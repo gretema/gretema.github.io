@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Vue.js 簡介Vue.js 是一款流行的 JavaScript 前端框架，旨在更好地組織與簡化 Web 開發。Vue 所關注的核心是 MVC 模式中的視圖層（View），同時，它也能方便地取得資料更新，並通過組件內部特定的方法實現視圖（View）與模型（Model）的互動。 ——維基百科">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Vue] Vue.js 基礎概述 (上)">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Vuejs&#x2F;20191217&#x2F;300157404&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="Vue.js 簡介Vue.js 是一款流行的 JavaScript 前端框架，旨在更好地組織與簡化 Web 開發。Vue 所關注的核心是 MVC 模式中的視圖層（View），同時，它也能方便地取得資料更新，並通過組件內部特定的方法實現視圖（View）與模型（Model）的互動。 ——維基百科">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2019-12-17T08:31:52.000Z">
+<meta property="article:modified_time" content="2019-12-21T06:47:26.746Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/Vuejs/20191217/300157404/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[Vue] Vue.js 基礎概述 (上) | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/Vuejs/20191217/300157404/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [Vue] Vue.js 基礎概述 (上)
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2019-12-17 16:31:52" itemprop="dateCreated datePublished" datetime="2019-12-17T16:31:52+08:00">2019-12-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2019-12-21 14:47:26" itemprop="dateModified" datetime="2019-12-21T14:47:26+08:00">2019-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vuejs/" itemprop="url" rel="index">
+                    <span itemprop="name">Vuejs</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/Vuejs/20191217/300157404/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Vuejs/20191217/300157404/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Vue-js-簡介"><a href="#Vue-js-簡介" class="headerlink" title="Vue.js 簡介"></a>Vue.js 簡介</h2><blockquote><p>Vue.js 是一款流行的 JavaScript 前端框架，旨在更好地組織與簡化 Web 開發。Vue 所關注的核心是 MVC 模式中的視圖層（View），同時，它也能方便地取得資料更新，並通過組件內部特定的方法實現視圖（View）與模型（Model）的互動。</p>
+<footer><strong>——維基百科</strong></footer></blockquote>
+
+<a id="more"></a>
+
+<p>總結一下維基百科對 Vue 的介紹，Vue 作為一款 JavaScript 的框架，有兩個特點：</p>
+<ol>
+<li>直觀語法：借鏡於 MVVM 模式，畫面與資料雙向綁定，所見即所得。</li>
+<li>多樣化延伸工具：可用來開發 SPA（單頁應用程式） 及傳統多頁應用程式。</li>
+</ol>
+<h2 id="從建立應用程式開始"><a href="#從建立應用程式開始" class="headerlink" title="從建立應用程式開始"></a>從建立應用程式開始</h2><ul>
+<li><p>宣告一個 Vue 實例：使用 <code>new</code> 關鍵字來宣告。一個網頁上可以放不只一個 Vue 實例，但不能在一個 Vue 實例中包另一個 Vue 實例（不可巢狀）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">var</span> app2 = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>綁定 DOM：一個 Vue 實例生成後必須綁定一個 HTML 元素，所以要綁定的 HTML 元素應該要設有 <code>id</code>。Vue 綁定 DOM 的方法是在剛剛宣告的 Vue 實例中放入 <code>el: &#39;元素 id&#39;</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt; ... &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ JS</span></span><br><span class="line"><span class="regexp">var app = new Vue(&#123;</span></span><br><span class="line"><span class="regexp">  el: '#app', /</span><span class="regexp">/ HTML id</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>把資料呈現在畫面上：在 Vue 實例中繼續放入資料，資料內容是以物件形式寫入。而要把資料內容呈現在畫面上，則要在綁定的 HTML 元素中，放入兩對大括號（雙花括號），雙花括號中間包著資料的特性名稱。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;p&gt; &#123;&#123; text &#125;&#125; &lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br><span class="line"><span class="comment">// JS</span></span><br><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    text: <span class="string">'這裡是一段文字'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>關於綁定：除了用 <code>id</code> 綁定以外，也可以在 HTML 元素設定 <code>class</code> 來綁定（<code>el</code> 的值也要由 <code>#</code> 改成 <code>.</code>）。但是如果同時有數個同樣 <code>class</code> 名稱的元素，Vue 只能帶資料到同 <code>class</code> 名稱的第一個元素上。所以大部份都還是用 <code>id</code> 綁定。</p>
+</li>
+</ul>
+<h2 id="基本指令"><a href="#基本指令" class="headerlink" title="基本指令"></a>基本指令</h2><h3 id="v-model-—-從網頁上更動-JS-資料"><a href="#v-model-—-從網頁上更動-JS-資料" class="headerlink" title="v-model — 從網頁上更動 JS 資料"></a>v-model — 從網頁上更動 JS 資料</h3><p>上一段提到 Model 能夠從網頁上直接更改的方式，就是在輸入資料的 HTML 元素上，加上 <code>v-model</code> 這個屬性。</p>
+<h3 id="v-text-—-雙花括號以外的資料綁定法"><a href="#v-text-—-雙花括號以外的資料綁定法" class="headerlink" title="v-text — 雙花括號以外的資料綁定法"></a>v-text — 雙花括號以外的資料綁定法</h3><p><code>v-text</code> 相當於 <code>.textContent</code>，上面都是用雙花括號包住資料的特性名稱來將 Model 渲染到網頁上，除了這個方法以外，也可以在要塞入 Model 的 HTML 元素上，加上 <code>v-text</code> 屬性來連接 Model 內容。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-text</span>=<span class="string">"message"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="v-html-—-傳入-HTML-標籤"><a href="#v-html-—-傳入-HTML-標籤" class="headerlink" title="v-html — 傳入 HTML 標籤"></a>v-html — 傳入 HTML 標籤</h3><p><code>v-html</code> 相當於 <code>.innerHTML</code>，如果想渲染到網頁上的 Model 含有 HTML 標籤，就要在要插入資料的元素上使用 <code>v-html</code> 屬性並與 Model 綁定，畫面上才會正確解讀 HTML 格式。同樣的內容用雙花括號跟 <code>v-text</code> 顯示出來的會是一串字串，而沒辦法正確渲染出 HTML 格式。</p>
+<iframe src="https://codepen.io/gretema/embed/vYYywrG?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<h3 id="v-bind-—-以參數更新-HTML-屬性"><a href="#v-bind-—-以參數更新-HTML-屬性" class="headerlink" title="v-bind — 以參數更新 HTML 屬性"></a>v-bind — 以參數更新 HTML 屬性</h3><p>雙花括號中填入資料特性名稱的方法，並不適用於 HTML <strong>屬性</strong>，因此我們應該把 <code>v-bind:</code> 加在 HTML 屬性前面，且在屬性對應的值中放置<strong>參數</strong>（資料特性名稱），並在 Model 中定義要傳入的值。<code>v-bind</code> 的縮寫是去掉 <code>v-bind</code>、只留下一個冒號 <code>:</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;img v-bind:src=<span class="string">"imgSrc"</span> v-bind:<span class="class"><span class="keyword">class</span></span>=<span class="string">"className"</span> alt=<span class="string">""</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ JS</span></span><br><span class="line"><span class="regexp">var app = new Vue(&#123;</span></span><br><span class="line"><span class="regexp">  el: '#app',</span></span><br><span class="line"><span class="regexp">  data: &#123;</span></span><br><span class="line"><span class="regexp">    imgSrc: '圖片位址',</span></span><br><span class="line"><span class="regexp">    className: 'img-fluid'</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="v-model-vs-v-bind"><a href="#v-model-vs-v-bind" class="headerlink" title="v-model vs v-bind"></a>v-model vs v-bind</h4><p><code>v-bind</code> 是將<strong>狀態</strong>綁定到 HTML 元素上，而 <code>v-model</code> 是<strong>接收資料</strong>，所以基本上 <code>v-model</code> 只會用在 <code>&lt;input&gt;</code>、<code>&lt;textarea&gt;</code>、<code>&lt;select&gt;</code> 這些<strong>傳入資訊</strong>的元素。</p>
+<h3 id="v-for-—-呈現資料列表"><a href="#v-for-—-呈現資料列表" class="headerlink" title="v-for — 呈現資料列表"></a>v-for — 呈現資料列表</h3><p>原生 JavaScript 疊代的方式依照型別的不同可以分成 <code>for</code> 迴圈、<code>forEach()</code>、<code>for…in</code>，而使用 Vue 的話全部都可以用 <code>v-for</code> 來疊代。</p>
+<p>例如，在 JavaScript 中需要透過迴圈並用串字串方式來新增多個同樣內容的 <code>&lt;li&gt;</code>，在 Vue 只要把 <code>v-for</code> 放在一個 <code>&lt;li&gt;</code> 上就有同樣的結果。</p>
+<p>下面的程式碼中， <code>item</code> 是一個參數（你也可以為它取別的名字）並用來指涉需要被疊代的陣列元素，<code>list</code> 指的是自定義的陣列名稱（陣列元素為數個物件）， <code>in</code> 也可以寫成 <code>of</code>，因為這樣更接近原生 JavaScript 疊代器的語法。</p>
+<p>在 <code>&lt;li&gt;</code> 上使用 <code>v-for</code> 並綁定要呈現的 <code>data</code> 資料，接著在 <code>&lt;li&gt; &lt;/li&gt;</code> 之間寫入要呈現的資料，雙花括號包起來的是 <code>item.資料特性</code>。</p>
+<p><code>v-for</code> 還支援第二個參數 — — 索引值（index），帶入索引值參數的方法是在原本 <code>item</code> 的位置改寫成 <code>(item, index)</code> 即可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li v-<span class="keyword">for</span>=<span class="string">"item in list"</span>&gt;</span><br><span class="line">      &#123;&#123; item.name &#125;&#125; 今年 &#123;&#123;item.age&#125;&#125; 歲</span><br><span class="line">    &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/u</span>l&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ JS</span></span><br><span class="line"><span class="regexp">var app = new Vue(&#123;</span></span><br><span class="line"><span class="regexp">  el: '#app',</span></span><br><span class="line"><span class="regexp">  data: &#123;</span></span><br><span class="line"><span class="regexp">    list: [</span></span><br><span class="line"><span class="regexp">      &#123;</span></span><br><span class="line"><span class="regexp">        name: '小明',</span></span><br><span class="line"><span class="regexp">        age: 16</span></span><br><span class="line"><span class="regexp">      &#125;,</span></span><br><span class="line"><span class="regexp">      &#123;</span></span><br><span class="line"><span class="regexp">        name: '媽媽',</span></span><br><span class="line"><span class="regexp">        age: 38</span></span><br><span class="line"><span class="regexp">      &#125;,</span></span><br><span class="line"><span class="regexp">      &#123;</span></span><br><span class="line"><span class="regexp">        name: '漂亮阿姨',</span></span><br><span class="line"><span class="regexp">        age: 24</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    ]</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="v-if-—-擷取部分資訊"><a href="#v-if-—-擷取部分資訊" class="headerlink" title="v-if — 擷取部分資訊"></a>v-if — 擷取部分資訊</h3><p>相當於判斷式的功能。跟 <code>v-for</code> 搭配使用時，可以依所設的條件渲染出部分的資料，也就是說只有資料符合條件時，該資料才會渲染出來，如果不符合條件，就不顯示。</p>
+<p>使用方法是在已經用了 <code>v-for</code> 的 HTML 元素上多加上 <code>v-if=&quot;條件&quot;</code> ，條件一般是以陣列元素的參數去設計的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li v-<span class="keyword">for</span>=<span class="string">"item in list"</span> v-<span class="keyword">if</span>=<span class="string">"item.age &gt; 20"</span>&gt;</span><br><span class="line">      &#123;&#123; item.name &#125;&#125; 今年 &#123;&#123;item.age&#125;&#125; 歲</span><br><span class="line">    &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/u</span>l&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>礙於篇幅，還有一些基礎指令沒寫出來，挪到下一篇再介紹 😃</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/hexo/20191217/2656253328/" rel="prev" title="[Hexo] 使用 NexT 主題如何在文章中內嵌 Codepen">
+      <i class="fa fa-chevron-left"></i> [Hexo] 使用 NexT 主題如何在文章中內嵌 Codepen
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191218/150943901/" rel="next" title="[Vue] Vue.js 基礎概述 (下)">
+      [Vue] Vue.js 基礎概述 (下) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-js-簡介"><span class="nav-number">1.</span> <span class="nav-text">Vue.js 簡介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#從建立應用程式開始"><span class="nav-number">2.</span> <span class="nav-text">從建立應用程式開始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本指令"><span class="nav-number">3.</span> <span class="nav-text">基本指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#v-model-—-從網頁上更動-JS-資料"><span class="nav-number">3.1.</span> <span class="nav-text">v-model — 從網頁上更動 JS 資料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v-text-—-雙花括號以外的資料綁定法"><span class="nav-number">3.2.</span> <span class="nav-text">v-text — 雙花括號以外的資料綁定法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v-html-—-傳入-HTML-標籤"><span class="nav-number">3.3.</span> <span class="nav-text">v-html — 傳入 HTML 標籤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v-bind-—-以參數更新-HTML-屬性"><span class="nav-number">3.4.</span> <span class="nav-text">v-bind — 以參數更新 HTML 屬性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#v-model-vs-v-bind"><span class="nav-number">3.4.1.</span> <span class="nav-text">v-model vs v-bind</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v-for-—-呈現資料列表"><span class="nav-number">3.5.</span> <span class="nav-text">v-for — 呈現資料列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v-if-—-擷取部分資訊"><span class="nav-number">3.6.</span> <span class="nav-text">v-if — 擷取部分資訊</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/Vuejs/20191217/300157404/",
+            identifier: "Vuejs/20191217/300157404/",
+            title: "[Vue] Vue.js 基礎概述 (上)"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

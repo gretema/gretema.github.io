@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="上一篇有提到一部份的基礎指令，今天要繼續介紹上一篇沒講完的部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Vue] Vue.js 基礎概述 (下)">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Vuejs&#x2F;20191218&#x2F;150943901&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="上一篇有提到一部份的基礎指令，今天要繼續介紹上一篇沒講完的部分。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2019-12-18T02:01:22.000Z">
+<meta property="article:modified_time" content="2019-12-21T06:47:26.746Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/Vuejs/20191218/150943901/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[Vue] Vue.js 基礎概述 (下) | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/Vuejs/20191218/150943901/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [Vue] Vue.js 基礎概述 (下)
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2019-12-18 10:01:22" itemprop="dateCreated datePublished" datetime="2019-12-18T10:01:22+08:00">2019-12-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2019-12-21 14:47:26" itemprop="dateModified" datetime="2019-12-21T14:47:26+08:00">2019-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vuejs/" itemprop="url" rel="index">
+                    <span itemprop="name">Vuejs</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/Vuejs/20191218/150943901/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Vuejs/20191218/150943901/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>上一篇有提到一部份的基礎指令，今天要繼續介紹上一篇沒講完的部分。</p>
+<a id="more"></a>
+
+<h2 id="v-on-—-事件監聽"><a href="#v-on-—-事件監聽" class="headerlink" title="v-on — 事件監聽"></a>v-on — 事件監聽</h2><p>在要監聽的 HTML 元素上加上 <code>v-on: 事件 = &quot;方法名稱()&quot;</code>，在 <code>data</code> 物件同層新增 <code>methods</code> 物件，裡面寫入一個特性，其值為函式（=方法），這個特性的名稱就是要填入 <code>v-on</code> 屬性中的「方法名稱」。 <code>v-on:</code> 的縮寫是 <code>@</code> 。</p>
+<p>範例：</p>
+<iframe src="https://codepen.io/gretema/embed/ExxOYxY?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<p>之前學 <code>this</code> 的時候曾學到，<code>this</code> 指向的是它所在的函式隸屬的物件，因此可能會有人疑惑為何 <code>reverseText()</code> 中是寫成 <code>this.newText</code> 跟 <code>this.text</code>，畢竟 <code>reverseText</code> 所在的物件是 <code>methods</code>，那 this 不就是指向 <code>methods</code> 嗎？</p>
+<p>在這裡可以把 <code>data</code> 想成 JavaScript 裡的全域變數（會變成 window 物件的其中一個特性），先宣告好就可給 <code>method</code> 物件裡面的方法去使用。</p>
+<h2 id="預先定義資料結構"><a href="#預先定義資料結構" class="headerlink" title="預先定義資料結構"></a>預先定義資料結構</h2><p>由於畫面跟資料可以雙向地變動，因此預先把程式碼的架構給定義出來是很重要的。</p>
+<h2 id="修飾符"><a href="#修飾符" class="headerlink" title="修飾符"></a>修飾符</h2><p>一種加在指令後面的後綴，例如在 <code>v-on</code> 後面加上 <code>.prevent</code> 修飾符就代表了 <code>event.preventDefault()</code>，使用修飾符可以讓我們少寫幾行程式碼。跟事件搭配的後綴在官方文件的<a href="https://cn.vuejs.org/v2/guide/events.html#%E4%BA%8B%E4%BB%B6%E4%BF%AE%E9%A5%B0%E7%AC%A6" target="_blank" rel="external nofollow noopener noreferrer">事件處理章節</a>有列出來。</p>
+<h2 id="動態切換-class"><a href="#動態切換-class" class="headerlink" title="動態切換 class"></a>動態切換 class</h2><p>在要動態切換 <code>class</code> 的 HTML 元素上用 <code>v-bind</code> 來設定參數，結構像這樣：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span> <span class="attr">:class</span>=<span class="string">"&#123; '要加入的 className': 判斷式&#125;"</span> &gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 在大括號內允許傳入多個要切換的 className --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以切換 <code>className</code> 來說，通常判斷式的內容會寫入一個 <code>data</code> 物件中的特性，而該特性的值為<strong>布林值</strong>。</p>
+<p>以「按下按鈕就讓一個正方形 box 旋轉」為例：</p>
+<iframe src="https://codepen.io/gretema/embed/wvvQwKm?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<p>在這個範例中，按下按鈕觸發的事件，會將 <code>data</code> 物件中 <code>isTransform</code> 特性的值顛倒，再配合 <code>.box</code> 增加 <code>className</code> 的條件，就達到 toggle <code>.rotate</code> 的效果。</p>
+<h2 id="computed-—-計算屬性"><a href="#computed-—-計算屬性" class="headerlink" title="computed — 計算屬性"></a>computed — 計算屬性</h2><p><code>computed</code> 物件跟 <code>data</code> 物件同層，它裡面放的只會是有取特性名稱的方法，這些方法用來 <code>return</code> 一個值且儲存在方法對應的特性裡（類似變數的性質）。</p>
+<p>範例：</p>
+<iframe src="https://codepen.io/gretema/embed/MWWzgbd?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<p><code>computed</code> 物件的 <code>reverseText()</code> 中，已經定義了回傳的值是以 <code>this.text</code> 的值為計算基礎（這裡的 <code>this</code> 依然是指全域），一旦 <code>data</code> 物件裡的 <code>text</code> 值變更，<code>reverseText()</code> 回傳的值也會隨之變動。</p>
+<p>以執行結果來說，<code>computed</code> 跟 <code>methods</code> 裡面的方法，輸出的結果確實是一樣的，但是兩者<strong>執行函式的方式不同</strong>。<br><code>computed</code> 裡的方法<strong>不是</strong>依靠觸發來執行的，只要它所依附的計算基礎沒有變動，就不會再次執行，只會固定輸出之前計算的結果；而 <code>methods</code> 則是<strong>依靠觸發</strong>，每次觸發都會再次執行函式。</p>
+<h2 id="表單輸入綁定"><a href="#表單輸入綁定" class="headerlink" title="表單輸入綁定"></a>表單輸入綁定</h2><p>將使用者在表單上輸入的內容記錄到 Model 裡，主要就是用 <code>v-model</code> 進行資料綁定。</p>
+<ul>
+<li>單一個 checkbox：設定 <code>v-model</code> 指向對應的特性，這樣點選時就能切換布林值。</li>
+<li>多選：checkbox 所有選項都要設定 <code>value</code> 屬性及 <code>v-model</code>，且 <code>v-model</code> 都要指向 <code>data</code> 裡同一個<strong>陣列</strong>，這樣勾選選項時，每個選項的 <code>value</code> 就會寫進陣列裡。</li>
+<li>單選：radio 也是所有選項都要設定 <code>value</code> 屬性及 <code>v-model</code>，且 <code>v-model</code> 都要指向 <code>data</code> 裡同一個<strong>特性</strong>，這樣就只會寫入一個值。</li>
+<li><code>&lt;select&gt;</code> 下拉選單：<code>&lt;select&gt;</code> 用 <code>v-model</code> 指向對應的<strong>特性</strong>，<code>&lt;select&gt;</code> 裡面是 <code>&lt;option&gt;</code> 選項。第一個 <code>&lt;option&gt;</code> 可以把 <code>value</code> 屬性的值空著，文字就寫些「請選擇」之類的初始選項，如果不想被使用者誤觸的話，可以再加上 <code>disabled</code> 屬性。其他選項都要填入 <code>value</code> 值，才能正確寫入對應特性中，不過 <code>value</code> 值不一定要跟選項文字相同。</li>
+</ul>
+<h2 id="元件-components-基礎"><a href="#元件-components-基礎" class="headerlink" title="元件 (components) 基礎"></a>元件 (components) 基礎</h2><p>元件可以複用，它在 HTML 中以標籤的形式表現，而標籤名是自定義的元件名稱。</p>
+<p>之前的指令都是寫在 Vue 實例裡，元件則是寫在 Vue 實例外面，而且順序要擺在 Vue 實例之前。因為解譯器是依序執行的，它會先讀到 HTML 的元件標籤，所以必須讓解譯器在 JS 檔案中馬上讀到關於元件的程式碼。</p>
+<p>範例：</p>
+<iframe src="https://codepen.io/gretema/embed/eYYQOMm?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<p>元件的資料會寫在 <code>Vue.components()</code> 的小括號裡面，小括號內有兩個參數，第一個參數是<strong>自訂元件的名稱</strong>（跟在 HTML 的標籤名相同），第二個參數是<strong>一個物件</strong>，該物件內要寫入一個 <code>data</code> 特性跟一個 <code>template</code> 特性。</p>
+<p><code>data</code> 特性對應的是一個函式，該函式必須 <code>return</code> 一個物件，該物件裡面放的就是專屬於這個元件的資料。</p>
+<p><code>data</code> 寫好後，開始寫 <code>template</code> 特性。<code>template</code> 特性負責的是這個元件的 HTML 結構，所以對應的值是用<strong>反引號</strong>包起來的「含有 HTML 標籤的字串」，在這裏面可以運用 <code>data</code> 的內容。</p>
+<p>雖然我們在 HTML 中寫的元件是用元件名稱當標籤，但是用 chrome 開發人員工具看 HTML 結構時會發現，原本的元件標籤呈現出來的程式碼會是 template 組出來的內容。</p>
+<hr>
+<p>以上就是 Vue 的基礎指令，這些指令都還有一些使用細節可以延伸來介紹，之後會再整理相關筆記。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191217/300157404/" rel="prev" title="[Vue] Vue.js 基礎概述 (上)">
+      <i class="fa fa-chevron-left"></i> [Vue] Vue.js 基礎概述 (上)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191218/2311842168/" rel="next" title="[Vue] 進階指令與模板語法 (上)">
+      [Vue] 進階指令與模板語法 (上) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#v-on-—-事件監聽"><span class="nav-number">1.</span> <span class="nav-text">v-on — 事件監聽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先定義資料結構"><span class="nav-number">2.</span> <span class="nav-text">預先定義資料結構</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修飾符"><span class="nav-number">3.</span> <span class="nav-text">修飾符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#動態切換-class"><span class="nav-number">4.</span> <span class="nav-text">動態切換 class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computed-—-計算屬性"><span class="nav-number">5.</span> <span class="nav-text">computed — 計算屬性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表單輸入綁定"><span class="nav-number">6.</span> <span class="nav-text">表單輸入綁定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#元件-components-基礎"><span class="nav-number">7.</span> <span class="nav-text">元件 (components) 基礎</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/Vuejs/20191218/150943901/",
+            identifier: "Vuejs/20191218/150943901/",
+            title: "[Vue] Vue.js 基礎概述 (下)"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,939 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>[Vue] Vue 元件 - 插槽篇</title>
+    <url>/Vuejs/20191221/4254408561/</url>
+    <content><![CDATA[<p>使用元件的目的是為了同樣結構的重複使用，但有時我們會需要對元件內容作調整，這時就可以使用插槽來做調整。</p>
+<a id="more"></a>
+
+<h2 id="單一插槽"><a href="#單一插槽" class="headerlink" title="單一插槽"></a>單一插槽</h2><p>當只有一個地方需要修改內容時，使用單一插槽即可。</p>
+<p>在模板中用 <code>&lt;slot&gt;</code> 標籤預留一個空間，用來存放等一下在 HTML 中要新增的內容。</p>
+<p>如果希望元件有預設的內容，寫在 <code>&lt;slot&gt;</code> 標籤中即可，如果 HTML 沒有新增的內容，則 <code>&lt;slot&gt;</code> 中的預設內容就會顯示，反之則會被新的內容取代。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 元件</span></span><br><span class="line">Vue.component(<span class="string">'single-slot-component'</span>, &#123;</span><br><span class="line">  template: <span class="string">'#singleSlotComponent'</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// x-template 模板</span></span><br><span class="line">&lt;script type=<span class="string">"text/x-template"</span> id=<span class="string">"singleSlotComponent"</span>&gt;</span><br><span class="line">  &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"alert alert-warning"</span>&gt;</span><br><span class="line">    &lt;h6&gt;我是一個元件&lt;<span class="regexp">/h6&gt;</span></span><br><span class="line"><span class="regexp">    &lt;slot&gt;</span></span><br><span class="line"><span class="regexp">        如果沒有內容，則會顯示此段落。</span></span><br><span class="line"><span class="regexp">    &lt;/</span>slot&gt;</span><br><span class="line">  &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// HTML</span></span><br><span class="line"></span><br><span class="line">&lt;!--內容需要替換的元件--&gt;</span><br><span class="line">&lt;single-slot-component&gt;</span><br><span class="line">  &lt;p&gt;使用這段取代原本的 Slot。&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>single-slot-component&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--不需要替換內容的元件--&gt;</span><br><span class="line">&lt;single-slot-component&gt; <span class="xml"><span class="tag">&lt;/<span class="name">single-slot-component</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="具名插槽"><a href="#具名插槽" class="headerlink" title="具名插槽"></a>具名插槽</h2><p>如果有多處內容需要替換，就需要搭配使用 <code>&lt;slot&gt;</code> 及 <code>name</code> 屬性，來綁定模板及要更換內容的 HTML 元素。</p>
+<p>在元件模板中定義好插槽位置與自訂的 <code>name</code> 後，在 HTML 中就可以使用 <code>&lt;template&gt;</code> 元素 + <code>v-slot</code> 指令 + 插槽的 <code>name</code>，來達成數個地方的內容替換了。</p>
+<p>注意，<code>v-slot</code> 只能用於 <code>&lt;template&gt;</code> 元素。</p>
+<p><code>&lt;template&gt;</code> 跟 <code>&lt;slot&gt;</code> 標籤在 HTML 中都不會被輸出，它們兩個的用途是互相配對，代表這個地方需要在 HTML 中替換成新的內容。<code>&lt;slot&gt;</code> 放置位置在元件模板中，<code>&lt;template&gt;</code> 放置位置在 HTML 中。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 元件的模板</span></span><br><span class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"container"</span>&gt;</span><br><span class="line">  &lt;header&gt;</span><br><span class="line">    &lt;slot name=<span class="string">"header"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span></span><br><span class="line">  &lt;<span class="regexp">/header&gt;</span></span><br><span class="line"><span class="regexp">  &lt;main&gt;</span></span><br><span class="line"><span class="regexp">    &lt;slot&gt;&lt;/</span>slot&gt;</span><br><span class="line">  &lt;<span class="regexp">/main&gt;</span></span><br><span class="line"><span class="regexp">  &lt;footer&gt;</span></span><br><span class="line"><span class="regexp">    &lt;slot name="footer"&gt;&lt;/</span>slot&gt;</span><br><span class="line">  &lt;<span class="regexp">/footer&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;base-layout&gt;</span><br><span class="line">  &lt;template v-slot:header&gt;</span><br><span class="line">    &lt;h1&gt;Here might be a page title&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">  &lt;p&gt;A paragraph <span class="keyword">for</span> the main content.&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">  &lt;p&gt;And another one.&lt;/</span>p&gt;</span><br><span class="line"></span><br><span class="line">  &lt;template v-slot:footer&gt;</span><br><span class="line">    &lt;p&gt;Here<span class="string">'s some contact info&lt;/p&gt;</span></span><br><span class="line"><span class="string">  &lt;/template&gt;</span></span><br><span class="line"><span class="string">&lt;/base-layout&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>Vue元件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] Vue 元件 - emit 篇</title>
+    <url>/Vuejs/20191220/2032442117/</url>
+    <content><![CDATA[<p>如何從元件傳遞資料到根實例？本篇筆記告訴你～</p>
+<a id="more"></a>
+
+<h2 id="emit-向外層傳遞事件"><a href="#emit-向外層傳遞事件" class="headerlink" title="$emit 向外層傳遞事件"></a>$emit 向外層傳遞事件</h2><p><code>$emit</code> 除了可以傳遞事件外，也可以傳遞參數。</p>
+<h3 id="emit-基本用法："><a href="#emit-基本用法：" class="headerlink" title="$emit() 基本用法："></a>$emit() 基本用法：</h3><p>在元件標籤上設定 <code>v-on:自訂事件名 = &quot;Vue 根實例的 method&quot;</code>，這表示元件內的事件發生後將會觸發 Vue 根實例的方法，內層元件就是透過這種方式傳送到外層。</p>
+<figure class="highlight hsp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;<span class="keyword">button</span>-counter v-<span class="keyword">on</span>:increment=<span class="string">"incrementTotal"</span>&gt;&lt;/<span class="keyword">button</span>-counter&gt;</span><br></pre></td></tr></table></figure>
+
+<p>元件的 <code>template</code> 中，要在 HTML 元素上綁定一個事件，以下面這個範例為例：發生 <code>click</code> 事件後要觸發 <code>incrementCounter</code> 函式，而這個函式是元件中的一個 <code>method</code>。在這個 <code>method</code> 裡面要用 <code>$emit</code> 觸發與 Vue 根實例綁定的事件，所以 <code>$emit()</code> 小括號內要寫入的是在元件標籤上設定的<strong>自訂事件名</strong>。</p>
+<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 元件</span></span><br><span class="line">Vue.component(<span class="string">'buttonCounter'</span>, &#123;</span><br><span class="line">  template:`</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;button @click=<span class="string">"incrementCounter"</span>&gt;增加 &#123;&#123; counter &#125;&#125; 元&lt;/button&gt;</span><br><span class="line">      &lt;input type=<span class="string">"number"</span> v-model=<span class="string">"counter"</span>&gt;</span><br><span class="line">    &lt;/div&gt;`,</span><br><span class="line">  data: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      counter: <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    incrementCounter: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.$emit(<span class="string">'increment'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>Vue 根實例中的 <code>incrementTotal</code> 方法，就是剛剛在元件上<strong>與自訂事件綁定的函式</strong>。</p>
+<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Vue 根實例</span></span><br><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    cash: <span class="number">300</span></span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    incrementTotal: <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="comment">// 每按一下按鈕，cash 數字就加 1</span></span><br><span class="line">      <span class="keyword">this</span>.cash++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-emit-與其參數："><a href="#使用-emit-與其參數：" class="headerlink" title="使用 $emit() 與其參數："></a>使用 $emit() 與其參數：</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 元件</span></span><br><span class="line">Vue.component(<span class="string">'buttonCouter'</span>, &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  methods: &#123;</span><br><span class="line">    incrementCounter: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.$emit(<span class="string">'increment'</span>, <span class="built_in">Number</span>(<span class="keyword">this</span>.counter));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Vue 根實例</span></span><br><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  methods: &#123;</span><br><span class="line">    incrementTotal: <span class="function"><span class="keyword">function</span>(<span class="params">newCount</span>) </span>&#123;</span><br><span class="line">      <span class="comment">// 用 newCount 參數接收元件傳來的 this.counter 值</span></span><br><span class="line">      <span class="keyword">this</span>.cash = <span class="keyword">this</span>.cash + newCount;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h2><ol>
+<li><code>$emit()</code> 第一個參數是自訂事件名稱，當元件發生一個事件時，把這個事件傳到根實例的 <code>methods</code> 去進行運算。</li>
+<li><code>$emit()</code> 第二個參數是元件的資料屬性，把專屬於這個元件的資料傳到根實例的 <code>methods</code> 去進行運算。</li>
+<li>元件模板中所綁定的，都是該元件獨有的資料、<code>methods</code>。</li>
+<li>HTML 中的元件標籤則是元件資料與根實例資料<strong>互相綁定</strong>的場所。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>$emit()</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] Vue 元件 - props 篇</title>
+    <url>/Vuejs/20191220/3720178681/</url>
+    <content><![CDATA[<p>上一篇我們提到，要從根實例傳資料到元件裡，需要使用 <code>props</code> 特性來傳遞，今天這篇筆記會談談 <code>props</code> 如何實際使用。</p>
+<a id="more"></a>
+
+<h2 id="在-HTML-放入元件"><a href="#在-HTML-放入元件" class="headerlink" title="在 HTML 放入元件"></a>在 HTML 放入元件</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>靜態傳遞<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">photo</span>&gt;</span><span class="tag">&lt;/<span class="name">photo</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>動態傳遞<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">photo</span>&gt;</span><span class="tag">&lt;/<span class="name">photo</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="定義元件模板"><a href="#定義元件模板" class="headerlink" title="定義元件模板"></a>定義元件模板</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/x-template"</span> <span class="attr">id</span>=<span class="string">"photo"</span>&gt;</span></span><br><span class="line"><span class="handlebars"><span class="xml">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    &lt;img :scr=<span class="string">"imgUrl"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"img-fluid"</span> alt=<span class="string">""</span> /&gt;</span></span><br><span class="line"><span class="handlebars"><span class="xml">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>風景照<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span></span><br><span class="line"><span class="handlebars"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="宣告-Vue-根實例"><a href="#宣告-Vue-根實例" class="headerlink" title="宣告 Vue 根實例"></a>宣告 Vue 根實例</h2><figure class="highlight lasso"><table><tr><td class="code"><pre><span class="line"><span class="built_in">var</span> app = <span class="literal">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  <span class="built_in">data</span>: &#123;</span><br><span class="line">    url: <span class="string">'一個圖片網址'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="在-Vue-根實例上方宣告一個元件"><a href="#在-Vue-根實例上方宣告一個元件" class="headerlink" title="在 Vue 根實例上方宣告一個元件"></a>在 Vue 根實例上方宣告一個元件</h2><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'自定義元件名稱'</span>,&#123;</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'# template 的 id 名稱'</span>,</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'取得 data 資料的屬性名'</span>]</span><br><span class="line">  <span class="comment">// 之後要用這裡的資料屬性名稱在 HTML 上設定 v-bind，就能得到上層的資料</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 範例</span></span><br><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'photo'</span>,&#123;</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'imgUrl'</span>],</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#photo'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>接下來傳遞資料的方式可以選擇靜態傳遞或動態傳遞。</p>
+<h2 id="靜態與動態傳入數值差異"><a href="#靜態與動態傳入數值差異" class="headerlink" title="靜態與動態傳入數值差異"></a>靜態與動態傳入數值差異</h2><p>加在 HTML 標籤上的屬性可以分為靜態跟動態兩種，沒有設定 <code>v-bind</code> 的屬性為靜態，有設定 <code>v-bind</code> 的屬性為動態。</p>
+<p>靜態屬性的值一律會轉為字串型別，動態屬性的值則不一定是字串。</p>
+<h3 id="靜態傳遞"><a href="#靜態傳遞" class="headerlink" title="靜態傳遞"></a>靜態傳遞</h3><p><code>&lt;photo img-url=&quot;圖片的網址&quot;&gt;&lt;/photo&gt;</code><br>原本在元件內的 <code>props</code> 值為 <code>imgUrl</code>，放到 HTML 中時要把駝峰改成 <code>-</code> 。<br><code>img-url</code>的值（圖片網址）會透過 <code>x-template</code> 中 <code>:src=&quot;imgUrl&quot;</code> 而跑到元件 <code>props</code> 裡。</p>
+<h3 id="動態傳遞"><a href="#動態傳遞" class="headerlink" title="動態傳遞"></a>動態傳遞</h3><p><code>&lt;photo :img-url=&quot;url&quot;&gt;&lt;/photo&gt;</code><br>這裡的 <code>url</code> 作為與元件 <code>props</code> <code>imgUrl</code> 綁定的值，同時代表的是根實例 <code>data</code> 物件中的 <code>url</code> 特性，因此會把 <code>url</code> 中的圖片網址帶進 <code>props</code> 裡面。</p>
+<h2 id="props-圖解"><a href="#props-圖解" class="headerlink" title="props 圖解"></a>props 圖解</h2><p><img src="https://i.imgur.com/w36W7L2.png" alt="這張圖屬於建良"></p>
+<h2 id="props-使用注意事項"><a href="#props-使用注意事項" class="headerlink" title="props 使用注意事項"></a>props 使用注意事項</h2><h3 id="1-單向數據流"><a href="#1-單向數據流" class="headerlink" title="1. 單向數據流"></a>1. 單向數據流</h3><p>像上面這樣使用 <code>v-bind</code> 綁定 <code>props</code>，並傳入 Vue 實例的 <code>data</code> 資料，如果又在 DOM 運用 <code>props</code> 屬性建立 <code>v-model</code> 會形成一個問題，就是當使用者從畫面上修改資料時，會去動到根實例的 <code>data</code> ，但這樣是不合規範的，所以會跳錯。</p>
+<p>解決辦法是在<strong>元件</strong>中新增 <code>data</code> 特性，對應一個 function，並在裡面 <code>return</code> 新的特性，當作<u>與畫面雙向綁定的標的</u>，這樣就不會跳錯了。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// JS</span></span><br><span class="line">Vue.component(<span class="string">'photo'</span>, &#123;</span><br><span class="line">  props: [<span class="string">'imgUrl'</span>],</span><br><span class="line">  template: <span class="string">'#photo'</span>,</span><br><span class="line">  data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">       newUrl: <span class="keyword">this</span>.imgUrl</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;script type=<span class="string">"text/x-template"</span> id=<span class="string">"photo"</span>&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;img :src=<span class="string">"imgUrl"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"img-fluid"</span> alt=<span class="string">""</span> /&gt;</span><br><span class="line">  &lt;input type=<span class="string">"text"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-control"</span> v-model=<span class="string">"newUrl"</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+<p><code>newUrl</code> 的值有兩個角色，第一個是接收 <code>props</code> 傳入的資料，第二個是放在元件模板中設定 <code>v-model</code>，使用 <code>newUrl</code> 來與畫面做雙向綁定，就能把 <code>props</code> 資料與 Vue 實例的 <code>data</code> 做隔離。</p>
+<h3 id="2-尚未宣告的變數"><a href="#2-尚未宣告的變數" class="headerlink" title="2. 尚未宣告的變數"></a>2. 尚未宣告的變數</h3><p>當我們在根實例 <code>data</code> 物件新增空的物件，並希望透過 AJAX 推資料進去這個空物件時，元件渲染會發生在 AJAX 資料推進來之前，就會造成抓不到資料而跳錯。</p>
+<p>解決方法是使用 <code>v-if=&quot;AJAX 傳入的資料特性&quot;</code>，確保 AJAX 取得資料後，才渲染元件；在資料尚未取得前，元件都不會顯示。</p>
+<p>範例：<br><code>&lt;card :user-data=&quot;user&quot; v-if=&quot;user.phone&quot;&gt;&lt;/card&gt;</code></p>
+<p><code>v-if</code> 裡對應的值可以是 AJAX 資料中隨便一個資料特性，這邊的 <code>user</code> 指的是一開始就宣告的空物件名稱。</p>
+<h3 id="3-物件透過參考的方式傳遞資料"><a href="#3-物件透過參考的方式傳遞資料" class="headerlink" title="3. 物件透過參考的方式傳遞資料"></a>3. 物件透過參考的方式傳遞資料</h3><p>在 JavaScript 中，當我們宣告一個變數並賦予它一個新的物件時，記憶體的某處也會建立起一個物件，然後把剛剛的變數指向新生成的物件。</p>
+<p>接著，如果我們又宣告第二個變數，並將這個變數指向第一個變數的話，當我們更新第一個變數裡的特性值，第二個變數的內容也會隨之更新。</p>
+<p>也就是說，兩個變數都是指向同一個實體。</p>
+<p>所以，當我們在畫面上修改資料，會更改到 <code>props</code> 的值，甚至連 Vue 實例的 <code>data</code> 物件也會跟著被改變。</p>
+<p>那為何單向數據流無法像這樣傳遞呢？因為單向數據流傳遞的是<strong>一般字串</strong>，所以<u>無法像物件這樣傳遞參考的特性</u>。如果沒有修改物件的特性，都還是維持單向數據流的概念。</p>
+<h3 id="4-維持狀態與生命週期"><a href="#4-維持狀態與生命週期" class="headerlink" title="4. 維持狀態與生命週期"></a>4. 維持狀態與生命週期</h3><p>如果不希望元件每次都重新生成，或是元件內的內容是由 AJAX 而來，而你不希望每次重整，元件都接收到不一樣的內容的話，就可以使用 <code>&lt;keep-alive&gt;</code> 標籤包住元件，這樣就能維持元件的狀態了。</p>
+<h2 id="props-值的型別"><a href="#props-值的型別" class="headerlink" title="props 值的型別"></a>props 值的型別</h2><p>預先定義 <code>props</code> 應該傳入哪種型別的資料，避免傳入錯誤的資料。</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原本是這樣寫</span></span><br><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'prop-type'</span>, &#123;</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'cash'</span>],</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#propType'</span>,</span><br><span class="line">  <span class="attribute">data</span>: function() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      <span class="attribute">newCash</span>: this.cash</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 預先定義 props 值型別</span></span><br><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'prop-type'</span>, &#123;</span><br><span class="line">   <span class="attribute">props</span>: &#123;</span><br><span class="line">     <span class="attribute">cash</span>: &#123;</span><br><span class="line">       <span class="attribute">type</span>: Number,</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;,</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#propType'</span>,</span><br><span class="line">  <span class="attribute">data</span>: function() &#123;</span><br><span class="line">    <span class="selector-tag">return</span> &#123;</span><br><span class="line">      <span class="attribute">newCash</span>: this.cash</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>有時候 <code>props</code> 不會接收到來自外部的值，但如果我們希望它帶有預設值，可以這樣做：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">props</span>: &#123;</span><br><span class="line">  <span class="attribute">cash</span>: &#123;</span><br><span class="line">    type: Number,</span><br><span class="line">    default: 預設值</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>Vue元件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] Vue 元件 - 基礎篇</title>
+    <url>/Vuejs/20191219/714316638/</url>
+    <content><![CDATA[<p>Vue 元件是運用 Vue 很核心的部分，此系列將會拆成 4~5 篇文 po 上來。<br>本篇會從元件的基礎開始，順便帶一些有 <code>props</code> 觀念的例子（但 <code>props</code> 的細節會寫在下一篇），最後會附上一個 Demo 供大家參考。</p>
+<a id="more"></a>
+
+<h2 id="元件的概念"><a href="#元件的概念" class="headerlink" title="元件的概念"></a>元件的概念</h2><p>網頁上不同的區塊可以由不同的元件組成，如果有重複出現的區塊，更可以利用元件來做。</p>
+<p>各個元件的資料都是<strong>獨立</strong>的，如果需要流通各自的資料，有兩種型態：<code>props</code> 特性可以即時地將<strong>外層資料傳進內層</strong>，而<strong>內層資料傳到外層</strong>則要使用 <code>emit</code> 事件（需要透過觸發事件，才能傳遞資料）。</p>
+<p>SPA 也是透過元件製作的（由前端模擬的路由）。</p>
+<h2 id="使用-x-template-建立元件"><a href="#使用-x-template-建立元件" class="headerlink" title="使用 x-template 建立元件"></a>使用 <code>x-template</code> 建立元件</h2><ol>
+<li><p>在 Vue 實例上方宣告一個元件</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'自定義元件名稱'</span>,&#123;</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'# template 的 id 名稱'</span>,</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'取得 data 資料的屬性名'</span>]</span><br><span class="line">  <span class="comment">// 取得 data 資料的屬性名: 自訂一個屬性名，並綁定 v-for 的 item 參數</span></span><br><span class="line">  <span class="comment">// 若用 v-bind 綁定 props，就能將 data 資料傳進元件</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 範例</span></span><br><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'row-component'</span>,&#123;</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#rowComponentTemplate'</span>,</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'person'</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>另外宣告一個 <code>&lt;script&gt;</code>，且 <code>type</code> 屬性為 <code>text/x-template</code> 並賦予 <code>id</code></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/x-template"</span> <span class="attr">id</span>=<span class="string">"rowComponentTemplate"</span>&gt;</span></span><br><span class="line"><span class="handlebars"><span class="xml">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span></span></span><br><span class="line"><span class="handlebars"><span class="xml">    <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123; person.name &#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span></span><br><span class="line"><span class="handlebars"><span class="xml">    <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123; person.cash &#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span></span><br><span class="line"><span class="handlebars"><span class="xml">    <span class="tag">&lt;<span class="name">td</span>&gt;</span></span><span class="template-variable">&#123;&#123; person.icash &#125;&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span></span><br><span class="line"><span class="handlebars"><span class="xml">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在要插入元件的地方，使用 Vue 的 <code>is</code> 屬性來掛載元件，<code>is</code> 用來動態切換模板</p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line">&lt;tbody&gt;</span><br><span class="line">  &lt;tr is=<span class="string">"row-component"</span> v-<span class="keyword">for</span>=<span class="string">"(item, key) in data"</span> <span class="symbol">:person=<span class="string">"item"</span></span> <span class="symbol">:key=<span class="string">"key"</span>&gt;&lt;/tr&gt;</span></span><br><span class="line">&lt;<span class="regexp">/tbody&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>:person=&quot;item&quot;</code> 的 <code>person</code> 指的是元件 <code>props</code> 中的屬性名稱，<code>item</code> 則是 <code>v-for=&quot;(item, key) in data&quot;</code> 的 <code>item</code>，且它連接的是根實例的資料。<br><img src="https://i.imgur.com/3PdZRAt.jpg" alt></p>
+</li>
+</ol>
+<h3 id="另外一種寫法：局部註冊"><a href="#另外一種寫法：局部註冊" class="headerlink" title="另外一種寫法：局部註冊"></a>另外一種寫法：局部註冊</h3><figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原本的寫法是註冊在所有 Vue 的應用程式下</span></span><br><span class="line">Vue.component(<span class="string">'row-component'</span>,&#123;</span><br><span class="line">  template: <span class="string">'#rowComponentTemplate'</span>,</span><br><span class="line">  props: [<span class="string">'person'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 改寫為只有目前這個應用程式可以用</span></span><br><span class="line"><span class="keyword">var</span> child = &#123;</span><br><span class="line">  template: <span class="string">'#rowComponentTemplate'</span>,</span><br><span class="line">  props: [<span class="string">'person'</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在目前這個 Vue 實例下新增一個 <code>components</code> 特性（跟 <code>data</code> 物件同層），將元件註冊在這個特性裡：</p>
+<figure class="highlight avrasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">components:</span> &#123;</span><br><span class="line">  <span class="string">"row-component"</span>: child</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="元件內的-data"><a href="#元件內的-data" class="headerlink" title="元件內的 data"></a>元件內的 data</h2><p>因為每個元件的 data 都是獨立的，所以都會有各自的資料狀態，當有需要使用，都需要獨立管理。但是要注意，在元件內使用 <code>data</code> 特性的時候，必須使用 <code>function</code> 來<code>return</code> 一個物件資料到 <code>data</code> 特性裡。</p>
+<h2 id="運用元件製作關注空污城市的網頁"><a href="#運用元件製作關注空污城市的網頁" class="headerlink" title="運用元件製作關注空污城市的網頁"></a>運用元件製作關注空污城市的網頁</h2><p>當元件系列文結束後，就可以做出這個網頁了。</p>
+<iframe src="https://codepen.io/gretema/embed/YzzjMxN?height=265&theme-id=default&default-tab=js,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>Vue元件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] Vue 生命週期</title>
+    <url>/Vuejs/20191219/1844116139/</url>
+    <content><![CDATA[<p>在學 Vue 的初期不知道生命週期其實也沒什麼關係，不過隨著越學越進階，還是應該了解一下相關的知識比較好。</p>
+<a id="more"></a>
+
+<h2 id="Vue-的生命週期"><a href="#Vue-的生命週期" class="headerlink" title="Vue 的生命週期"></a>Vue 的生命週期</h2><p>Vue 實例擁有一個完整的生命週期，過程中會執行一連串的工作，從開始「創建」、「初始化數據」、「Template 編譯模板」、「DOM 元素掛載」、「資料的渲染與更新」和「卸載」等過程，我們統稱為 Vue 實例的生命週期。<br><img src="https://i.imgur.com/UuiWUiH.png" alt="官方生命週期示意圖"></p>
+<h2 id="在-HTML-寫好元件模板"><a href="#在-HTML-寫好元件模板" class="headerlink" title="在 HTML 寫好元件模板"></a>在 HTML 寫好元件模板</h2><p>在 HTML 中用 <code>x-template</code> 先寫好一個模板，並且用 <code>id</code> 與 Vue 元件模板做綁定。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/x-template"</span> <span class="attr">id</span>=<span class="string">"childarea"</span>&gt;</span></span><br><span class="line"><span class="handlebars"><span class="xml">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="handlebars"><span class="xml">    <span class="tag">&lt;<span class="name">h4</span>&gt;</span> Hello! </span><span class="template-variable">&#123;&#123; text &#125;&#125;</span><span class="xml"> <span class="tag">&lt;/<span class="name">h4</span>&gt;</span></span></span></span><br><span class="line"><span class="handlebars"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Vue-元件與-hook"><a href="#Vue-元件與-hook" class="headerlink" title="Vue: 元件與 hook"></a>Vue: 元件與 hook</h2><h3 id="hook-是什麼"><a href="#hook-是什麼" class="headerlink" title="hook 是什麼"></a>hook 是什麼</h3><p>當 Vue 生命週期到特定的點的時候，就會觸發相對應的鉤子 (hook)。</p>
+<p>較重要的 hook 有下列這些：</p>
+<ul>
+<li><code>beforeCreate()</code>: Vue 開始運行，但還沒讀到資料</li>
+<li><code>created()</code>: 建立數據觀測，要進行 AJAX 至少從這一個階段開始</li>
+<li><code>beforeMount()</code>: 準備開始編譯 Vue 的元件模板</li>
+<li><code>mounted()</code>: 模板建立完成，已掛載到 HTML DOM，要操作 DOM 元素要從這裡開始</li>
+<li><code>updated()</code>: 如果有用 <code>v-model</code> 的話，在網頁上更改資料就會連動到 Vue Model，此時這種更新資料的行為就會觸發這個 hook</li>
+<li><code>activated()</code>: 使用 <code>&lt;keepalive&gt;</code> 的元件在渲染時觸發，下次再渲染時就會直接跳到這個 hook</li>
+<li><code>deactivated()</code>: 使用 <code>&lt;keepalive&gt;</code> 的元件在取消渲染時觸發，有這個 hook 就不會觸發銷毀系列的 hook</li>
+<li><code>beforeDestroy()</code>: 取消渲染元件時觸發 (例如用 <code>v-if</code> 控制渲染與否)</li>
+<li><code>destroyed()</code>: 元件銷毀完畢，之後如果要再次渲染元件，就會從 creation 階段開始</li>
+</ul>
+<h3 id="在元件內設定-hook"><a href="#在元件內設定-hook" class="headerlink" title="在元件內設定 hook"></a>在元件內設定 hook</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> Child = &#123;</span><br><span class="line">  template: <span class="string">'#childarea'</span>,</span><br><span class="line">  data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      text: <span class="string">'Vue data 資料狀態'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  beforeCreate () &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`beforeCreate! <span class="subst">$&#123;<span class="keyword">this</span>.text&#125;</span>`</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">  ... <span class="comment">// 以下依序為各個 hook</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Vue = &#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="mounted-之後才會正確顯示-DOM-與資料"><a href="#mounted-之後才會正確顯示-DOM-與資料" class="headerlink" title="mounted() 之後才會正確顯示 DOM 與資料"></a>mounted() 之後才會正確顯示 DOM 與資料</h3><p>在一開始的 <code>x-template</code> 模板裡面，我們寫了一個 <code>&lt;h4&gt;</code>，它的內容要到 <code>mounted()</code> 階段後才會正確顯示「Hello! Vue data 資料狀態」，因為此時元件 DOM 與資料才會完整掛載在 Vue 實例上。</p>
+<h3 id="保留元件的資料狀態"><a href="#保留元件的資料狀態" class="headerlink" title="保留元件的資料狀態"></a>保留元件的資料狀態</h3><p>前面有提到，在一般情況下，取消渲染（銷毀）元件後如果要再次渲染，生命週期會從 <code>beforeCreate()</code> 重新開始。但在有些情況下，我們希望能在下次渲染時保留之前的資料狀態，此時我們可以用 <code>&lt;keepalive&gt;</code> 標籤包住元件，來維持它的生命週期。</p>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><p><a href="https://medium.com/pierceshih/vue-js-%E5%AD%B8%E7%BF%92%E7%AD%86%E8%A8%98-day14-vue%E7%94%9F%E5%91%BD%E9%80%B1%E6%9C%9F-65bc934dfd47" target="_blank" rel="external nofollow noopener noreferrer">「Vue.js 學習筆記 Day14」- Vue生命週期</a><br><a href="https://cn.vuejs.org/v2/guide/instance.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%9B%BE%E7%A4%BA" target="_blank" rel="external nofollow noopener noreferrer">官方文件：生命周期图示</a></p>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>Vue生命週期</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] 用 Vue 寫一個 todo-list</title>
+    <url>/Vuejs/20191218/266480435/</url>
+    <content><![CDATA[<p>運用已學到的基礎與進階指令，試著寫出一個 todo-list 待辦事項清單吧！</p>
+<a id="more"></a>
+
+<p>先附上成品 Demo，以下會一步步說明該如何實作一個 todo-list。</p>
+<iframe src="https://codepen.io/gretema/embed/rNNzKQj?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<h2 id="基本架構：輸入欄及待辦事項列表"><a href="#基本架構：輸入欄及待辦事項列表" class="headerlink" title="基本架構：輸入欄及待辦事項列表"></a>基本架構：輸入欄及待辦事項列表</h2><h3 id="HTML-部分"><a href="#HTML-部分" class="headerlink" title="HTML 部分"></a>HTML 部分</h3><ul>
+<li>任務輸入欄：<code>v-model=&quot;newTodo&quot;</code></li>
+<li>輸入按鈕：<code>@click=&quot;addTodo&quot;</code></li>
+<li>渲染每項任務的 <code>&lt;li&gt;</code>：<code>v-for=&quot;items in todos&quot;</code>，<code>todos</code> 是一個陣列，用來儲存所有待辦事項</li>
+<li><code>&lt;li&gt;</code> 裡面的 checkbox：checkbox 要用 <code>v-bind</code> 綁定 <code>todos</code> 中每個物件的 <code>id</code> 特性，<code>:id=&quot;item.id&quot;</code></li>
+<li><code>&lt;li&gt;</code> 裡面的 label：要指向跟 checkbox 同樣的 <code>id</code>，所以要寫成 <code>:for=&quot;item.id&quot;</code>，<code>&lt;label&gt;</code> 中間用雙花括號包住 <code>item.title</code></li>
+<li>任務的完成狀態：在 checkbox 使用 <code>v-model=&quot;item.completed&quot;</code></li>
+<li>加上按鍵功能：為了讓按下 Enter 也能產生跟點擊一樣的效果，在 input 上綁定按鍵事件，<code>@keyup.enter=&quot;addTodo&quot;</code> </li>
+</ul>
+<h3 id="Vue-的-data-部分"><a href="#Vue-的-data-部分" class="headerlink" title="Vue 的 data 部分"></a>Vue 的 data 部分</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">newTodo:<span class="string">''</span>, <span class="comment">// 一個字串，對應到任務輸入欄</span></span><br><span class="line">todos: [] <span class="comment">// 一個陣列，用來儲存所有待辦事項，對應到 &lt;li&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// todos 陣列</span></span><br><span class="line"><span class="comment">// 裡面放物件，一個物件就代表一個任務，該物件會有以下的特性</span></span><br><span class="line">&#123;</span><br><span class="line">  id: <span class="string">''</span>,</span><br><span class="line">  title: <span class="string">''</span>,</span><br><span class="line">  completed: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vue-的-methods-部分-把新事項加到列表"><a href="#Vue-的-methods-部分-把新事項加到列表" class="headerlink" title="Vue 的 methods 部分 (把新事項加到列表)"></a>Vue 的 methods 部分 (把新事項加到列表)</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">methods: &#123;</span><br><span class="line">  addTodo: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 抓取輸入的文字</span></span><br><span class="line">    <span class="keyword">var</span> value = <span class="keyword">this</span>.newTodo;</span><br><span class="line">    <span class="comment">// 賦予 id - 將當下的時間轉為數字</span></span><br><span class="line">    <span class="keyword">var</span> timestamp = <span class="built_in">Math</span>.floor(<span class="built_in">Date</span>.now());</span><br><span class="line">    <span class="comment">// 把資料以物件格式推進 todos 陣列</span></span><br><span class="line">    <span class="keyword">this</span>.todos.push(&#123; <span class="attr">id</span>: timestamp, <span class="attr">title</span>: value, <span class="attr">completed</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">    <span class="keyword">this</span>.newTodo = <span class="string">''</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="輸入欄防呆"><a href="#輸入欄防呆" class="headerlink" title="輸入欄防呆"></a>輸入欄防呆</h2><p>依照上面的設定可以順利新增任務了，但是如果沒在 <code>&lt;input&gt;</code> 打入文字也會送得出去，所以需要增加一些防止空白的效果。</p>
+<p>把 <code>addTodo()</code> 裡面的程式碼稍作修改：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">addTodo: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 加上 trim() 去除頭尾空白並防止沒鍵入文字</span></span><br><span class="line">  <span class="keyword">var</span> value = <span class="keyword">this</span>.newTodo.trim;</span><br><span class="line">  <span class="comment">// 如果輸入欄空白就不會往下執行</span></span><br><span class="line">  <span class="keyword">if</span>(!value)&#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  ... <span class="comment">// 後面一樣</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="刪除待辦事項"><a href="#刪除待辦事項" class="headerlink" title="刪除待辦事項"></a>刪除待辦事項</h2><p>刪除功能必須仰賴待辦事項在陣列中的索引值，才能辨認使用者要刪除的是哪一筆資料，所以要將索引值設參數傳入刪除按鈕綁定的事件中去處理。</p>
+<ul>
+<li>將原本 <code>&lt;li&gt;</code> 設定的 <code>v-for</code> 值改為 <code>(item, key) in todos</code>，<code>key</code> 代表待辦事項的索引值</li>
+<li>在 <code>&lt;li&gt;</code> 中的刪除按鈕綁定事件：<code>@click=&quot;removeTodo(key)&quot;</code></li>
+<li>到 <code>methods</code> 增加 <code>removeTodo()</code>：<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">removeTodo: <span class="function"><span class="keyword">function</span>(<span class="params">key</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.todos.splice(key,<span class="number">1</span>);</span><br><span class="line">  <span class="comment">// 括號中的 1 代表從該索引值起，刪除 1 筆資料</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="為已完成事項加上刪除線"><a href="#為已完成事項加上刪除線" class="headerlink" title="為已完成事項加上刪除線"></a>為已完成事項加上刪除線</h2><p>寫一個 CSS 樣式，內容是在文字上加上刪除線。<br>由於 chceckbox 上已經綁定了 <code>v-model=&quot;tem.completed&quot;</code> 可以雙向修改 data 資料中 <code>completed</code> 的值，所以接下來只要在 <code>&lt;label&gt;</code> 上切換 <code>class</code> 即可。<br>在 <code>&lt;label&gt;</code> 上設定：<code>:class=&quot;{ &#39;completed&#39;: item.completed }&quot;</code>。</p>
+<h2 id="製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項"><a href="#製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項" class="headerlink" title="製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項"></a>製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項</h2><h3 id="頁籤切換"><a href="#頁籤切換" class="headerlink" title="頁籤切換"></a>頁籤切換</h3><p>在 <code>data</code> 新增一個特性，這個特性會去感應使用者點擊的是哪一個頁籤，這邊將該特性取名作 <code>visibility</code>，且它的值可以先預設成第一頁頁籤的名稱。<br>在 HTML 頁籤結構的 <code>&lt;a&gt;</code> 上使用切換 <code>class</code> 的指令：<code>:class=&quot;{&#39;active&#39;: visibility == &#39;頁籤名稱&#39;}&quot;</code>，各個頁籤 <code>&lt;a&gt;</code> 都要加這一行，名稱記得替換。頁籤名稱可以依據各頁代表的意義來取。<br>接著在頁籤 <code>&lt;a&gt;</code> 上綁定點擊事件：<code>@click=&quot;visibility = &#39;頁籤名稱&#39;&quot;</code>。</p>
+<h3 id="頁籤過濾"><a href="#頁籤過濾" class="headerlink" title="頁籤過濾"></a>頁籤過濾</h3><p>切換頁籤的功能做好後，繼續做頁面內容的替換（過濾）。<br>剛剛我們呈現在畫面上的都是從 <code>todos</code> 陣列撈出來的資料 (原始資料)，但其實畫面上應該呈現的是過濾後的資料。<br>所以要在 <code>computed</code> 裡面新增方法，運用 <code>todos</code> 進行資料的過濾。</p>
+<p>在 <code>methods</code> 同層新增一個 <code>compute</code> 物件，並宣告一個新方法（這邊取名為 <code>filteredTodos</code>），用來執行過濾功能。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">compute:&#123;</span><br><span class="line">  filteredTodos: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.visibility==<span class="string">'全部任務頁籤名'</span>)&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.todos;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.visibility==<span class="string">'進行中任務頁籤名'</span>) &#123;</span><br><span class="line">         anotherTodos = [];</span><br><span class="line">         <span class="keyword">this</span>.todos.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">           <span class="keyword">if</span>(!item.completed) &#123;</span><br><span class="line">              anotherTodos.push(item);</span><br><span class="line">           &#125;</span><br><span class="line">         &#125;)</span><br><span class="line">        <span class="keyword">return</span> anotherTodos;</span><br><span class="line">    &#125;  <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.visibility==<span class="string">'已完成任務頁籤名'</span>) &#123;</span><br><span class="line">         anotherTodos = [];</span><br><span class="line">         <span class="keyword">this</span>.todos.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">           <span class="keyword">if</span>(item.completed) &#123;</span><br><span class="line">              anotherTodos.push(item);</span><br><span class="line">           &#125;</span><br><span class="line">         &#125;)</span><br><span class="line">        <span class="keyword">return</span> anotherTodos;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把 <code>&lt;li&gt;</code> 原本寫的 <code>v-for = &quot;(item, key) in todos&quot;</code> 的 <code>todos</code> 改為 <code>filteredTodos</code>，可以這樣寫是因為 <code>filteredTodos</code> 回傳的是一個陣列。（<code>in</code> 後面可以接陣列或物件）</p>
+<h3 id="刪除功能的修正"><a href="#刪除功能的修正" class="headerlink" title="刪除功能的修正"></a>刪除功能的修正</h3><p>加入了頁籤換頁功能後，原本的刪除功能會失靈，這是因為不同頁籤就是內容不同的陣列，因此其他頁籤的待辦事項索引值會跟在原始陣列 <code>todos</code> 不同，透過修正 <code>removeTodo()</code> 的程式碼，去比對在不同頁籤中的待辦事項 <code>id</code> 是否相同，如果 <code>id</code> 相同，就回傳它在原始陣列 <code>todos</code> 的索引值，統一從 <code>todos</code> 裡刪除，這樣才不會刪錯。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">removeTodo: <span class="function"><span class="keyword">function</span>(<span class="params">todo</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> vm = <span class="keyword">this</span>;</span><br><span class="line">  <span class="keyword">var</span> newIndex = vm.todos.findIndex(<span class="function"><span class="keyword">function</span>(<span class="params">item, key</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 這裡的 item 指的是 todos 裡的元素</span></span><br><span class="line">    <span class="keyword">return</span> todo.id === item.id;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">this</span>.todos.splice(newIndex,<span class="number">1</span>);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>原本 <code>removeTodo()</code> 是傳入 <code>key</code> 當參數，要改成 <code>todo</code>，<code>todo</code> 代表所點選的項目；刪除按鈕綁定的事件 <code>@click=&quot;removeTodo(key)&quot;</code>，要把參數 <code>key</code> 改成 <code>item</code>。</p>
+<h4 id="用變數存取-this-的必要性"><a href="#用變數存取-this-的必要性" class="headerlink" title="用變數存取 this 的必要性"></a>用變數存取 this 的必要性</h4><p>若在 <code>forEach</code> 中的 callback 函式內使用 <code>this</code> 來存取 <code>data</code> 中的屬性，就會發生讀取不到的問題，為了保險起見還是會宣告個 <code>vm</code> 變數，以確保存取的屬性是 Vue 實例中的 <code>data</code> 內的屬性。</p>
+<h2 id="雙擊修改待辦事項內容"><a href="#雙擊修改待辦事項內容" class="headerlink" title="雙擊修改待辦事項內容"></a>雙擊修改待辦事項內容</h2><h3 id="lt-li-gt-的雙擊事件"><a href="#lt-li-gt-的雙擊事件" class="headerlink" title="&lt;li&gt; 的雙擊事件"></a><code>&lt;li&gt;</code> 的雙擊事件</h3><p>在設定 <code>v-for</code> 的 <code>&lt;li&gt;</code> 上，再綁一個雙擊事件的監聽：<code>@dblclick=&quot;editTodo(item)&quot;</code></p>
+<h4 id="data-預存要編輯的任務"><a href="#data-預存要編輯的任務" class="headerlink" title="data 預存要編輯的任務"></a><code>data</code> 預存要編輯的任務</h4><p>在 <code>data</code> 新增兩個特性，用來預存要編輯的物件及該物件的文字：</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="string">cacheTodo:</span> &#123;&#125;,</span><br><span class="line"><span class="string">cacheTitle:</span> <span class="string">''</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="在-methods-增加-editTodo-方法"><a href="#在-methods-增加-editTodo-方法" class="headerlink" title="在 methods 增加 editTodo() 方法"></a>在 <code>methods</code> 增加 <code>editTodo()</code> 方法</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">editTodo: <span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">  <span class="comment">// 將雙擊的項目傳入 data</span></span><br><span class="line">  <span class="keyword">this</span>.cacheTodo = item;</span><br><span class="line">  <span class="keyword">this</span>.cacheTitle = item.title;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加編輯任務的輸入欄"><a href="#添加編輯任務的輸入欄" class="headerlink" title="添加編輯任務的輸入欄"></a>添加編輯任務的輸入欄</h3><p>把一個 <code>&lt;input&gt;</code> 寫在待辦列表 <code>&lt;li&gt;</code> 裡面的最下方（刪除按鈕的下面）。<br>這個 <code>&lt;input&gt;</code> 就是拿來編輯待辦事項用的，<code>&lt;input&gt;</code> 跟待辦事項兩者<strong>不會同時顯示</strong>，所以要在 <code>&lt;li&gt;</code> 的下一層（包住所有表單元素的 <code>&lt;div&gt;</code>）設定判斷是否要渲染一個待辦事項出來。</p>
+<ul>
+<li>在 <code>&lt;li&gt;</code> 下判斷：<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">v-if="item.id !== cacheTodo.id"</span><br><span class="line"><span class="comment">&lt;!-- 這一行的意思是：只顯示沒有被雙擊的項目 --&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>在 <code>&lt;input&gt;</code> 上設定的判斷則相反：<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">v-if="item.id == cacheTodo.id"</span><br><span class="line"><span class="comment">&lt;!-- 項目被雙擊時被 input 取代 --&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>關於渲染的邏輯</strong><br><code>v-if</code> 條件為 <code>true</code> 時會把內容的 DOM 渲染出來，條件為 <code>false</code> 時會把 DOM 移掉。</p>
+<ol>
+<li>雙擊 <code>&lt;li&gt;</code> 時，產生 <code>cacheTodo.id</code>，讓 <code>item.id == cacheTodo.id</code> 為 <code>true</code>，所以 <code>&lt;input&gt;</code> 就會渲染出來 。</li>
+<li>沒有雙點擊 <code>&lt;li&gt;</code> 時， 不會產生 <code>cacheTodo.id</code>，讓 <code>item.id !== cacheTodo.id</code> 為 <code>true</code>，所以待辦事項就會渲染出來。</li>
+</ol>
+<h3 id="lt-input-gt-欄位中顯示被雙擊的任務文字"><a href="#lt-input-gt-欄位中顯示被雙擊的任務文字" class="headerlink" title="&lt;input&gt; 欄位中顯示被雙擊的任務文字"></a><code>&lt;input&gt;</code> 欄位中顯示被雙擊的任務文字</h3><p>在 <code>&lt;input&gt;</code> 上設定：<code>v-model=&quot;cacheTitle&quot;</code>。</p>
+<h3 id="按下-Esc-鍵時取消編輯"><a href="#按下-Esc-鍵時取消編輯" class="headerlink" title="按下 Esc 鍵時取消編輯"></a>按下 Esc 鍵時取消編輯</h3><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML input --&gt;</span></span><br><span class="line">@keyup.esc="cancelEdit()"</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// JS methods</span></span><br><span class="line">cancelEdit: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="comment">// 切換到未雙擊時的狀態</span></span><br><span class="line">  <span class="keyword">this</span>.cacheTodo = &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="項目修改完成"><a href="#項目修改完成" class="headerlink" title="項目修改完成"></a>項目修改完成</h3><p>按下 Enter 鍵就用新文字替換掉舊的，在 <code>&lt;input&gt;</code> 上設定：<code>@keyup.enter=&quot;doneEdit(item)&quot;</code>。<br>到 <code>methods</code> 去新增方法：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">doneEdit: <span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">  <span class="comment">// 按下 Enter 的瞬間把編輯中文字變為編輯完成的項目</span></span><br><span class="line">  item.title = <span class="keyword">this</span>.cacheTitle;</span><br><span class="line">  <span class="comment">// 回復到未點擊狀態</span></span><br><span class="line">  <span class="keyword">this</span>.cacheTitle = <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">this</span>.cacheTodo = &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>關於將暫存資料清空</strong><br>將 <code>doneEdit</code> 方法中的 <code>this.cacheTitle = &#39;&#39;;</code> 刪除也不會影響功能，是因為在 <code>editTodo</code> 方法中已經用 <code>this.cacheTitle = item.title;</code> 先把 <code>this.cacheTitle</code> 的內容用當下這筆事項的內容取代了，當編輯不同筆事項時，<code>this.cacheTitle</code> 中的值都會被使用者正在編輯的事項內容給取代。</p>
+<p>如果沒有 <code>this.cacheTitle = &#39;&#39;</code> ; 編輯完成後 <code>cacheTitle</code> 的值就會固定成改變後的值，而不是原來預設在 <code>data</code> 裡的空值。雖然 <code>editTodo</code> 方法中已經寫好了替換編輯內容的效果，但假設有要再用 <code>cacheTitle</code> 做其他資料的處理，可能就會受影響，所以保險起見把它的值歸零。</p>
+<h2 id="未完成任務數目與清除所有任務"><a href="#未完成任務數目與清除所有任務" class="headerlink" title="未完成任務數目與清除所有任務"></a>未完成任務數目與清除所有任務</h2><h3 id="未完成任務數目"><a href="#未完成任務數目" class="headerlink" title="未完成任務數目"></a>未完成任務數目</h3><ul>
+<li>在 <code>computed</code> 新增方法，目的是計算 <code>todos.completed</code> 為 <code>false</code> 的數量</li>
+<li>用 <code>filter()</code> 過濾 <code>todos</code></li>
+<li>取得一個未完成任務組成的陣列</li>
+<li>用 <code>compute</code> 方法 <code>return</code> 這個陣列的長度</li>
+<li>在 HTML 中用雙花括號插入 <code>compute 方法名</code></li>
+</ul>
+<h3 id="清除所有任務"><a href="#清除所有任務" class="headerlink" title="清除所有任務"></a>清除所有任務</h3><ul>
+<li>在「清除所有任務」<code>&lt;a&gt;</code> 上綁定事件監聽</li>
+<li>在 <code>methods</code> 新增方法，把 <code>todos</code> 宣告為空陣列即可</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>todolist</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] 進階指令與模板語法 (下)</title>
+    <url>/Vuejs/20191218/2429605945/</url>
+    <content><![CDATA[<p>本篇筆記要繼續分享 Vue 中一些指令的進階用法與使用細節，基本上是 Vue 基礎概述篇的延伸，不過也會提到一些新的東西。<br>我超不會寫前言，就不廢話了，直接開始吧！</p>
+<a id="more"></a>
+
+<h2 id="v-if-v-else-v-if-else"><a href="#v-if-v-else-v-if-else" class="headerlink" title="v-if / v-else / v-if-else"></a>v-if / v-else / v-if-else</h2><p>在一個 HTML 元素上使用 <code>v-if=&quot;data資料&quot;</code>，當資料的值為 <code>true</code> 時才會渲染這個 DOM；而在 <code>v-if</code> 相鄰的 HTML 元素上使用 <code>v-else</code>，就能把 <code>v-if</code> 判斷為 <code>false</code> 的資料渲染在這個 DOM 上。</p>
+<p><code>v-else-if</code> 用於渲染條件<strong>多於兩個以上</strong>時，第一個條件用 <code>v-if=&quot;條件</code>“，第二跟第三個就可以用 <code>v-else-if=&quot;其他條件&quot;</code> 。</p>
+<h3 id="v-if-跟-v-show-的差異"><a href="#v-if-跟-v-show-的差異" class="headerlink" title="v-if 跟 v-show 的差異"></a>v-if 跟 v-show 的差異</h3><p><code>v-show</code> 是控制 HTML 元素的 <code>display</code>，所以 <code>v-show</code> 為 <code>false</code> 的 HTML 元素其實還是有被渲染出來，只是 <code>display: none</code> 而已；<code>v-if</code> 是指渲染出符合條件的 HTML 元素，不符合的就不會渲染。</p>
+<h3 id="模板-lt-template-gt"><a href="#模板-lt-template-gt" class="headerlink" title="模板 &lt;template&gt;"></a>模板 <code>&lt;template&gt;</code></h3><p><code>&lt;template&gt;</code> 的使用時機在於，想要使用 Vue 指令，但不希望 HTML 標籤輸出時。<br>在 <code>&lt;template&gt;</code> 裡的子元素不會被渲染出來，可以一次控制多個 DOM。如果在 <code>&lt;template&gt;</code> 使用 <code>v-if</code>，那麼條件為 <code>true</code> 時，就能渲染出 <code>&lt;template&gt;</code> 內的子元素。</p>
+<h2 id="compued-與-watch"><a href="#compued-與-watch" class="headerlink" title="compued 與 watch"></a>compued 與 watch</h2><p><code>computed</code> 與 <code>watch</code> 都是專門放函式的 Vue 實例特性，兩者很像，因為都會隨著資料做變化，但兩者最大差異在於<strong>會不會變動 data 資料</strong>，<code>computed</code> 裡的 <code>function</code> 在資料變動時才會執行、渲染；而 <code>watch</code> 相反，是<strong>主動去監控及變動 data 資料</strong>，當資料變動時就執行特定 <code>function</code>。</p>
+<p>所以可以整理成以下的比較：</p>
+<ul>
+<li><code>methods</code>：需要主動觸發，且可以多次重複觸發</li>
+<li><code>computed</code>：當資料出現變化且需要改變畫面的 <code>function</code> 放這裡</li>
+<li><code>watch</code>：監控特定資料變化的 <code>function</code> 就放這裡</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">watch: &#123;</span><br><span class="line">  監控的 data 特性: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">this</span>.data特性 = <span class="literal">false</span>;</span><br><span class="line">    &#125;, <span class="number">3000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="表單細節操作"><a href="#表單細節操作" class="headerlink" title="表單細節操作"></a>表單細節操作</h2><h3 id="用-v-for-製作多個-lt-option-gt-："><a href="#用-v-for-製作多個-lt-option-gt-：" class="headerlink" title="用 v-for 製作多個 &lt;option&gt;："></a>用 v-for 製作多個 <code>&lt;option&gt;</code>：</h3><p><code>&lt;select&gt;</code> 下拉式選單標籤裡面包的是好幾個 <code>&lt;option&gt;</code>，也就是選項，可以透過 <code>v-for</code> 製作多個 <code>&lt;option&gt;</code> 。</p>
+<ol>
+<li>在 <code>data</code> 先寫好要放進 <code>&lt;option&gt;</code> 的資料（陣列格式）</li>
+<li>寫一個 HTML <code>&lt;option&gt;</code>，並設定 <code>:value=&quot;item&quot;</code>，及 <code>v-for=&quot;item in 資料陣列&quot;</code></li>
+<li>在 <code>&lt;option&gt;</code> 中插入 <code></code></li>
+</ol>
+<h3 id="lt-select-gt-多選："><a href="#lt-select-gt-多選：" class="headerlink" title="&lt;select&gt; 多選："></a><code>&lt;select&gt;</code> 多選：</h3><p>跟上面的程式碼大同小異，不過要在 <code>&lt;select&gt;</code> 多加一個 <code>multiple</code> 屬性。</p>
+<h3 id="checkbox-與-data-的切換"><a href="#checkbox-與-data-的切換" class="headerlink" title="checkbox 與 data 的切換"></a>checkbox 與 data 的切換</h3><p>在 checkobx 使用 <code>true-value</code> 與 <code>false-value</code> 屬性，例如下面的程式碼，當勾選（<code>true</code>）時會使 <code>data.sex</code> 為男生，沒勾選（<code>false</code>）時會使 <code>data.sex</code> 為女生。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// data 裡其中一筆資料如下：</span></span><br><span class="line">sex: <span class="string">"男生"</span>,</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"checkbox"</span> <span class="attr">id</span>=<span class="string">"sex"</span> <span class="attr">v-model</span>=<span class="string">"sex"</span> <span class="attr">true-value</span>=<span class="string">"男生"</span> <span class="attr">false-value</span>=<span class="string">"女生"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"sex"</span>&gt;</span>&#123;&#123; sex &#125;&#125;<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="表單欄位修飾符"><a href="#表單欄位修飾符" class="headerlink" title="表單欄位修飾符"></a>表單欄位修飾符</h3><ul>
+<li><code>.lazy</code>：跟 <code>v-model</code> 搭配使用，原本 Vue 預設輸入的資料會與 <code>data</code> 同步，使用 <code>.lazy</code> 後就相當於使用 <code>change</code> 事件</li>
+<li><code>.number</code>：將字串轉型為數字</li>
+<li><code>.trim</code>：將字元間的空白去除</li>
+</ul>
+<h2 id="事件修飾符"><a href="#事件修飾符" class="headerlink" title="事件修飾符"></a>事件修飾符</h2><p>以下修飾符都是加在 <code>v-on: 事件</code> 後面的後綴：</p>
+<ul>
+<li>.stop — 中止冒泡，等於 <code>event.stopPropagation()</code>。</li>
+<li>.prevent — 取消預設送出的行為，等於 <code>event.preventDefault()</code>。</li>
+<li>.capture — 監聽事件時使用事件捕捉模式。</li>
+<li>.self — 使用這個修飾符的作用是，當 event.target 是綁定監聽的元素時才觸發函式。</li>
+<li>.once — 使用這個修飾符的作用是，讓事件只被觸發一次。</li>
+</ul>
+<h2 id="按鍵修飾符"><a href="#按鍵修飾符" class="headerlink" title="按鍵修飾符"></a>按鍵修飾符</h2><p>在鍵盤事件後加上特定 keyCode 或別名，當事件是從特定鍵觸發時，才執行函式。<br>又分成以下兩種修飾：</p>
+<ul>
+<li>按鍵碼別名修飾：因為 keyCode 很難記，所以 Vue 提供常用的按鍵別名可以拿來當修飾符，例如 <code>.enter</code>, <code>.tab</code>, <code>.delete</code>, <code>.esc</code>, <code>.space</code>, <code>.up</code>, <code>.down</code>, <code>.left</code>, <code>.right</code></li>
+<li>系統修飾鍵：在事件後面加系統修飾鍵當後綴，使用時就必須搭配游標或別名修飾按鍵，才會觸發事件，例如 <code>.ctrl</code>, <code>.alt</code>, <code>.shift</code>, <code>.meta</code><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Alt + C --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> @<span class="attr">keyup.alt.67</span>=<span class="string">"clear"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Ctrl + Click --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> @<span class="attr">click.ctrl</span>=<span class="string">"doSomething"</span>&gt;</span>Do something<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="滑鼠修飾符"><a href="#滑鼠修飾符" class="headerlink" title="滑鼠修飾符"></a>滑鼠修飾符</h2><ul>
+<li>.left：當點擊滑鼠左鍵時觸發。</li>
+<li>.right：當點擊滑鼠右鍵時觸發。</li>
+<li>.middle：當點擊滑鼠中鍵時觸發。</li>
+</ul>
+<hr>
+<p>參考資料：<a href="https://cn.vuejs.org/v2/guide/events.html" target="_blank" rel="external nofollow noopener noreferrer">Vue.js 官方文件的許多部份</a></p>
+<p>順便補上跟本篇有關的<a href="https://gretema.github.io/Vuejs/20191218/150943901/">基礎概述</a>。</p>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] 進階指令與模板語法 (上)</title>
+    <url>/Vuejs/20191218/2311842168/</url>
+    <content><![CDATA[<p>了解了 Vue 的基本指令以後，接著繼續來了解指令及模板的進階用法吧！</p>
+<a id="more"></a>
+
+<h2 id="v-once-—-單次綁定"><a href="#v-once-—-單次綁定" class="headerlink" title="v-once — 單次綁定"></a>v-once — 單次綁定</h2><p><code>v-text</code> 跟 <code>v-once</code> 同時寫在一個 HTML 元素上，如此一來這個元素的內容在第一次寫入完成後，之後就不會再被變動。</p>
+<h2 id="雙花括號輸出資料加總"><a href="#雙花括號輸出資料加總" class="headerlink" title="雙花括號輸出資料加總"></a>雙花括號輸出資料加總</h2><p>如果 <code>data</code> 中有多個特性的值為數字，可以用雙花括號在 HTML 輸出這些特性作為變數組成的算式，並在畫面上渲染出計算結果；或者也可以將數個字串型別的特性直接在雙花括號中串接，一樣可以渲染出字串連接的結果。</p>
+<h2 id="動態操控-disabled-屬性"><a href="#動態操控-disabled-屬性" class="headerlink" title="動態操控 disabled 屬性"></a>動態操控 disabled 屬性</h2><p>用 <code>v-bind</code> 綁定 <code>disabled</code> 屬性與 <code>data</code> 特性，當切換對應的 <code>data</code> 值（值為布林）時，就能隨之切換 HTML 的可用狀態。</p>
+<h2 id="動態切換-className-的多種寫法"><a href="#動態切換-className-的多種寫法" class="headerlink" title="動態切換 className 的多種寫法"></a>動態切換 className 的多種寫法</h2><ul>
+<li><p>用物件帶值：在 <a href="https://gretema.github.io/Vuejs/20191218/150943901/">Vue 基礎概述 (下)</a> 講過，也就是在要切換 <code>className</code> 的 HTML 元素上使用 <code>v-bind</code> 並且值用<strong>物件形式</strong>帶入，像下面這樣：<br><code>:class=&quot;{&#39;要加入的 className&#39;: 判斷式}&quot;</code> </p>
+</li>
+<li><p>用陣列帶值：在 data 創一個<strong>空陣列</strong>，在要套用 <code>className</code> 的元素上設定 <code>:class=&quot;data 陣列名&quot;</code>，觸發切換的元素加上 <code>v-model=&quot;data 陣列名&quot;</code> 及 <code>value=&quot;要切換的 className&quot;</code>，這樣如果要啟用 <code>className</code> 就能透過觸發元素將 <code>value</code> 傳進 <code>data</code> 裡的陣列，而如果要拿掉 <code>className</code> 一樣也是透過觸發元素刪掉該陣列中的 <code>value</code>。</p>
+</li>
+</ul>
+<h2 id="插入行內樣式-style"><a href="#插入行內樣式-style" class="headerlink" title="插入行內樣式 (style)"></a>插入行內樣式 (style)</h2><ul>
+<li><p>用物件帶值：要注意 style 樣式屬性的名稱跟 CSS 不太一樣，style 的樣式屬性採用駝峰式命名法。也可以用<strong>參數</strong>的方式從 data 傳物件到 style 屬性，這樣做的話可以在物件內放入數個特性（樣式）</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 基本款 --&gt;</span></span><br><span class="line">:style="&#123;'樣式屬性': '樣式的值'&#125;"</span><br><span class="line"><span class="comment">&lt;!-- 傳參數版 --&gt;</span></span><br><span class="line">:style="styleObject"</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用陣列帶值：陣列元素必須以<strong>物件方式</strong>寫入；或用<strong>參數</strong>，可以在陣列內放入數個物件參數。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 基本款 --&gt;</span></span><br><span class="line">[&#123;'樣式屬性1': '樣式的值1'&#125;, &#123;'樣式屬性2': '樣式的值2'&#125;]</span><br><span class="line"><span class="comment">&lt;!-- 傳參數版 --&gt;</span></span><br><span class="line">[styleObject1, styleObject2]</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="v-for-使用細節"><a href="#v-for-使用細節" class="headerlink" title="v-for 使用細節"></a>v-for 使用細節</h2><p>可以用於疊代 data 中的陣列及物件。</p>
+<h3 id="v-for-與-key-屬性"><a href="#v-for-與-key-屬性" class="headerlink" title="v-for 與 key 屬性"></a>v-for 與 key 屬性</h3><p>引述自官網：「使用 v-for 渲染的元素列表時，默認使用『就地更新』的策略。如果數據項的順序被改變，Vue 將<strong>不會移動 DOM 元素</strong>來匹配數據項的順序，而是就地更新每個元素，並且確保它們在每個索引位置正確渲染。」</p>
+<p>也就是說，預設狀況下，資料的<strong>索引值是固定的</strong>，當畫面上資料順序變換時，是將內容進行替換，而不是替換 DOM 元素位置。</p>
+<p>如果希望 DOM 元素位置替換呢？在每筆資料上綁定 key 屬性，該屬性必須對應一個唯一值。<br>參照：<a href="https://cn.vuejs.org/v2/guide/list.html" target="_blank" rel="external nofollow noopener noreferrer">官方文件（列表渲染）</a>、<a href="https://juejin.im/post/5cb06250f265da03b204207e" target="_blank" rel="external nofollow noopener noreferrer">如何理解vue的key属性</a></p>
+<h3 id="v-for-跟-filter-連用"><a href="#v-for-跟-filter-連用" class="headerlink" title="v-for 跟 filter() 連用"></a>v-for 跟 filter() 連用</h3><p>來寫一個可以過濾資料的小範例吧！</p>
+<ol>
+<li>結構：</li>
+</ol>
+<ul>
+<li><strong>data 資料</strong> - <code>arrayData</code> 為一個包含多個物件資料的陣列</li>
+<li><strong>負責輸入的 HTML 元素</strong>（例如 input text） - 設定 <code>v-model=&quot;filterText&quot;</code>（等一下過濾 <code>arrayData</code> 的條件）</li>
+<li><strong>負責輸出的 HTML 元素</strong> - 設定 <code>v-for=&quot;(item,key) in filterArray&quot;</code>（<code>filterArray</code> 初始狀態為空陣列）</li>
+</ul>
+<ol start="2">
+<li><p>在 <code>methods</code> 新增方法：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">filterData: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> vm = <span class="keyword">this</span>;</span><br><span class="line">  <span class="comment">// 用 for loop 時裡面的 this 不是指向 Vue，所以要在外面先定義好 this</span></span><br><span class="line">  vm.filterArray = vm.arrayData.filter(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> item.name.match(vm.filterText);</span><br><span class="line">  <span class="comment">// 回傳與輸入文字相符的 name 值</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>⚠️ <code>match()</code> 方法：<br>用於在字串中檢索指定的值，此方法類似 <code>indexOf()</code>，不過它回傳的是指定的值而不是索引值。</p>
+</li>
+<li><p>實際運行</p>
+<iframe src="https://codepen.io/gretema/embed/OJJdgor?height=265&theme-id=default&default-tab=js,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+</li>
+</ol>
+<h3 id="v-for-無法運行的狀況"><a href="#v-for-無法運行的狀況" class="headerlink" title="v-for 無法運行的狀況"></a>v-for 無法運行的狀況</h3><p>在 <code>methods</code> 方法中用陣列特性及索引去修改 <code>data</code> 資料是無效的，因為 Vue 無法探測普通的新增屬性。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 無效的修改方式</span></span><br><span class="line"><span class="keyword">this</span>.arrayData.length = <span class="number">0</span>; <span class="comment">// arrayData 的陣列元素依然存在陣列中</span></span><br><span class="line"><span class="keyword">this</span>.arrayData[<span class="number">0</span>] = &#123;</span><br><span class="line">  name: <span class="string">'阿強'</span>,</span><br><span class="line">  age: <span class="number">99</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正確修改的方式是用 <code>Vue.set()</code> 新增 <code>data</code> 裡沒有的資料，用這個方式才能讓資料保持響應式，帶動 View 正常更新。</p>
+<p><code>Vue.set()</code> 第一個參數是<strong>陣列名</strong>，第二個參數是陣列元素<strong>索引值</strong>，第三個是<strong>要新增的內容</strong>。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">Vue.set(<span class="keyword">this</span>.arrayData, <span class="number">0</span>, &#123;</span><br><span class="line">  name: <span class="string">'阿強'</span>,</span><br><span class="line">  age: <span class="number">99</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="v-for-用於純數字"><a href="#v-for-用於純數字" class="headerlink" title="v-for 用於純數字"></a>v-for 用於純數字</h3><p>在 HTML 元素上使用 <code>v-for=&quot;item in 10&quot;</code>，並在標籤內用雙花括號包住 <code>item</code> 就能渲染出 1 到 10 的數字。</p>
+<h3 id="v-for-用於-lt-template-gt"><a href="#v-for-用於-lt-template-gt" class="headerlink" title="v-for 用於 &lt;template&gt;"></a>v-for 用於 <code>&lt;template&gt;</code></h3><p>在 <code>&lt;template&gt;</code> 使用 <code>v-for</code>，可以讓內部的子元素以<strong>群組</strong>的方式一起疊代。</p>
+<p>⚠️ HTML <code>&lt;template&gt;</code> 模板結構：</p>
+<p>模板結構中的內容在頁面載入時不受渲染，但可以在運行時使用 JavaScript 實例化。</p>
+<p>你可以把 <code>&lt;template&gt;</code> 想成文件裡面，被儲存以待<strong>稍後使用</strong>的內容片段。在頁面載入時，解析器雖然會處理 <code>&lt;template&gt;</code> 元件的內容，但元素本身並<strong>不會被渲染</strong>。</p>
+<p><code>&lt;template&gt;</code> 內的內容可以用 JavaScript 抓取節點、複製到要插入的 DOM 之下，類似這樣：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 在 template 上面有一些表格元素 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span> <span class="attr">id</span>=<span class="string">"itemRow"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// JS</span></span><br><span class="line"><span class="keyword">var</span> template = <span class="built_in">document</span>.querySelector(<span class="string">'#itemRow'</span>);</span><br><span class="line"><span class="keyword">var</span> td = t.content.querySelectorAll(<span class="string">"td"</span>);</span><br><span class="line">td[<span class="number">0</span>].textContent = <span class="string">"123"</span>;</span><br><span class="line">td[<span class="number">1</span>].textContent = <span class="string">"abc"</span>;</span><br><span class="line"><span class="keyword">var</span> clone = <span class="built_in">document</span>.importNode(template.content, <span class="literal">true</span>);</span><br><span class="line">要插入的DOM.appendChild(clone);</span><br></pre></td></tr></table></figure>
+
+<p>⚠️ 關於 <code>importNode()</code><br><code>importNode()</code> 是 <code>document</code> 物件的方法，功用是把一個節點從另一個文件（document）複製到該文件以便運用。第二個參數（布林值）必填，如果為 <code>true</code>，會複製 <code>importNode()</code> 的所有子節點。</p>
+<p>參考資料：<a href="https://www.zhangxinxu.com/wordpress/2014/07/hello-html5-template-tag/" target="_blank" rel="external nofollow noopener noreferrer">HTML5 <code>&lt;template&gt;</code> 标签元素简介</a>、<a href="https://developer.mozilla.org/zh-TW/docs/Web/HTML/Element/template" target="_blank" rel="external nofollow noopener noreferrer">&lt;template — HTML&gt; | MDN</a></p>
+<h3 id="v-for-與-v-if-連用"><a href="#v-for-與-v-if-連用" class="headerlink" title="v-for 與 v-if 連用"></a>v-for 與 v-if 連用</h3><p>當 <code>v-for</code> 與 <code>v-if</code> 同時綁在一個元素上時，<code>v-for</code> 先執行，接著才執行 <code>v-if</code>。兩者連用可以從迴圈中過濾出符合條件的結果。不過這樣做會導致畫面上雖然只渲染部分資料，但卻必須巡訪過全部資料才能輸出。</p>
+<p>因此 Vue 官方建議在 <code>computed</code> 新增方法，使用 <code>filter()</code> 進行條件過濾，此時 <code>v-for</code> 對應的值要改為 <code>item in 方法名</code>，比較能提升效能。</p>
+<p>另外一個提升效能的方法是把 <code>v-if</code> 放在 <code>v-for</code> 的<strong>父層元素</strong>，如此一來我們不會再對列表中的每個項目檢查條件，取而代之的是，我們只檢查它一次，且不會在條件不成立的時候運算 <code>v-for</code>。</p>
+<p>參照：<a href="https://cn.vuejs.org/v2/style-guide/#%E9%81%BF%E5%85%8D-v-if-%E5%92%8C-v-for-%E7%94%A8%E5%9C%A8%E4%B8%80%E8%B5%B7-%E5%BF%85%E8%A6%81" target="_blank" rel="external nofollow noopener noreferrer">避免 v-if 和 v-for 用在一起（官方文件）</a></p>
+<hr>
+<p>下篇要講的是 <code>v-if</code>、<code>compued</code> 與 <code>watch</code>、表單細節操作、<code>v-on</code> 細節。</p>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] Vue.js 基礎概述 (下)</title>
+    <url>/Vuejs/20191218/150943901/</url>
+    <content><![CDATA[<p>上一篇有提到一部份的基礎指令，今天要繼續介紹上一篇沒講完的部分。</p>
+<a id="more"></a>
+
+<h2 id="v-on-—-事件監聽"><a href="#v-on-—-事件監聽" class="headerlink" title="v-on — 事件監聽"></a>v-on — 事件監聽</h2><p>在要監聽的 HTML 元素上加上 <code>v-on: 事件 = &quot;方法名稱()&quot;</code>，在 <code>data</code> 物件同層新增 <code>methods</code> 物件，裡面寫入一個特性，其值為函式（=方法），這個特性的名稱就是要填入 <code>v-on</code> 屬性中的「方法名稱」。 <code>v-on:</code> 的縮寫是 <code>@</code> 。</p>
+<p>範例：</p>
+<iframe src="https://codepen.io/gretema/embed/ExxOYxY?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<p>之前學 <code>this</code> 的時候曾學到，<code>this</code> 指向的是它所在的函式隸屬的物件，因此可能會有人疑惑為何 <code>reverseText()</code> 中是寫成 <code>this.newText</code> 跟 <code>this.text</code>，畢竟 <code>reverseText</code> 所在的物件是 <code>methods</code>，那 this 不就是指向 <code>methods</code> 嗎？</p>
+<p>在這裡可以把 <code>data</code> 想成 JavaScript 裡的全域變數（會變成 window 物件的其中一個特性），先宣告好就可給 <code>method</code> 物件裡面的方法去使用。</p>
+<h2 id="預先定義資料結構"><a href="#預先定義資料結構" class="headerlink" title="預先定義資料結構"></a>預先定義資料結構</h2><p>由於畫面跟資料可以雙向地變動，因此預先把程式碼的架構給定義出來是很重要的。</p>
+<h2 id="修飾符"><a href="#修飾符" class="headerlink" title="修飾符"></a>修飾符</h2><p>一種加在指令後面的後綴，例如在 <code>v-on</code> 後面加上 <code>.prevent</code> 修飾符就代表了 <code>event.preventDefault()</code>，使用修飾符可以讓我們少寫幾行程式碼。跟事件搭配的後綴在官方文件的<a href="https://cn.vuejs.org/v2/guide/events.html#%E4%BA%8B%E4%BB%B6%E4%BF%AE%E9%A5%B0%E7%AC%A6" target="_blank" rel="external nofollow noopener noreferrer">事件處理章節</a>有列出來。</p>
+<h2 id="動態切換-class"><a href="#動態切換-class" class="headerlink" title="動態切換 class"></a>動態切換 class</h2><p>在要動態切換 <code>class</code> 的 HTML 元素上用 <code>v-bind</code> 來設定參數，結構像這樣：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span> <span class="attr">:class</span>=<span class="string">"&#123; '要加入的 className': 判斷式&#125;"</span> &gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 在大括號內允許傳入多個要切換的 className --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以切換 <code>className</code> 來說，通常判斷式的內容會寫入一個 <code>data</code> 物件中的特性，而該特性的值為<strong>布林值</strong>。</p>
+<p>以「按下按鈕就讓一個正方形 box 旋轉」為例：</p>
+<iframe src="https://codepen.io/gretema/embed/wvvQwKm?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<p>在這個範例中，按下按鈕觸發的事件，會將 <code>data</code> 物件中 <code>isTransform</code> 特性的值顛倒，再配合 <code>.box</code> 增加 <code>className</code> 的條件，就達到 toggle <code>.rotate</code> 的效果。</p>
+<h2 id="computed-—-計算屬性"><a href="#computed-—-計算屬性" class="headerlink" title="computed — 計算屬性"></a>computed — 計算屬性</h2><p><code>computed</code> 物件跟 <code>data</code> 物件同層，它裡面放的只會是有取特性名稱的方法，這些方法用來 <code>return</code> 一個值且儲存在方法對應的特性裡（類似變數的性質）。</p>
+<p>範例：</p>
+<iframe src="https://codepen.io/gretema/embed/MWWzgbd?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<p><code>computed</code> 物件的 <code>reverseText()</code> 中，已經定義了回傳的值是以 <code>this.text</code> 的值為計算基礎（這裡的 <code>this</code> 依然是指全域），一旦 <code>data</code> 物件裡的 <code>text</code> 值變更，<code>reverseText()</code> 回傳的值也會隨之變動。</p>
+<p>以執行結果來說，<code>computed</code> 跟 <code>methods</code> 裡面的方法，輸出的結果確實是一樣的，但是兩者<strong>執行函式的方式不同</strong>。<br><code>computed</code> 裡的方法<strong>不是</strong>依靠觸發來執行的，只要它所依附的計算基礎沒有變動，就不會再次執行，只會固定輸出之前計算的結果；而 <code>methods</code> 則是<strong>依靠觸發</strong>，每次觸發都會再次執行函式。</p>
+<h2 id="表單輸入綁定"><a href="#表單輸入綁定" class="headerlink" title="表單輸入綁定"></a>表單輸入綁定</h2><p>將使用者在表單上輸入的內容記錄到 Model 裡，主要就是用 <code>v-model</code> 進行資料綁定。</p>
+<ul>
+<li>單一個 checkbox：設定 <code>v-model</code> 指向對應的特性，這樣點選時就能切換布林值。</li>
+<li>多選：checkbox 所有選項都要設定 <code>value</code> 屬性及 <code>v-model</code>，且 <code>v-model</code> 都要指向 <code>data</code> 裡同一個<strong>陣列</strong>，這樣勾選選項時，每個選項的 <code>value</code> 就會寫進陣列裡。</li>
+<li>單選：radio 也是所有選項都要設定 <code>value</code> 屬性及 <code>v-model</code>，且 <code>v-model</code> 都要指向 <code>data</code> 裡同一個<strong>特性</strong>，這樣就只會寫入一個值。</li>
+<li><code>&lt;select&gt;</code> 下拉選單：<code>&lt;select&gt;</code> 用 <code>v-model</code> 指向對應的<strong>特性</strong>，<code>&lt;select&gt;</code> 裡面是 <code>&lt;option&gt;</code> 選項。第一個 <code>&lt;option&gt;</code> 可以把 <code>value</code> 屬性的值空著，文字就寫些「請選擇」之類的初始選項，如果不想被使用者誤觸的話，可以再加上 <code>disabled</code> 屬性。其他選項都要填入 <code>value</code> 值，才能正確寫入對應特性中，不過 <code>value</code> 值不一定要跟選項文字相同。</li>
+</ul>
+<h2 id="元件-components-基礎"><a href="#元件-components-基礎" class="headerlink" title="元件 (components) 基礎"></a>元件 (components) 基礎</h2><p>元件可以複用，它在 HTML 中以標籤的形式表現，而標籤名是自定義的元件名稱。</p>
+<p>之前的指令都是寫在 Vue 實例裡，元件則是寫在 Vue 實例外面，而且順序要擺在 Vue 實例之前。因為解譯器是依序執行的，它會先讀到 HTML 的元件標籤，所以必須讓解譯器在 JS 檔案中馬上讀到關於元件的程式碼。</p>
+<p>範例：</p>
+<iframe src="https://codepen.io/gretema/embed/eYYQOMm?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<p>元件的資料會寫在 <code>Vue.components()</code> 的小括號裡面，小括號內有兩個參數，第一個參數是<strong>自訂元件的名稱</strong>（跟在 HTML 的標籤名相同），第二個參數是<strong>一個物件</strong>，該物件內要寫入一個 <code>data</code> 特性跟一個 <code>template</code> 特性。</p>
+<p><code>data</code> 特性對應的是一個函式，該函式必須 <code>return</code> 一個物件，該物件裡面放的就是專屬於這個元件的資料。</p>
+<p><code>data</code> 寫好後，開始寫 <code>template</code> 特性。<code>template</code> 特性負責的是這個元件的 HTML 結構，所以對應的值是用<strong>反引號</strong>包起來的「含有 HTML 標籤的字串」，在這裏面可以運用 <code>data</code> 的內容。</p>
+<p>雖然我們在 HTML 中寫的元件是用元件名稱當標籤，但是用 chrome 開發人員工具看 HTML 結構時會發現，原本的元件標籤呈現出來的程式碼會是 template 組出來的內容。</p>
+<hr>
+<p>以上就是 Vue 的基礎指令，這些指令都還有一些使用細節可以延伸來介紹，之後會再整理相關筆記。</p>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] Vue.js 基礎概述 (上)</title>
+    <url>/Vuejs/20191217/300157404/</url>
+    <content><![CDATA[<h2 id="Vue-js-簡介"><a href="#Vue-js-簡介" class="headerlink" title="Vue.js 簡介"></a>Vue.js 簡介</h2><blockquote><p>Vue.js 是一款流行的 JavaScript 前端框架，旨在更好地組織與簡化 Web 開發。Vue 所關注的核心是 MVC 模式中的視圖層（View），同時，它也能方便地取得資料更新，並通過組件內部特定的方法實現視圖（View）與模型（Model）的互動。</p>
+<footer><strong>——維基百科</strong></footer></blockquote>
+
+<a id="more"></a>
+
+<p>總結一下維基百科對 Vue 的介紹，Vue 作為一款 JavaScript 的框架，有兩個特點：</p>
+<ol>
+<li>直觀語法：借鏡於 MVVM 模式，畫面與資料雙向綁定，所見即所得。</li>
+<li>多樣化延伸工具：可用來開發 SPA（單頁應用程式） 及傳統多頁應用程式。</li>
+</ol>
+<h2 id="從建立應用程式開始"><a href="#從建立應用程式開始" class="headerlink" title="從建立應用程式開始"></a>從建立應用程式開始</h2><ul>
+<li><p>宣告一個 Vue 實例：使用 <code>new</code> 關鍵字來宣告。一個網頁上可以放不只一個 Vue 實例，但不能在一個 Vue 實例中包另一個 Vue 實例（不可巢狀）。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">var</span> app2 = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>綁定 DOM：一個 Vue 實例生成後必須綁定一個 HTML 元素，所以要綁定的 HTML 元素應該要設有 <code>id</code>。Vue 綁定 DOM 的方法是在剛剛宣告的 Vue 實例中放入 <code>el: &#39;元素 id&#39;</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt; ... &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ JS</span></span><br><span class="line"><span class="regexp">var app = new Vue(&#123;</span></span><br><span class="line"><span class="regexp">  el: '#app', /</span><span class="regexp">/ HTML id</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>把資料呈現在畫面上：在 Vue 實例中繼續放入資料，資料內容是以物件形式寫入。而要把資料內容呈現在畫面上，則要在綁定的 HTML 元素中，放入兩對大括號（雙花括號），雙花括號中間包著資料的特性名稱。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;p&gt; &#123;&#123; text &#125;&#125; &lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br><span class="line"><span class="comment">// JS</span></span><br><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    text: <span class="string">'這裡是一段文字'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>關於綁定：除了用 <code>id</code> 綁定以外，也可以在 HTML 元素設定 <code>class</code> 來綁定（<code>el</code> 的值也要由 <code>#</code> 改成 <code>.</code>）。但是如果同時有數個同樣 <code>class</code> 名稱的元素，Vue 只能帶資料到同 <code>class</code> 名稱的第一個元素上。所以大部份都還是用 <code>id</code> 綁定。</p>
+</li>
+</ul>
+<h2 id="基本指令"><a href="#基本指令" class="headerlink" title="基本指令"></a>基本指令</h2><h3 id="v-model-—-從網頁上更動-JS-資料"><a href="#v-model-—-從網頁上更動-JS-資料" class="headerlink" title="v-model — 從網頁上更動 JS 資料"></a>v-model — 從網頁上更動 JS 資料</h3><p>上一段提到 Model 能夠從網頁上直接更改的方式，就是在輸入資料的 HTML 元素上，加上 <code>v-model</code> 這個屬性。</p>
+<h3 id="v-text-—-雙花括號以外的資料綁定法"><a href="#v-text-—-雙花括號以外的資料綁定法" class="headerlink" title="v-text — 雙花括號以外的資料綁定法"></a>v-text — 雙花括號以外的資料綁定法</h3><p><code>v-text</code> 相當於 <code>.textContent</code>，上面都是用雙花括號包住資料的特性名稱來將 Model 渲染到網頁上，除了這個方法以外，也可以在要塞入 Model 的 HTML 元素上，加上 <code>v-text</code> 屬性來連接 Model 內容。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-text</span>=<span class="string">"message"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="v-html-—-傳入-HTML-標籤"><a href="#v-html-—-傳入-HTML-標籤" class="headerlink" title="v-html — 傳入 HTML 標籤"></a>v-html — 傳入 HTML 標籤</h3><p><code>v-html</code> 相當於 <code>.innerHTML</code>，如果想渲染到網頁上的 Model 含有 HTML 標籤，就要在要插入資料的元素上使用 <code>v-html</code> 屬性並與 Model 綁定，畫面上才會正確解讀 HTML 格式。同樣的內容用雙花括號跟 <code>v-text</code> 顯示出來的會是一串字串，而沒辦法正確渲染出 HTML 格式。</p>
+<iframe src="https://codepen.io/gretema/embed/vYYywrG?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<h3 id="v-bind-—-以參數更新-HTML-屬性"><a href="#v-bind-—-以參數更新-HTML-屬性" class="headerlink" title="v-bind — 以參數更新 HTML 屬性"></a>v-bind — 以參數更新 HTML 屬性</h3><p>雙花括號中填入資料特性名稱的方法，並不適用於 HTML <strong>屬性</strong>，因此我們應該把 <code>v-bind:</code> 加在 HTML 屬性前面，且在屬性對應的值中放置<strong>參數</strong>（資料特性名稱），並在 Model 中定義要傳入的值。<code>v-bind</code> 的縮寫是去掉 <code>v-bind</code>、只留下一個冒號 <code>:</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;img v-bind:src=<span class="string">"imgSrc"</span> v-bind:<span class="class"><span class="keyword">class</span></span>=<span class="string">"className"</span> alt=<span class="string">""</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ JS</span></span><br><span class="line"><span class="regexp">var app = new Vue(&#123;</span></span><br><span class="line"><span class="regexp">  el: '#app',</span></span><br><span class="line"><span class="regexp">  data: &#123;</span></span><br><span class="line"><span class="regexp">    imgSrc: '圖片位址',</span></span><br><span class="line"><span class="regexp">    className: 'img-fluid'</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="v-model-vs-v-bind"><a href="#v-model-vs-v-bind" class="headerlink" title="v-model vs v-bind"></a>v-model vs v-bind</h4><p><code>v-bind</code> 是將<strong>狀態</strong>綁定到 HTML 元素上，而 <code>v-model</code> 是<strong>接收資料</strong>，所以基本上 <code>v-model</code> 只會用在 <code>&lt;input&gt;</code>、<code>&lt;textarea&gt;</code>、<code>&lt;select&gt;</code> 這些<strong>傳入資訊</strong>的元素。</p>
+<h3 id="v-for-—-呈現資料列表"><a href="#v-for-—-呈現資料列表" class="headerlink" title="v-for — 呈現資料列表"></a>v-for — 呈現資料列表</h3><p>原生 JavaScript 疊代的方式依照型別的不同可以分成 <code>for</code> 迴圈、<code>forEach()</code>、<code>for…in</code>，而使用 Vue 的話全部都可以用 <code>v-for</code> 來疊代。</p>
+<p>例如，在 JavaScript 中需要透過迴圈並用串字串方式來新增多個同樣內容的 <code>&lt;li&gt;</code>，在 Vue 只要把 <code>v-for</code> 放在一個 <code>&lt;li&gt;</code> 上就有同樣的結果。</p>
+<p>下面的程式碼中， <code>item</code> 是一個參數（你也可以為它取別的名字）並用來指涉需要被疊代的陣列元素，<code>list</code> 指的是自定義的陣列名稱（陣列元素為數個物件）， <code>in</code> 也可以寫成 <code>of</code>，因為這樣更接近原生 JavaScript 疊代器的語法。</p>
+<p>在 <code>&lt;li&gt;</code> 上使用 <code>v-for</code> 並綁定要呈現的 <code>data</code> 資料，接著在 <code>&lt;li&gt; &lt;/li&gt;</code> 之間寫入要呈現的資料，雙花括號包起來的是 <code>item.資料特性</code>。</p>
+<p><code>v-for</code> 還支援第二個參數 — — 索引值（index），帶入索引值參數的方法是在原本 <code>item</code> 的位置改寫成 <code>(item, index)</code> 即可。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li v-<span class="keyword">for</span>=<span class="string">"item in list"</span>&gt;</span><br><span class="line">      &#123;&#123; item.name &#125;&#125; 今年 &#123;&#123;item.age&#125;&#125; 歲</span><br><span class="line">    &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/u</span>l&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ JS</span></span><br><span class="line"><span class="regexp">var app = new Vue(&#123;</span></span><br><span class="line"><span class="regexp">  el: '#app',</span></span><br><span class="line"><span class="regexp">  data: &#123;</span></span><br><span class="line"><span class="regexp">    list: [</span></span><br><span class="line"><span class="regexp">      &#123;</span></span><br><span class="line"><span class="regexp">        name: '小明',</span></span><br><span class="line"><span class="regexp">        age: 16</span></span><br><span class="line"><span class="regexp">      &#125;,</span></span><br><span class="line"><span class="regexp">      &#123;</span></span><br><span class="line"><span class="regexp">        name: '媽媽',</span></span><br><span class="line"><span class="regexp">        age: 38</span></span><br><span class="line"><span class="regexp">      &#125;,</span></span><br><span class="line"><span class="regexp">      &#123;</span></span><br><span class="line"><span class="regexp">        name: '漂亮阿姨',</span></span><br><span class="line"><span class="regexp">        age: 24</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    ]</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="v-if-—-擷取部分資訊"><a href="#v-if-—-擷取部分資訊" class="headerlink" title="v-if — 擷取部分資訊"></a>v-if — 擷取部分資訊</h3><p>相當於判斷式的功能。跟 <code>v-for</code> 搭配使用時，可以依所設的條件渲染出部分的資料，也就是說只有資料符合條件時，該資料才會渲染出來，如果不符合條件，就不顯示。</p>
+<p>使用方法是在已經用了 <code>v-for</code> 的 HTML 元素上多加上 <code>v-if=&quot;條件&quot;</code> ，條件一般是以陣列元素的參數去設計的。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li v-<span class="keyword">for</span>=<span class="string">"item in list"</span> v-<span class="keyword">if</span>=<span class="string">"item.age &gt; 20"</span>&gt;</span><br><span class="line">      &#123;&#123; item.name &#125;&#125; 今年 &#123;&#123;item.age&#125;&#125; 歲</span><br><span class="line">    &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/u</span>l&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>礙於篇幅，還有一些基礎指令沒寫出來，挪到下一篇再介紹 😃</p>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Hexo] 使用 NexT 主題如何在文章中內嵌 Codepen</title>
+    <url>/hexo/20191217/2656253328/</url>
+    <content><![CDATA[<p>估狗估不到什麼東西，還好自己有摸索成功，乾脆來發一篇！</p>
+<a id="more"></a>
+<p>在搬運 Medium 文章過來的過程中遇到一個問題，就是我之前在 Medium 寫文的時候超常 embed Codepen 的，畢竟有些效果真的有 Demo 輔助說明會比較好。<br>但在 hexo NexT 的環境下要怎麼嵌入 Codepen 哩？</p>
+<h2 id="第一次踩雷"><a href="#第一次踩雷" class="headerlink" title="第一次踩雷"></a>第一次踩雷</h2><p>我首先找到這篇文章： <a href="https://www.jianshu.com/p/79e808bbf0a8" target="_blank" rel="external nofollow noopener noreferrer">Hexo NexT：在文章中嵌入 CodePen或 jsFiddle</a>，但是我下載完套件後，按照文中的方式在文章裡插入模板，卻跑出一堆錯誤訊息，整篇文章的內容都無法渲染。</p>
+<p>所以我只好捨棄這個方法，跑去翻翻 NexT 官方文件：<a href="https://hexo.io/zh-tw/docs/tag-plugins" target="_blank" rel="external nofollow noopener noreferrer">標籤外掛（Tag Plugins）</a>。<br>看到官方有提供插入 iframe 的語法，我就想說 Codepen 也有提供 iframe 程式碼，說不定行得通。</p>
+<h2 id="Next-與-Codepen-iframe-語法"><a href="#Next-與-Codepen-iframe-語法" class="headerlink" title="Next 與 Codepen iframe 語法"></a>Next 與 Codepen iframe 語法</h2><p>Next 官方提供的語法：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;% iframe url [width] [height] %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Codepen 提供的 iframe 程式碼：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">height</span>=<span class="string">"265"</span> <span class="attr">style</span>=<span class="string">"width: 100%;"</span> <span class="attr">scrolling</span>=<span class="string">"no"</span> <span class="attr">title</span>=<span class="string">"bs flex order"</span> <span class="attr">src</span>=<span class="string">"https://codepen.io/gretema/embed/eYOjPJx?height=265&amp;theme-id=default&amp;default-tab=html,result"</span> <span class="attr">frameborder</span>=<span class="string">"no"</span> <span class="attr">allowtransparency</span>=<span class="string">"true"</span> <span class="attr">allowfullscreen</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">  See the Pen <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'https://codepen.io/gretema/pen/eYOjPJx'</span>&gt;</span>bs flex order<span class="tag">&lt;/<span class="name">a</span>&gt;</span> by 馬維君</span><br><span class="line">  (<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'https://codepen.io/gretema'</span>&gt;</span>@gretema<span class="tag">&lt;/<span class="name">a</span>&gt;</span>) on <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'https://codepen.io'</span>&gt;</span>CodePen<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.</span><br><span class="line"><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="第二次踩雷"><a href="#第二次踩雷" class="headerlink" title="第二次踩雷"></a>第二次踩雷</h2><p>我把 Next 語法中的 <code>url</code> 代換成 Codepen 連結網址 (<code>https://codepen.io/gretema/pen/eYOjPJx</code>)，<code>[width]</code> 代換成 <code>[100%]</code>，<code>[height]</code> 代換成 <code>[265]</code>。<br>寬度跟高度的數值都是從 Codepen 提供的程式碼中取出來的。<br>呈現出來是這樣：</p>
+<iframe src="https://codepen.io/gretema/pen/eYOjPJx" width="[100%]" height="[265]" frameborder="0" loading="lazy" allowfullscreen></iframe>
+<p>嗯…… Codepen 畫面是出來了，但尺寸很有問題。</p>
+<h2 id="終於成功啦"><a href="#終於成功啦" class="headerlink" title="終於成功啦"></a>終於成功啦</h2><p>最後，我嘗試把 Codepen 提供的程式碼中，<code>&lt;iframe&gt;</code> 的 <code>src</code> 值取出來，放到 Next iframe 語法的 <code>url</code> 位置，而 <code>[width]</code> 跟 <code>[height]</code> 都去掉。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;% iframe https://codepen.io/gretema/embed/eYOjPJx?height=265&amp;theme-id=default&amp;default-tab=html,result %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>嵌入成功！</p>
+<iframe src="https://codepen.io/gretema/embed/eYOjPJx?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>next</tag>
+        <tag>codepen</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[CSS] CSS3 flex 屬性</title>
+    <url>/htmlcss/20191217/214491870/</url>
+    <content><![CDATA[<p>我是在學習 Bootstrap 4 時才真正接觸到這個 CSS3 的屬性，在此之前都是用 float 屬性在排版。但是用 float 的缺點就是清除浮動很麻煩，如果能夠掌握 flex 屬性的話就能解決這個問題，而且真的能夠更加「彈性」地排版。</p>
+<p>以下．就讓我們來了解 flex 屬性吧！</p>
+<a id="more"></a>
+
+<h2 id="軸線觀念"><a href="#軸線觀念" class="headerlink" title="軸線觀念"></a>軸線觀念</h2><p>以前學到的 float 只能水平排列，現在學到的 flex 能夠同時做到水平跟垂直排列，也因此衍生出不同對齊方式，所以使用了 flex 的元素也就有了「軸線」這個東西。</p>
+<p>在<strong>預設</strong>的情況下，水平方向的軸線稱為<strong>主軸線</strong>，垂直方向的軸線稱為<strong>交錯軸</strong>，兩種軸線都有<strong>起點</strong>跟<strong>終點</strong>，物件會從主軸線起點（左到右）開始排列。<br><img src="https://upload.cc/i1/2019/12/17/ir0BpN.png" alt></p>
+<p>必須注意的是，當物件排列的方向改變時（上到下），主軸線跟交錯軸的方向就會交換，垂直的軸線變成主軸線、水平的軸線變成交錯軸。<br><img src="https://upload.cc/i1/2019/12/17/puywS6.png" alt="."></p>
+<h2 id="一覽-flex-相關屬性"><a href="#一覽-flex-相關屬性" class="headerlink" title="一覽 flex 相關屬性"></a>一覽 flex 相關屬性</h2><p>可以用<strong>外層屬性</strong>或<strong>內層屬性</strong>來分類，也可以用<strong>是否為對齊方法</strong>來分類。<br>粗體為特別重要的屬性。</p>
+<h3 id="外層屬性"><a href="#外層屬性" class="headerlink" title="外層屬性"></a>外層屬性</h3><ul>
+<li>display - 必備屬性，宣告 flex 排版</li>
+<li>flex-flow<ul>
+<li><strong>flex-direction</strong> - 決定 flex 軸線</li>
+<li>flex-wrap - 決定換行的屬性</li>
+</ul>
+</li>
+<li><strong>justify-content</strong> - 主軸線的對齊</li>
+<li><strong>align-items</strong> - 交錯軸的對齊</li>
+</ul>
+<h3 id="內層屬性"><a href="#內層屬性" class="headerlink" title="內層屬性"></a>內層屬性</h3><ul>
+<li>flex<ul>
+<li>flex-grow - 伸展比</li>
+<li>flex-shrink - 收縮比</li>
+<li>flex-basis - 絕對值</li>
+</ul>
+</li>
+<li>order - 排序</li>
+<li><strong>align-self</strong> - 單一物件的交錯軸對齊</li>
+</ul>
+<h3 id="對齊方法"><a href="#對齊方法" class="headerlink" title="對齊方法"></a>對齊方法</h3><h4 id="flex-direction-屬性"><a href="#flex-direction-屬性" class="headerlink" title="flex-direction 屬性"></a><code>flex-direction</code> 屬性</h4><p>決定主軸線方向，共有四個值。</p>
+<ul>
+<li>row：預設值，物件將沿著主軸線由左到右排列</li>
+<li>row-reverse：反轉主軸線，物件將沿著主軸線由右到左排列</li>
+<li>column：將主軸線由水平改為垂直，物件將由上至下排列</li>
+<li>column-reverse：將主軸線由水平改為垂直，物件將由下至上排列</li>
+</ul>
+<h4 id="justify-content-屬性"><a href="#justify-content-屬性" class="headerlink" title="justify-content 屬性"></a><code>justify-content</code> 屬性</h4><p>依據主軸線決定內層物件之間的間隔方式。共有五個值。</p>
+<ul>
+<li>flex-start：所有內層物件對齊主軸線起點</li>
+<li>flex-end：所有內層物件對齊主軸線終點</li>
+<li>center：所有內層物件置中在主軸線上</li>
+<li>space-between：內層物件頭尾在主軸線起訖點，其餘物件等距對齊</li>
+<li>space-around：所有內層物件之間等距對齊</li>
+</ul>
+<p><img src="https://upload.cc/i1/2019/12/17/S2noQc.png" alt></p>
+<h4 id="align-items-屬性"><a href="#align-items-屬性" class="headerlink" title="align-items 屬性"></a>align-items 屬性</h4><p>依據交錯軸決定內層物件的垂直對齊方式。共有五個值。</p>
+<ul>
+<li>flex-start：所有內層物件對齊交錯軸起點</li>
+<li>flex-end：所有內層物件對齊交錯軸終點</li>
+<li>center：所有內層物件在交錯軸上置中</li>
+<li>baseline：跟文字行高有關，用文字的基準線作排列（很少用）</li>
+<li>stretch：所有內層物件拉高，由交錯軸起點拉到終點</li>
+</ul>
+<p><img src="https://upload.cc/i1/2019/12/17/7n3Gbm.png" alt></p>
+<h4 id="align-self-屬性"><a href="#align-self-屬性" class="headerlink" title="align-self 屬性"></a>align-self 屬性</h4><p>個別的內層元件本身的垂直對齊方式，此屬性的值跟 <code>align-items</code> 一模一樣。</p>
+<h3 id="對齊以外的其他屬性"><a href="#對齊以外的其他屬性" class="headerlink" title="對齊以外的其他屬性"></a>對齊以外的其他屬性</h3><h4 id="flex-wrap-屬性（外層）"><a href="#flex-wrap-屬性（外層）" class="headerlink" title="flex-wrap 屬性（外層）"></a>flex-wrap 屬性（外層）</h4><p>決定物件超出範圍時要不要換行。</p>
+<p class="codepen" data-height="265" data-theme-id="default" data-default-tab="html,result" data-user="gretema" data-slug-hash="yLBqRaQ" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="bs flex flex-wrap">
+  <span>See the Pen <a href="https://codepen.io/gretema/pen/yLBqRaQ" target="_blank" rel="external nofollow noopener noreferrer">
+  bs flex flex-wrap</a> by 馬維君 (<a href="https://codepen.io/gretema" target="_blank" rel="external nofollow noopener noreferrer">@gretema</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<p>範例中，原本 <code>.col-*</code> 會被 <code>.row</code> 包裹，但因為 Bootstrap 已經幫 <code>.row</code> 內建 <code>flex-wrap</code> 換行了，所以改用 <code>.d-flex</code> 包裹 <code>.col-*</code>。</p>
+<h4 id="align-content（外層）"><a href="#align-content（外層）" class="headerlink" title="align-content（外層）"></a>align-content（外層）</h4><p>只有在換行（<code>flex-wrap</code>）的情況下可使用，用在有高度的外層容器上，會使內層物件在父元素內垂直對齊。</p>
+<p class="codepen" data-height="265" data-theme-id="default" data-default-tab="html,result" data-user="gretema" data-slug-hash="mdbjzqw" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="bs flex align-content">
+  <span>See the Pen <a href="https://codepen.io/gretema/pen/mdbjzqw" target="_blank" rel="external nofollow noopener noreferrer">
+  bs flex align-content</a> by 馬維君 (<a href="https://codepen.io/gretema" target="_blank" rel="external nofollow noopener noreferrer">@gretema</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<h4 id="order-屬性（內層）"><a href="#order-屬性（內層）" class="headerlink" title="order 屬性（內層）"></a>order 屬性（內層）</h4><p>用來更改區塊排列的順序，將 <code>order-*</code> 寫在 class 裡，<code>*</code> 代表我們希望區塊排列的順序。</p>
+<p class="codepen" data-height="265" data-theme-id="default" data-default-tab="html,result" data-user="gretema" data-slug-hash="eYOjPJx" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="bs flex order">
+  <span>See the Pen <a href="https://codepen.io/gretema/pen/eYOjPJx" target="_blank" rel="external nofollow noopener noreferrer">
+  bs flex order</a> by 馬維君 (<a href="https://codepen.io/gretema" target="_blank" rel="external nofollow noopener noreferrer">@gretema</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<hr>
+<p>參考資料：<a href="https://wcc723.github.io/css/2017/07/21/css-flex/" target="_blank" rel="external nofollow noopener noreferrer">圖解：CSS Flex 屬性一點也不難</a></p>
+<hr>
+<p>看完這篇，保證你可以加入六角戰隊去<a href="https://hexschool.github.io/flexbox-pirate/index.html#/" target="_blank" rel="external nofollow noopener noreferrer">打海盜</a>！</p>
+]]></content>
+      <categories>
+        <category>HTML&amp;CSS</category>
+      </categories>
+      <tags>
+        <tag>CSS3</tag>
+        <tag>flexbox</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[SASS] SASS 基礎概念 2</title>
+    <url>/SASS/20191217/3307620580/</url>
+    <content><![CDATA[<p>延續上一篇的主題，本篇將整理稍微進階一些、但更接近實作的相關應用，包含如何使用 SASS 來提升響應式設計的開發效率。</p>
+<a id="more"></a>
+
+<h2 id="化簡知識庫：-mixin-設定常用語法，-include-召喚出來"><a href="#化簡知識庫：-mixin-設定常用語法，-include-召喚出來" class="headerlink" title="化簡知識庫：@mixin 設定常用語法，@include 召喚出來"></a>化簡知識庫：<code>@mixin</code> 設定常用語法，<code>@include</code> 召喚出來</h2><p>這個語法可以省去一直回想原理跟技巧的時間。</p>
+<h3 id="基本用法：複製"><a href="#基本用法：複製" class="headerlink" title="基本用法：複製"></a>基本用法：複製</h3><ol>
+<li>寫在檔案起始處，<code>@mixin</code> 後面取一個<strong>變數名</strong>接中括號，裡面寫該變數所欲達成的效果。</li>
+<li>後面需要呼叫該效果時，先寫選擇器加中刮弧，裡面先寫 <code>@include</code>，後面加變數名稱。</li>
+<li><code>@mixin</code> 裡面寫的常用語法，會用「&amp;」來表示所在的選擇器。例如：<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line">&amp;<span class="selector-pseudo">:after</span> &#123;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="補充用法：參數"><a href="#補充用法：參數" class="headerlink" title="補充用法：參數"></a>補充用法：參數</h3><p><code>@mixin</code> 也可以設參數，而且可以是複數的參數。</p>
+<p>例如，先在開頭設定如下：</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@mixin</span> circle (<span class="variable">$size</span>, <span class="variable">$bgcolor</span>) &#123;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="variable">$size</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="variable">$size</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="variable">$size</span> / <span class="number">3</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="variable">$bgcolor</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之後要在某選擇器使用時，就可以簡單用一行字召喚出來了。</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.box</span>&#123;</span><br><span class="line">  <span class="keyword">@include</span> circle (<span class="number">30px</span>, <span class="number">#fff</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用途舉例"><a href="#用途舉例" class="headerlink" title="用途舉例"></a>用途舉例</h3><ul>
+<li>圖片取代文字</li>
+<li>兼容各瀏覽器的 inline-block 的寫法</li>
+<li>各 CSS3 語法瀏覽器支援解決方案</li>
+<li>清除浮動</li>
+<li>用 CSS 畫各方向的三角型</li>
+</ul>
+<blockquote>
+<p>溫馨提示：平常可以多累積自己的 mixin 資料庫，設一個 mixin 資料夾把學過的一些 CSS 技巧記錄成 .sass 檔存放進去。有些面試官光看應徵者的 mixin 庫就能了解這個人處理過多少專案了。</p>
+</blockquote>
+<h2 id="將-mixin-用於開發-RWD"><a href="#將-mixin-用於開發-RWD" class="headerlink" title="將 @mixin 用於開發 RWD"></a>將 <code>@mixin</code> 用於開發 RWD</h2><p>先用 <code>@mixin</code> 設定好斷點，各斷點可以取名為該裝置的名字，例如 <code>pad</code>、<code>iPhone5</code> 等。<br>接著在 media query 裡面只要加一個東西，那就是 <code>@content</code>。</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@mixin</span> iphone5&#123;</span><br><span class="line">  <span class="keyword">@media</span> (max-width: <span class="number">320px</span>) &#123;</span><br><span class="line">    <span class="keyword">@content</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之後就先寫 PC 版的樣式，但在需要 RWD 的項目裡面，可以用 <code>@include</code> 呼叫斷點，然後直接寫 RWD 的樣式在裡面。</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.header</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>:<span class="number">100px</span>;</span><br><span class="line">  <span class="keyword">@include</span> iphone5&#123;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">30</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>溫馨提示：應該常備一個 <code>grid.scss</code> 專放用 <code>@mixin</code> 設定好的 media query 斷點，在開發時就可以打開來複製到手上的新專案。</p>
+</blockquote>
+<hr>
+<p>掌握了這兩篇介紹的 SASS 基礎，就相當夠用了。當然，之後如果有機會再吸收一些 SASS 技巧也會繼續分享的。</p>
+]]></content>
+      <categories>
+        <category>SASS</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>SASS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[SASS] SASS 基礎概念 1</title>
+    <url>/SASS/20191217/1546590558/</url>
+    <content><![CDATA[<p>什麼是 SASS？ <del>不是 SARS 哦</del><br>來聊聊它的基本觀念。</p>
+<a id="more"></a>
+
+<h2 id="什麼是-SASS？"><a href="#什麼是-SASS？" class="headerlink" title="什麼是 SASS？"></a>什麼是 SASS？</h2><p>SASS 是一種針對 CSS 的腳本程式語言，藉由提供程式語言的特性，例如變數、巢狀結構、混合、函式與擴充（繼承）等等，可以預先對 CSS 進行結構化的工作，最後再編譯可使用於網頁上的 CSS 語法。需要搭配 SASS 解譯器 (如 prepros) 進行撰寫。</p>
+<p>SASS 包括兩套語法。最開始的語法叫做「縮排語法」，使用縮排來區分程式碼塊，並且用換行將不同規則分隔開，附檔名為 .sass。而較新的語法叫做「SCSS」，使用和 CSS 一樣的塊語法，即使用大括號將不同的規則分開，使用分號將具體的樣式分開。</p>
+<p>以下以 SCSS 語法為主，整理 SASS 的應用方法。</p>
+<h2 id="寫法：減少重工，不必重複寫同樣的選取器。"><a href="#寫法：減少重工，不必重複寫同樣的選取器。" class="headerlink" title="寫法：減少重工，不必重複寫同樣的選取器。"></a>寫法：減少重工，不必重複寫同樣的選取器。</h2><p>子元素的樣式直接寫在父元素裡即可。</p>
+<h2 id="變數：便於管理，快速管理出同樣設定的樣式"><a href="#變數：便於管理，快速管理出同樣設定的樣式" class="headerlink" title="變數：便於管理，快速管理出同樣設定的樣式"></a>變數：便於管理，快速管理出同樣設定的樣式</h2><p>在最前面設一個變數名，例如 <code>linkcolor</code> ，名稱前加一個 <code>$</code> 字號，並寫上該變數代表的值。例：</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="variable">$linkcolor</span>: <span class="number">#000</span>;</span><br></pre></td></tr></table></figure>
+
+<p>所有要做相同管理的屬性後面，都接上變數名。例：</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.header</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="variable">$linkcolor</span></span><br><span class="line">&#125;</span><br><span class="line">.content a &#123;</span><br><span class="line">  color: <span class="variable">$linkcolor</span></span><br><span class="line">&#125;</span><br><span class="line">.footer a &#123;</span><br><span class="line">  color: <span class="variable">$linkcolor</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以後若要全部替代成別的值，就在 <code>$linkcolor</code> (變數名) 後面作值的修改即可。</p>
+<blockquote>
+<p>那麼，哪些項目適合用變數做全域設定？</p>
+</blockquote>
+<p>字型大小這種常常需要統一規格的項目就很適合。例：</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="attribute">font</span>-m: <span class="number">16px</span>;</span><br><span class="line"><span class="attribute">font</span>-l: font-m * <span class="number">1.2</span> // 支援加減乘除</span><br><span class="line">font-s: font-m * <span class="number">0.8</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="拆檔：-import-讓每支-scss-檔各司其職"><a href="#拆檔：-import-讓每支-scss-檔各司其職" class="headerlink" title="拆檔：@import 讓每支 .scss 檔各司其職"></a>拆檔：<code>@import</code> 讓每支 .scss 檔各司其職</h2><ol>
+<li>一支 .scss 檔案只單獨處理一件事，例如 reset 寫在一個 .scss 檔，檔名命名為 <code>_reset.scss</code>；首頁樣式寫在另一個檔，檔名命名為 <code>_index.scss</code>。前面加<u>底線</u>很重要，代表那是<strong>合併用</strong>的 sass 檔，理論上並不會編譯出對應的 .css 檔。</li>
+<li>在名為 all 的 .scss 檔裡做統整，用 <code>@import</code>「依序」匯入個別的 .scss 檔。網頁中只會引入 <code>all.scss</code> 編譯出來的 <code>all.css</code>。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>SASS</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>SASS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[RWD] 響應式網頁 - 實作常見問題與錯誤</title>
+    <url>/rwd/20191217/296575981/</url>
+    <content><![CDATA[<p>乳蹄，本篇筆記非常簡潔扼要地列出 3 點 RWD 要注意的問題。</p>
+<a id="more"></a>
+
+<h2 id="確認-media-query-斷點"><a href="#確認-media-query-斷點" class="headerlink" title="確認 media query 斷點"></a>確認 media query 斷點</h2><p>先抓熱門的螢幕解析度，例如平板 (768px) 及 iPhone 5 橫式 (569px)，在這兩個解析度之間會有一個斷層，可能在寬度 6xx px 時版面會變得比較難看，此時就為這一段斷層加條件：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">@media(max-width: 767px) and (min-width: 569px)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="media-query-到底要寫在一起還是分開寫"><a href="#media-query-到底要寫在一起還是分開寫" class="headerlink" title="media query 到底要寫在一起還是分開寫"></a>media query 到底要寫在一起還是分開寫</h2><p>同一個 <code>&lt;div&gt;</code> 就寫在一起，包含該 <code>&lt;div&gt;</code> 的子元素。</p>
+<h2 id="不要習慣性寫死高度"><a href="#不要習慣性寫死高度" class="headerlink" title="不要習慣性寫死高度"></a>不要習慣性寫死高度</h2><p>在 PC 版上是可以寫固定高度的，因為版面不會隨螢幕大小而變化。但是要記得在 media query 中多加一行 <code>height: auto</code>，讓內容自適應延伸。</p>
+]]></content>
+      <categories>
+        <category>RWD</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>響應式網頁設計</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[RWD] 響應式網頁 - 固定式選單及 off-canvas 選單</title>
+    <url>/rwd/20191216/822299504/</url>
+    <content><![CDATA[<p>本篇文章接續上一篇，繼續記錄 RWD 的常用選單語法結構，包含固定式選單及側邊展開（off-canvas）選單等兩種。</p>
+<a id="more"></a>
+
+<h2 id="固定式選單"><a href="#固定式選單" class="headerlink" title="固定式選單"></a>固定式選單</h2><p>讓使用者在滑動頁面時，表頭永遠在螢幕上方。<br>使用 <code>position: fixed</code>，但要注意頁面內容會被表頭遮住，所以內容區塊要用 <code>padding-top</code> 空出表頭的高度，才不會被遮住部分內容。</p>
+<h3 id="注意事項："><a href="#注意事項：" class="headerlink" title="注意事項："></a>注意事項：</h3><ul>
+<li><code>position: fixed</code> 在安卓部分舊型手機上不適用，若能用 JS 做兼容是較好的做法。</li>
+<li>要考慮到表頭是否會佔螢幕太多版面，會的話就不要用 <code>fixed</code>。</li>
+</ul>
+<h3 id="語法："><a href="#語法：" class="headerlink" title="語法："></a>語法：</h3><figure class="highlight css"><table><tr><td class="code"><pre><span class="line">@media(max-width: 767px)&#123;</span><br><span class="line">  <span class="selector-class">.header</span>&#123;</span><br><span class="line">    <span class="attribute">position</span>: fixed;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">background</span>: black; &#125;</span><br><span class="line">  <span class="selector-class">.content</span>&#123;</span><br><span class="line">    <span class="attribute">padding-top</span>: <span class="number">81px</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="off-canvas-選單設計"><a href="#off-canvas-選單設計" class="headerlink" title="off canvas 選單設計"></a>off canvas 選單設計</h2><p>適合用於選項超多的選單，PC 版（放較少選項）跟手機版（放較多選項）可以各一套選單設計。</p>
+<h3 id="說明："><a href="#說明：" class="headerlink" title="說明："></a>說明：</h3><p>請搭配 <a href="https://codepen.io/gretema/pen/zeyxqO" target="_blank" rel="external nofollow noopener noreferrer">範例程式碼</a> 一同閱讀。</p>
+<ul>
+<li>結構：<code>.container</code> 底下有 <code>.aside</code>（會滑出來的選單）跟 <code>.main</code>（底下有 <code>.header</code>）</li>
+<li>預期效果：點了表頭中的 a 連結按鈕（<code>.mobile-link</code>）就會讓 <code>body</code> 動態加入 <code>.open</code>，之後 <code>.aside</code> 選單從左側滑出來，點 <code>.aside</code> 中的 a 連結按鈕（<code>.mobile-close</code>）又滑回去。</li>
+</ul>
+<h3 id="語法：-1"><a href="#語法：-1" class="headerlink" title="語法："></a>語法：</h3><h4 id="CSS："><a href="#CSS：" class="headerlink" title="CSS："></a>CSS：</h4><ol>
+<li><code>.aside</code> 設定絕對定位<br>用 <code>transform</code> ( 或 <code>margin</code> ) 設定 X 軸位移的距離 (=寬度)<br>註：<code>transform</code> 在網頁上的效能比 <code>padding</code>、<code>margin</code> 都好<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.aside</span>&#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">270px</span>;</span><br><span class="line">  height: 100%;;</span><br><span class="line">  <span class="selector-tag">overflow</span>: <span class="selector-tag">hidden</span>;</span><br><span class="line">  <span class="selector-tag">transform</span>: <span class="selector-tag">translateX</span>(<span class="selector-tag">-270px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>核心程式碼<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.open</span> <span class="selector-class">.main</span>&#123;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translateX</span>(<span class="number">270px</span>);</span><br><span class="line">  // 點了 .header 會讓 .menu 往右推 270 px 以容納滑出來的選單</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.open</span> <span class="selector-class">.aside</span>&#123;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translateX</span>(<span class="number">0px</span>);</span><br><span class="line">  // 點了 .header 會讓選單滑入視窗中</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>選單滑入的動畫效果 — <code>transition</code>，可以有<strong>影格效果</strong><figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.main</span>&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="selector-tag">transition</span>: 0<span class="selector-class">.3s</span> <span class="selector-tag">ease</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="jQ："><a href="#jQ：" class="headerlink" title="jQ："></a>jQ：</h4><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$(<span class="string">'.mobile-link'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  $(<span class="string">'body'</span>).addClass(<span class="string">'open'</span>);</span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">'.mobile-close'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">  $(<span class="string">'body'</span>).removeClass(<span class="string">'open'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>好啦，響應式的選單設計就先介紹四種，雖然選單不是響應式設計的全部，但應該算是蠻核心的部分了，其他眉眉角角就等我之後有時間精力再來補寫囉（癱）。</p>
+]]></content>
+      <categories>
+        <category>RWD</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>響應式網頁設計</tag>
+        <tag>HTML</tag>
+        <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[RWD] 響應式網頁 - 多欄多列選單及漢堡選單</title>
+    <url>/rwd/20191216/3809709620/</url>
+    <content><![CDATA[<p>本篇文章將記錄 RWD 的常用選單語法結構，包含多行多列選單及漢堡選單等兩種。</p>
+<a id="more"></a>
+
+<h2 id="多欄多列選單排版法：以-3-2-為例"><a href="#多欄多列選單排版法：以-3-2-為例" class="headerlink" title="多欄多列選單排版法：以 3*2 為例"></a>多欄多列選單排版法：以 3*2 為例</h2><h3 id="語法："><a href="#語法：" class="headerlink" title="語法："></a>語法：</h3><h4 id="HTML："><a href="#HTML：" class="headerlink" title="HTML："></a>HTML：</h4><p><code>&lt;ul&gt;&lt;li&gt;</code> 結構，<code>&lt;li&gt;</code> 需要 6 個</p>
+<h4 id="CSS："><a href="#CSS：" class="headerlink" title="CSS："></a>CSS：</h4><figure class="highlight css"><table><tr><td class="code"><pre><span class="line">float: right;  // PC版排版</span><br><span class="line"><span class="keyword">@media</span> ( <span class="attribute">max-width:</span> <span class="number">767px</span>)&#123;</span><br><span class="line">  float: none;  // 自然排列，這是 RWD 的精髓</span><br><span class="line">  <span class="selector-tag">width</span>: 33<span class="selector-class">.33333</span> % ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="漢堡選單排版法"><a href="#漢堡選單排版法" class="headerlink" title="漢堡選單排版法"></a>漢堡選單排版法</h2><p>請搭配 <a href="https://codepen.io/gretema/pen/bzQveq" target="_blank" rel="external nofollow noopener noreferrer">範例程式碼</a> 一同觀看。</p>
+<h3 id="漢堡選單是怎麼出現的"><a href="#漢堡選單是怎麼出現的" class="headerlink" title="漢堡選單是怎麼出現的"></a>漢堡選單是怎麼出現的</h3><p>在寫 PC 版時，就預先寫好了漢堡選單的按鈕（<code>&lt;a&gt;.showmenu</code>），只是用 <code>display: none</code> 先隱藏起來；漢堡選單裡的選項跟 PC 版其實是同一套，只是把 <code>float</code> 拿掉而已。</p>
+<h3 id="PC-版選單怎麼變成漢堡選單的"><a href="#PC-版選單怎麼變成漢堡選單的" class="headerlink" title="PC 版選單怎麼變成漢堡選單的"></a>PC 版選單怎麼變成漢堡選單的</h3><h4 id="CSS：-1"><a href="#CSS：-1" class="headerlink" title="CSS："></a>CSS：</h4><blockquote>
+<p>以下都是寫在 <code>@media (max-width: 767px)</code> 的大括號裡，在相對應的裝置才會觸發，1~3 都是 <code>.menu</code> 的樣式。</p>
+</blockquote>
+<ol>
+<li>隱藏選單<strong>（關鍵語法）</strong>（之後會用 jQ 動態加入 <code>class</code>，就會展開）<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="attribute">max-height</span>: <span class="number">0px</span>;</span><br><span class="line"><span class="attribute">overflow</span>: hidden;</span><br></pre></td></tr></table></figure></li>
+<li>絕對定位疊在網頁上<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">z-index</span>: <span class="number">100</span>; <span class="comment">// 權重</span></span><br><span class="line"><span class="attribute">top</span>: <span class="number">81px</span>; <span class="comment">// 因為 header 80 px + border 1 px，若漢堡選單要從 header 下方展開就要這樣設</span></span><br><span class="line"><span class="attribute">left</span>: <span class="number">0</span>; <span class="comment">// 在絕對定位之下要做出滿版效果，左右都要0</span></span><br><span class="line"><span class="attribute">right</span>: <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
+<li>選單展開的漸變效果<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">transition</span>: <span class="selector-tag">max-height</span> 2<span class="selector-class">.3s</span>;</span><br></pre></td></tr></table></figure></li>
+<li>取消隱藏漢堡選單的按鈕<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.showmenu</span>&#123;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">float</span>: right;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">1</span> em;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>配合 jQ 指令的 CSS 語法：點擊後，動態在 <code>body</code> 加上 <code>class</code><figure class="highlight mel"><table><tr><td class="code"><pre><span class="line">.<span class="keyword">menu</span>-show .<span class="keyword">menu</span>&#123;</span><br><span class="line">  <span class="keyword">max</span>-height: <span class="number">500</span>px; <span class="comment">// 選單的高度，原本是設成 0 px</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="jQ："><a href="#jQ：" class="headerlink" title="jQ："></a>jQ：</h4>點擊漢堡按鈕（<code>.showmenu</code>） 後，取消預設連結功能，動態在 <code>body</code> 加上 <code>class</code>（<code>.menu-show</code>）。<figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line">$(<span class="string">'.showmenu'</span>).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">  e.preventDefault();</span><br><span class="line">  $(<span class="string">'body'</span>).toggleClass(<span class="string">'menu-show'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<code>body</code> 加上 <code>.menu-show</code> 之後，<code>body</code> 中的 <code>.menu</code> 才會被觸發，否則按了也不會展開。</li>
+</ol>
+<h3 id="menu-show-為何是加在-body-上"><a href="#menu-show-為何是加在-body-上" class="headerlink" title=".menu-show 為何是加在 body 上"></a>.menu-show 為何是加在 body 上</h3><p>如果 jQ 是在 <code>.menu</code> 上動態加上 <code>class</code> 會怎麼樣呢？</p>
+<p>其實要在哪裡動態加上 <code>class</code>，需要看網頁的樣式怎麼設計。像是有些設計可能不只影響 <code>.menu</code>，還會加上其他的效果，那就必須要加在 <code>body</code> 上。<br>若只有增加彈出選單的效果，那 <code>.menu-show</code> 其實不一定要在 <code>body</code> 上， 加在 <code>.header</code> 、加在 <code>.menu</code> 都可以。</p>
+]]></content>
+      <categories>
+        <category>RWD</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>響應式網頁設計</tag>
+        <tag>HTML</tag>
+        <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[RWD] 響應式網頁 - 常用選單樣式與注意事項</title>
+    <url>/rwd/20191216/3160700070/</url>
+    <content><![CDATA[<p>在學習響應式網頁設計（Responsive Web Design）的路上，想記錄一些學習過程跟基礎語法，本篇筆記將從 RWD 常用選單的樣式及實作時的注意事項開始這個系列的旅程。</p>
+<a id="more"></a>
+
+<h2 id="常用樣式"><a href="#常用樣式" class="headerlink" title="常用樣式"></a>常用樣式</h2><ul>
+<li>一行式橫幅選單：每格選單的字數不能太多，文字總寬不能超過載具的寬度，例如一個字大約是 16px，在 iPhone 5 (320px) 上就不能超過 20 字。除了單行排列，也有 3*2 之類多欄多列的排版方式。但不要超過兩行，因為排到三行就占太多版面了。</li>
+<li>漢堡選單：點開時覆蓋部分網頁內容，可以用下拉式，也可用從左 / 右方滑出的方式。</li>
+</ul>
+<h2 id="實作注意事項"><a href="#實作注意事項" class="headerlink" title="實作注意事項"></a>實作注意事項</h2><ul>
+<li>要避免選單點開後把原本網頁內容往下擠的狀況，因為這樣瀏覽器在渲染網頁的時候效能會降低。</li>
+<li>抓 320px 為最小值：這是 iPhone 5 、SE 的寬度，大約可以放 20 個字元（一格選項不超過4個字），不過考慮到留白的問題，12~16 個字元就差不多了。</li>
+<li>不放奇數選單：3 個選項的選單還可以剛好用 33% 去處理，5 個選項的選單排起來會很尷尬地空一格出來，所以要與客戶溝通。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>RWD</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>響應式網頁設計</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[CSS] 浮動 (float) 與清除浮動 (clear)</title>
+    <url>/htmlcss/20191216/714228330/</url>
+    <content><![CDATA[<p>由於老師耳提面命，<code>float</code> 及 <code>clear</code> 是網頁排版的基石之一，所以決定來彙整一下相關的資料，剛好某種程度上也可以承接上一篇的主題。</p>
+<a id="more"></a>
+
+<h2 id="float-屬性的使用時機"><a href="#float-屬性的使用時機" class="headerlink" title="float 屬性的使用時機"></a>float 屬性的使用時機</h2><p>使用諸如 <code>&lt;div&gt;</code> 之類的區塊元素排版時，預設的排列方式都是由左至右、由上至下。但如果我們今天想要做的是多欄式排版，或是讓多個區塊元素並排時，就需要使用 <code>float</code> 屬性。</p>
+<h2 id="float-屬性的值"><a href="#float-屬性的值" class="headerlink" title="float 屬性的值"></a>float 屬性的值</h2><figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="attribute">float</span>: 浮動方向 ;</span><br></pre></td></tr></table></figure>
+<p>浮動方向可以用的值有 <code>left</code>、<code>right</code>、<code>none</code>（預設值，也就是不浮動）以及 <code>inherit</code>（繼承自父層的屬性），最後這個 <code>inherit</code> 盡量不要使用，避免 IE 不支援的情況發生。</p>
+<h2 id="clear-屬性的使用時機"><a href="#clear-屬性的使用時機" class="headerlink" title="clear 屬性的使用時機"></a>clear 屬性的使用時機</h2><p>如果想控制浮動元素的排版，就一定要懂 <code>clear</code> 屬性的操作方式。</p>
+<p>有時候，浮動元素在前，而後面的元素沒有使用浮動時，後面的元素就會往上跑、疊在前一個元素的下方；有時候，父層內的元素使用浮動，會讓父層包不住子元素。</p>
+<p>遇到這種情形時，就要使用 clear 屬性來處理跑版問題。</p>
+<p><img src="https://upload.cc/i1/2019/12/17/YZure6.jpeg" alt="父層包不住子元素"></p>
+<h2 id="clear-屬性的使用方法"><a href="#clear-屬性的使用方法" class="headerlink" title="clear 屬性的使用方法"></a>clear 屬性的使用方法</h2><figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="attribute">clear</span>: 清除方向 ;</span><br></pre></td></tr></table></figure>
+<p><code>clear</code> 屬性可以用的值有 <code>left</code>、<code>right</code>、<code>both</code>、<code>none</code> 以及 <code>inherit</code>（IE不支援）， 其中以 <code>both</code> 最常用。</p>
+<p><code>clear</code> 屬性可以有 3 種使用方法：</p>
+<ol>
+<li>在浮動元素的後面多加一個 <code>&lt;div&gt;</code>（命名為 <code>.clearfix</code>），並在 <code>.clearfix</code> 使用 <code>clear: both</code> 語法。</li>
+<li>在要清除浮動內容的父層多加一個 <code>.clearfix</code> 並使用偽元素。★<br><img src="https://upload.cc/i1/2019/12/17/cZz5wI.jpeg" alt="after 僞元素：透過 content 在元素的後面生成了内容爲一個點的區塊元素"></li>
+<li>在浮動元素後面的區塊元素加上 <code>clear: both</code>。</li>
+</ol>
+<blockquote>
+<p>使用 <code>clear</code> 屬性須注意，在 <code>&lt;ul&gt;&lt;li&gt;</code> 結構中，必須在 <code>&lt;ul&gt;</code> 父元素清除子元素，沒辦法在 <code>&lt;li&gt;</code> 後面插入 <code>.clearfix</code>。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>HTML&amp;CSS</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>float</tag>
+        <tag>clear</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[CSS] 沒有清除浮動，還是沒搞清楚元素特性？</title>
+    <url>/htmlcss/20191216/3595727743/</url>
+    <content><![CDATA[<p>昨天在六角學院社團看到有人發問排版問題，因為是我第一次試著替別人 debug 因此特別想記錄下來，順便當作我使用部落格紀錄前端學習之路的濫觴。</p>
+<a id="more"></a>
+
+<hr>
+<p>這位同學的問題是這樣的：</p>
+<blockquote>
+<p>「 請問大家，相似的浮動為什麼第一張圖 submit 會跑掉，在 textarea 結束加 clearfix 才正常（第二張圖），第三張就不會？」</p>
+</blockquote>
+<p><img src="https://upload.cc/i1/2019/12/17/LlC0gj.jpeg" alt="圖 1"><br><img src="https://upload.cc/i1/2019/12/17/WDRnSZ.jpeg" alt="圖 2"><br><img src="https://upload.cc/i1/2019/12/17/vwK2S3.jpeg" alt="圖 3"></p>
+<p>我這樣回答：</p>
+<blockquote>
+<p>「因為第一張 textarea 沒有下 <code>display:block</code>，所以按鈕就跟它並排了；而第三張的 input text 都有下 <code>display:block</code>，所以按鈕就不會並排。」</p>
+</blockquote>
+<p><code>&lt;input&gt;</code> 跟 <code>&lt;img&gt;</code>，<code>display</code> 預設都是 <code>inline-block</code>，也就是說如果不指定為 <code>block</code>，排完它的寬度後，如果還有空間，底下非 <code>block</code> 的元素或浮動元素就會跑上來。<code>inline</code> 跟 <code>inline-block</code> 的差別在於，前者不能指定寬高，而後者可以。</p>
+<p>第一個圖會跑版的原因是因為 <code>&lt;textarea&gt;</code> 沒有下 <code>display:block</code>，所以 <code>float</code> 的按鈕便與他並排了。<br>並排之後整個 <code>&lt;form&gt;</code> 加上左邊的 <code>&lt;h6&gt;</code> 的寬度後，整體超過了 <code>.faqform</code>，所以才會掉下來。</p>
+<p>第二個圖裡，<code>&lt;textarea&gt;</code> 下面多加了一塊 <code>&lt;div&gt;</code>，這個 <code>&lt;div&gt;</code> 的屬性是 <code>block</code> ，所以不是因為加了 <code>clearfix</code>，如果把那個 <code>class</code> 去掉，只留下 <code>&lt;div&gt;</code>，也會有同樣效果。如此，接下來的按鈕便不會前面的原素並排，整個 <code>&lt;form&gt;</code> 加上左邊 <code>&lt;h6&gt;</code> 的寬度後也還在 <code>.faqform</code> 的極限內，版型就正常了。</p>
+<p>第三個圖版型正常的原因，也是因為前面的元素加了 <code>block</code>，而且整個 <code>.form</code> 加上左邊 <code>&lt;h4&gt;</code> 的寬度後還在 <code>.faqform</code> 的極限內。</p>
+<p>此外，盒模型的概念也是很重要，子元素要注意寬度加起來是否會超過包住它的父層， 不然一旦內容寬度超過就一定會跑版了。</p>
+]]></content>
+      <categories>
+        <category>HTML&amp;CSS</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>float</tag>
+        <tag>display</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>被推坑的 Hexo Blog</title>
+    <url>/hexo/20191216/2697934891/</url>
+    <content><![CDATA[<p>這陣子專案告了一個段落，有感於自己 Git 操作很不熟，在 Ray 的建議之下開始使用 Hexo 自架部落格，據說對熟悉指令有奇效（？）。<br>結果手忙腳亂地把基本環境一步一步架起來後，Ray 才說他只是不甘心只有自己踩雷、要讓更多人一起踩進來，<del>總之就是報復社會就對惹</del>。<br>總之，以後這邊應該就是放純技術文章、學習筆記，而 Medium 則是放一些軟性文章，例如讀書心得、碎碎唸之類的。</p>
+<p>接下來就是要 <del>愚公移山</del> 把 Medium 的技術文移過來了。</p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+  </entry>
+</search>

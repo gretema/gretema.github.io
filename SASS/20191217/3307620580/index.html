@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="延續上一篇的主題，本篇將整理稍微進階一些、但更接近實作的相關應用，包含如何使用 SASS 來提升響應式設計的開發效率。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[SASS] SASS 基礎概念 2">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;SASS&#x2F;20191217&#x2F;3307620580&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="延續上一篇的主題，本篇將整理稍微進階一些、但更接近實作的相關應用，包含如何使用 SASS 來提升響應式設計的開發效率。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2019-12-17T06:51:50.000Z">
+<meta property="article:modified_time" content="2019-12-21T06:47:26.746Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="CSS">
+<meta property="article:tag" content="SASS">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/SASS/20191217/3307620580/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[SASS] SASS 基礎概念 2 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/SASS/20191217/3307620580/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [SASS] SASS 基礎概念 2
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2019-12-17 14:51:50" itemprop="dateCreated datePublished" datetime="2019-12-17T14:51:50+08:00">2019-12-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2019-12-21 14:47:26" itemprop="dateModified" datetime="2019-12-21T14:47:26+08:00">2019-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SASS/" itemprop="url" rel="index">
+                    <span itemprop="name">SASS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/SASS/20191217/3307620580/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="SASS/20191217/3307620580/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>延續上一篇的主題，本篇將整理稍微進階一些、但更接近實作的相關應用，包含如何使用 SASS 來提升響應式設計的開發效率。</p>
+<a id="more"></a>
+
+<h2 id="化簡知識庫：-mixin-設定常用語法，-include-召喚出來"><a href="#化簡知識庫：-mixin-設定常用語法，-include-召喚出來" class="headerlink" title="化簡知識庫：@mixin 設定常用語法，@include 召喚出來"></a>化簡知識庫：<code>@mixin</code> 設定常用語法，<code>@include</code> 召喚出來</h2><p>這個語法可以省去一直回想原理跟技巧的時間。</p>
+<h3 id="基本用法：複製"><a href="#基本用法：複製" class="headerlink" title="基本用法：複製"></a>基本用法：複製</h3><ol>
+<li>寫在檔案起始處，<code>@mixin</code> 後面取一個<strong>變數名</strong>接中括號，裡面寫該變數所欲達成的效果。</li>
+<li>後面需要呼叫該效果時，先寫選擇器加中刮弧，裡面先寫 <code>@include</code>，後面加變數名稱。</li>
+<li><code>@mixin</code> 裡面寫的常用語法，會用「&amp;」來表示所在的選擇器。例如：<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&amp;<span class="selector-pseudo">:after</span> &#123;</span><br><span class="line">  <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="補充用法：參數"><a href="#補充用法：參數" class="headerlink" title="補充用法：參數"></a>補充用法：參數</h3><p><code>@mixin</code> 也可以設參數，而且可以是複數的參數。</p>
+<p>例如，先在開頭設定如下：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@mixin</span> circle (<span class="variable">$size</span>, <span class="variable">$bgcolor</span>) &#123;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="variable">$size</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="variable">$size</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="variable">$size</span> / <span class="number">3</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="variable">$bgcolor</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之後要在某選擇器使用時，就可以簡單用一行字召喚出來了。</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span>&#123;</span><br><span class="line">  <span class="keyword">@include</span> circle (<span class="number">30px</span>, <span class="number">#fff</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用途舉例"><a href="#用途舉例" class="headerlink" title="用途舉例"></a>用途舉例</h3><ul>
+<li>圖片取代文字</li>
+<li>兼容各瀏覽器的 inline-block 的寫法</li>
+<li>各 CSS3 語法瀏覽器支援解決方案</li>
+<li>清除浮動</li>
+<li>用 CSS 畫各方向的三角型</li>
+</ul>
+<blockquote>
+<p>溫馨提示：平常可以多累積自己的 mixin 資料庫，設一個 mixin 資料夾把學過的一些 CSS 技巧記錄成 .sass 檔存放進去。有些面試官光看應徵者的 mixin 庫就能了解這個人處理過多少專案了。</p>
+</blockquote>
+<h2 id="將-mixin-用於開發-RWD"><a href="#將-mixin-用於開發-RWD" class="headerlink" title="將 @mixin 用於開發 RWD"></a>將 <code>@mixin</code> 用於開發 RWD</h2><p>先用 <code>@mixin</code> 設定好斷點，各斷點可以取名為該裝置的名字，例如 <code>pad</code>、<code>iPhone5</code> 等。<br>接著在 media query 裡面只要加一個東西，那就是 <code>@content</code>。</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@mixin</span> iphone5&#123;</span><br><span class="line">  <span class="keyword">@media</span> (max-width: <span class="number">320px</span>) &#123;</span><br><span class="line">    <span class="keyword">@content</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之後就先寫 PC 版的樣式，但在需要 RWD 的項目裡面，可以用 <code>@include</code> 呼叫斷點，然後直接寫 RWD 的樣式在裡面。</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.header</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>:<span class="number">100px</span>;</span><br><span class="line">  <span class="keyword">@include</span> iphone5&#123;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">30</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>溫馨提示：應該常備一個 <code>grid.scss</code> 專放用 <code>@mixin</code> 設定好的 media query 斷點，在開發時就可以打開來複製到手上的新專案。</p>
+</blockquote>
+<hr>
+<p>掌握了這兩篇介紹的 SASS 基礎，就相當夠用了。當然，之後如果有機會再吸收一些 SASS 技巧也會繼續分享的。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CSS/" rel="tag"># CSS</a>
+              <a href="/tags/SASS/" rel="tag"># SASS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/SASS/20191217/1546590558/" rel="prev" title="[SASS] SASS 基礎概念 1">
+      <i class="fa fa-chevron-left"></i> [SASS] SASS 基礎概念 1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/htmlcss/20191217/214491870/" rel="next" title="[CSS] CSS3 flex 屬性">
+      [CSS] CSS3 flex 屬性 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#化簡知識庫：-mixin-設定常用語法，-include-召喚出來"><span class="nav-number">1.</span> <span class="nav-text">化簡知識庫：@mixin 設定常用語法，@include 召喚出來</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本用法：複製"><span class="nav-number">1.1.</span> <span class="nav-text">基本用法：複製</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#補充用法：參數"><span class="nav-number">1.2.</span> <span class="nav-text">補充用法：參數</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用途舉例"><span class="nav-number">1.3.</span> <span class="nav-text">用途舉例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#將-mixin-用於開發-RWD"><span class="nav-number">2.</span> <span class="nav-text">將 @mixin 用於開發 RWD</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/SASS/20191217/3307620580/",
+            identifier: "SASS/20191217/3307620580/",
+            title: "[SASS] SASS 基礎概念 2"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

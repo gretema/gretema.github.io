@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="上一篇我們提到，要從根實例傳資料到元件裡，需要使用 props 特性來傳遞，今天這篇筆記會談談 props 如何實際使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Vue] Vue 元件 - props 篇">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Vuejs&#x2F;20191220&#x2F;3720178681&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="上一篇我們提到，要從根實例傳資料到元件裡，需要使用 props 特性來傳遞，今天這篇筆記會談談 props 如何實際使用。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;w36W7L2.png">
+<meta property="article:published_time" content="2019-12-20T04:00:10.000Z">
+<meta property="article:modified_time" content="2019-12-21T06:47:26.746Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="Vue元件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;w36W7L2.png">
+
+<link rel="canonical" href="http://gretema.github.io/Vuejs/20191220/3720178681/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[Vue] Vue 元件 - props 篇 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/Vuejs/20191220/3720178681/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [Vue] Vue 元件 - props 篇
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2019-12-20 12:00:10" itemprop="dateCreated datePublished" datetime="2019-12-20T12:00:10+08:00">2019-12-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2019-12-21 14:47:26" itemprop="dateModified" datetime="2019-12-21T14:47:26+08:00">2019-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vuejs/" itemprop="url" rel="index">
+                    <span itemprop="name">Vuejs</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/Vuejs/20191220/3720178681/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Vuejs/20191220/3720178681/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>上一篇我們提到，要從根實例傳資料到元件裡，需要使用 <code>props</code> 特性來傳遞，今天這篇筆記會談談 <code>props</code> 如何實際使用。</p>
+<a id="more"></a>
+
+<h2 id="在-HTML-放入元件"><a href="#在-HTML-放入元件" class="headerlink" title="在 HTML 放入元件"></a>在 HTML 放入元件</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>靜態傳遞<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">photo</span>&gt;</span><span class="tag">&lt;/<span class="name">photo</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>動態傳遞<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">photo</span>&gt;</span><span class="tag">&lt;/<span class="name">photo</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="定義元件模板"><a href="#定義元件模板" class="headerlink" title="定義元件模板"></a>定義元件模板</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/x-template"</span> <span class="attr">id</span>=<span class="string">"photo"</span>&gt;</span></span><br><span class="line"><span class="handlebars"><span class="xml">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">    &lt;img :scr=<span class="string">"imgUrl"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"img-fluid"</span> alt=<span class="string">""</span> /&gt;</span></span><br><span class="line"><span class="handlebars"><span class="xml">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>風景照<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span></span><br><span class="line"><span class="handlebars"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="宣告-Vue-根實例"><a href="#宣告-Vue-根實例" class="headerlink" title="宣告 Vue 根實例"></a>宣告 Vue 根實例</h2><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">var</span> app = <span class="literal">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  <span class="built_in">data</span>: &#123;</span><br><span class="line">    url: <span class="string">'一個圖片網址'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="在-Vue-根實例上方宣告一個元件"><a href="#在-Vue-根實例上方宣告一個元件" class="headerlink" title="在 Vue 根實例上方宣告一個元件"></a>在 Vue 根實例上方宣告一個元件</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'自定義元件名稱'</span>,&#123;</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'# template 的 id 名稱'</span>,</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'取得 data 資料的屬性名'</span>]</span><br><span class="line">  <span class="comment">// 之後要用這裡的資料屬性名稱在 HTML 上設定 v-bind，就能得到上層的資料</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 範例</span></span><br><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'photo'</span>,&#123;</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'imgUrl'</span>],</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#photo'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>接下來傳遞資料的方式可以選擇靜態傳遞或動態傳遞。</p>
+<h2 id="靜態與動態傳入數值差異"><a href="#靜態與動態傳入數值差異" class="headerlink" title="靜態與動態傳入數值差異"></a>靜態與動態傳入數值差異</h2><p>加在 HTML 標籤上的屬性可以分為靜態跟動態兩種，沒有設定 <code>v-bind</code> 的屬性為靜態，有設定 <code>v-bind</code> 的屬性為動態。</p>
+<p>靜態屬性的值一律會轉為字串型別，動態屬性的值則不一定是字串。</p>
+<h3 id="靜態傳遞"><a href="#靜態傳遞" class="headerlink" title="靜態傳遞"></a>靜態傳遞</h3><p><code>&lt;photo img-url=&quot;圖片的網址&quot;&gt;&lt;/photo&gt;</code><br>原本在元件內的 <code>props</code> 值為 <code>imgUrl</code>，放到 HTML 中時要把駝峰改成 <code>-</code> 。<br><code>img-url</code>的值（圖片網址）會透過 <code>x-template</code> 中 <code>:src=&quot;imgUrl&quot;</code> 而跑到元件 <code>props</code> 裡。</p>
+<h3 id="動態傳遞"><a href="#動態傳遞" class="headerlink" title="動態傳遞"></a>動態傳遞</h3><p><code>&lt;photo :img-url=&quot;url&quot;&gt;&lt;/photo&gt;</code><br>這裡的 <code>url</code> 作為與元件 <code>props</code> <code>imgUrl</code> 綁定的值，同時代表的是根實例 <code>data</code> 物件中的 <code>url</code> 特性，因此會把 <code>url</code> 中的圖片網址帶進 <code>props</code> 裡面。</p>
+<h2 id="props-圖解"><a href="#props-圖解" class="headerlink" title="props 圖解"></a>props 圖解</h2><p><img src="https://i.imgur.com/w36W7L2.png" alt="這張圖屬於建良"></p>
+<h2 id="props-使用注意事項"><a href="#props-使用注意事項" class="headerlink" title="props 使用注意事項"></a>props 使用注意事項</h2><h3 id="1-單向數據流"><a href="#1-單向數據流" class="headerlink" title="1. 單向數據流"></a>1. 單向數據流</h3><p>像上面這樣使用 <code>v-bind</code> 綁定 <code>props</code>，並傳入 Vue 實例的 <code>data</code> 資料，如果又在 DOM 運用 <code>props</code> 屬性建立 <code>v-model</code> 會形成一個問題，就是當使用者從畫面上修改資料時，會去動到根實例的 <code>data</code> ，但這樣是不合規範的，所以會跳錯。</p>
+<p>解決辦法是在<strong>元件</strong>中新增 <code>data</code> 特性，對應一個 function，並在裡面 <code>return</code> 新的特性，當作<u>與畫面雙向綁定的標的</u>，這樣就不會跳錯了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JS</span></span><br><span class="line">Vue.component(<span class="string">'photo'</span>, &#123;</span><br><span class="line">  props: [<span class="string">'imgUrl'</span>],</span><br><span class="line">  template: <span class="string">'#photo'</span>,</span><br><span class="line">  data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">       newUrl: <span class="keyword">this</span>.imgUrl</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;script type=<span class="string">"text/x-template"</span> id=<span class="string">"photo"</span>&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;img :src=<span class="string">"imgUrl"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"img-fluid"</span> alt=<span class="string">""</span> /&gt;</span><br><span class="line">  &lt;input type=<span class="string">"text"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"form-control"</span> v-model=<span class="string">"newUrl"</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+<p><code>newUrl</code> 的值有兩個角色，第一個是接收 <code>props</code> 傳入的資料，第二個是放在元件模板中設定 <code>v-model</code>，使用 <code>newUrl</code> 來與畫面做雙向綁定，就能把 <code>props</code> 資料與 Vue 實例的 <code>data</code> 做隔離。</p>
+<h3 id="2-尚未宣告的變數"><a href="#2-尚未宣告的變數" class="headerlink" title="2. 尚未宣告的變數"></a>2. 尚未宣告的變數</h3><p>當我們在根實例 <code>data</code> 物件新增空的物件，並希望透過 AJAX 推資料進去這個空物件時，元件渲染會發生在 AJAX 資料推進來之前，就會造成抓不到資料而跳錯。</p>
+<p>解決方法是使用 <code>v-if=&quot;AJAX 傳入的資料特性&quot;</code>，確保 AJAX 取得資料後，才渲染元件；在資料尚未取得前，元件都不會顯示。</p>
+<p>範例：<br><code>&lt;card :user-data=&quot;user&quot; v-if=&quot;user.phone&quot;&gt;&lt;/card&gt;</code></p>
+<p><code>v-if</code> 裡對應的值可以是 AJAX 資料中隨便一個資料特性，這邊的 <code>user</code> 指的是一開始就宣告的空物件名稱。</p>
+<h3 id="3-物件透過參考的方式傳遞資料"><a href="#3-物件透過參考的方式傳遞資料" class="headerlink" title="3. 物件透過參考的方式傳遞資料"></a>3. 物件透過參考的方式傳遞資料</h3><p>在 JavaScript 中，當我們宣告一個變數並賦予它一個新的物件時，記憶體的某處也會建立起一個物件，然後把剛剛的變數指向新生成的物件。</p>
+<p>接著，如果我們又宣告第二個變數，並將這個變數指向第一個變數的話，當我們更新第一個變數裡的特性值，第二個變數的內容也會隨之更新。</p>
+<p>也就是說，兩個變數都是指向同一個實體。</p>
+<p>所以，當我們在畫面上修改資料，會更改到 <code>props</code> 的值，甚至連 Vue 實例的 <code>data</code> 物件也會跟著被改變。</p>
+<p>那為何單向數據流無法像這樣傳遞呢？因為單向數據流傳遞的是<strong>一般字串</strong>，所以<u>無法像物件這樣傳遞參考的特性</u>。如果沒有修改物件的特性，都還是維持單向數據流的概念。</p>
+<h3 id="4-維持狀態與生命週期"><a href="#4-維持狀態與生命週期" class="headerlink" title="4. 維持狀態與生命週期"></a>4. 維持狀態與生命週期</h3><p>如果不希望元件每次都重新生成，或是元件內的內容是由 AJAX 而來，而你不希望每次重整，元件都接收到不一樣的內容的話，就可以使用 <code>&lt;keep-alive&gt;</code> 標籤包住元件，這樣就能維持元件的狀態了。</p>
+<h2 id="props-值的型別"><a href="#props-值的型別" class="headerlink" title="props 值的型別"></a>props 值的型別</h2><p>預先定義 <code>props</code> 應該傳入哪種型別的資料，避免傳入錯誤的資料。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原本是這樣寫</span></span><br><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'prop-type'</span>, &#123;</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'cash'</span>],</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#propType'</span>,</span><br><span class="line">  <span class="attribute">data</span>: function() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      <span class="attribute">newCash</span>: this.cash</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 預先定義 props 值型別</span></span><br><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'prop-type'</span>, &#123;</span><br><span class="line">   <span class="attribute">props</span>: &#123;</span><br><span class="line">     <span class="attribute">cash</span>: &#123;</span><br><span class="line">       <span class="attribute">type</span>: Number,</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;,</span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#propType'</span>,</span><br><span class="line">  <span class="attribute">data</span>: function() &#123;</span><br><span class="line">    <span class="selector-tag">return</span> &#123;</span><br><span class="line">      <span class="attribute">newCash</span>: this.cash</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>有時候 <code>props</code> 不會接收到來自外部的值，但如果我們希望它帶有預設值，可以這樣做：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">props</span>: &#123;</span><br><span class="line">  <span class="attribute">cash</span>: &#123;</span><br><span class="line">    type: Number,</span><br><span class="line">    default: 預設值</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+              <a href="/tags/Vue%E5%85%83%E4%BB%B6/" rel="tag"># Vue元件</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191219/714316638/" rel="prev" title="[Vue] Vue 元件 - 基礎篇">
+      <i class="fa fa-chevron-left"></i> [Vue] Vue 元件 - 基礎篇
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191220/2032442117/" rel="next" title="[Vue] Vue 元件 - emit 篇">
+      [Vue] Vue 元件 - emit 篇 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#在-HTML-放入元件"><span class="nav-number">1.</span> <span class="nav-text">在 HTML 放入元件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定義元件模板"><span class="nav-number">2.</span> <span class="nav-text">定義元件模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#宣告-Vue-根實例"><span class="nav-number">3.</span> <span class="nav-text">宣告 Vue 根實例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在-Vue-根實例上方宣告一個元件"><span class="nav-number">4.</span> <span class="nav-text">在 Vue 根實例上方宣告一個元件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#靜態與動態傳入數值差異"><span class="nav-number">5.</span> <span class="nav-text">靜態與動態傳入數值差異</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#靜態傳遞"><span class="nav-number">5.1.</span> <span class="nav-text">靜態傳遞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#動態傳遞"><span class="nav-number">5.2.</span> <span class="nav-text">動態傳遞</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#props-圖解"><span class="nav-number">6.</span> <span class="nav-text">props 圖解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#props-使用注意事項"><span class="nav-number">7.</span> <span class="nav-text">props 使用注意事項</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-單向數據流"><span class="nav-number">7.1.</span> <span class="nav-text">1. 單向數據流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-尚未宣告的變數"><span class="nav-number">7.2.</span> <span class="nav-text">2. 尚未宣告的變數</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-物件透過參考的方式傳遞資料"><span class="nav-number">7.3.</span> <span class="nav-text">3. 物件透過參考的方式傳遞資料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-維持狀態與生命週期"><span class="nav-number">7.4.</span> <span class="nav-text">4. 維持狀態與生命週期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#props-值的型別"><span class="nav-number">8.</span> <span class="nav-text">props 值的型別</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/Vuejs/20191220/3720178681/",
+            identifier: "Vuejs/20191220/3720178681/",
+            title: "[Vue] Vue 元件 - props 篇"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

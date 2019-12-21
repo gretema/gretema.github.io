@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="我是在學習 Bootstrap 4 時才真正接觸到這個 CSS3 的屬性，在此之前都是用 float 屬性在排版。但是用 float 的缺點就是清除浮動很麻煩，如果能夠掌握 flex 屬性的話就能解決這個問題，而且真的能夠更加「彈性」地排版。 以下．就讓我們來了解 flex 屬性吧！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[CSS] CSS3 flex 屬性">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;htmlcss&#x2F;20191217&#x2F;214491870&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="我是在學習 Bootstrap 4 時才真正接觸到這個 CSS3 的屬性，在此之前都是用 float 屬性在排版。但是用 float 的缺點就是清除浮動很麻煩，如果能夠掌握 flex 屬性的話就能解決這個問題，而且真的能夠更加「彈性」地排版。 以下．就讓我們來了解 flex 屬性吧！">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload.cc&#x2F;i1&#x2F;2019&#x2F;12&#x2F;17&#x2F;ir0BpN.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload.cc&#x2F;i1&#x2F;2019&#x2F;12&#x2F;17&#x2F;puywS6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload.cc&#x2F;i1&#x2F;2019&#x2F;12&#x2F;17&#x2F;S2noQc.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload.cc&#x2F;i1&#x2F;2019&#x2F;12&#x2F;17&#x2F;7n3Gbm.png">
+<meta property="article:published_time" content="2019-12-17T07:08:09.000Z">
+<meta property="article:modified_time" content="2019-12-21T06:47:26.744Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="CSS3">
+<meta property="article:tag" content="flexbox">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;upload.cc&#x2F;i1&#x2F;2019&#x2F;12&#x2F;17&#x2F;ir0BpN.png">
+
+<link rel="canonical" href="http://gretema.github.io/htmlcss/20191217/214491870/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[CSS] CSS3 flex 屬性 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/htmlcss/20191217/214491870/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [CSS] CSS3 flex 屬性
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2019-12-17 15:08:09" itemprop="dateCreated datePublished" datetime="2019-12-17T15:08:09+08:00">2019-12-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2019-12-21 14:47:26" itemprop="dateModified" datetime="2019-12-21T14:47:26+08:00">2019-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/htmlcss/" itemprop="url" rel="index">
+                    <span itemprop="name">HTML&CSS</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/htmlcss/20191217/214491870/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="htmlcss/20191217/214491870/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我是在學習 Bootstrap 4 時才真正接觸到這個 CSS3 的屬性，在此之前都是用 float 屬性在排版。但是用 float 的缺點就是清除浮動很麻煩，如果能夠掌握 flex 屬性的話就能解決這個問題，而且真的能夠更加「彈性」地排版。</p>
+<p>以下．就讓我們來了解 flex 屬性吧！</p>
+<a id="more"></a>
+
+<h2 id="軸線觀念"><a href="#軸線觀念" class="headerlink" title="軸線觀念"></a>軸線觀念</h2><p>以前學到的 float 只能水平排列，現在學到的 flex 能夠同時做到水平跟垂直排列，也因此衍生出不同對齊方式，所以使用了 flex 的元素也就有了「軸線」這個東西。</p>
+<p>在<strong>預設</strong>的情況下，水平方向的軸線稱為<strong>主軸線</strong>，垂直方向的軸線稱為<strong>交錯軸</strong>，兩種軸線都有<strong>起點</strong>跟<strong>終點</strong>，物件會從主軸線起點（左到右）開始排列。<br><img src="https://upload.cc/i1/2019/12/17/ir0BpN.png" alt></p>
+<p>必須注意的是，當物件排列的方向改變時（上到下），主軸線跟交錯軸的方向就會交換，垂直的軸線變成主軸線、水平的軸線變成交錯軸。<br><img src="https://upload.cc/i1/2019/12/17/puywS6.png" alt="."></p>
+<h2 id="一覽-flex-相關屬性"><a href="#一覽-flex-相關屬性" class="headerlink" title="一覽 flex 相關屬性"></a>一覽 flex 相關屬性</h2><p>可以用<strong>外層屬性</strong>或<strong>內層屬性</strong>來分類，也可以用<strong>是否為對齊方法</strong>來分類。<br>粗體為特別重要的屬性。</p>
+<h3 id="外層屬性"><a href="#外層屬性" class="headerlink" title="外層屬性"></a>外層屬性</h3><ul>
+<li>display - 必備屬性，宣告 flex 排版</li>
+<li>flex-flow<ul>
+<li><strong>flex-direction</strong> - 決定 flex 軸線</li>
+<li>flex-wrap - 決定換行的屬性</li>
+</ul>
+</li>
+<li><strong>justify-content</strong> - 主軸線的對齊</li>
+<li><strong>align-items</strong> - 交錯軸的對齊</li>
+</ul>
+<h3 id="內層屬性"><a href="#內層屬性" class="headerlink" title="內層屬性"></a>內層屬性</h3><ul>
+<li>flex<ul>
+<li>flex-grow - 伸展比</li>
+<li>flex-shrink - 收縮比</li>
+<li>flex-basis - 絕對值</li>
+</ul>
+</li>
+<li>order - 排序</li>
+<li><strong>align-self</strong> - 單一物件的交錯軸對齊</li>
+</ul>
+<h3 id="對齊方法"><a href="#對齊方法" class="headerlink" title="對齊方法"></a>對齊方法</h3><h4 id="flex-direction-屬性"><a href="#flex-direction-屬性" class="headerlink" title="flex-direction 屬性"></a><code>flex-direction</code> 屬性</h4><p>決定主軸線方向，共有四個值。</p>
+<ul>
+<li>row：預設值，物件將沿著主軸線由左到右排列</li>
+<li>row-reverse：反轉主軸線，物件將沿著主軸線由右到左排列</li>
+<li>column：將主軸線由水平改為垂直，物件將由上至下排列</li>
+<li>column-reverse：將主軸線由水平改為垂直，物件將由下至上排列</li>
+</ul>
+<h4 id="justify-content-屬性"><a href="#justify-content-屬性" class="headerlink" title="justify-content 屬性"></a><code>justify-content</code> 屬性</h4><p>依據主軸線決定內層物件之間的間隔方式。共有五個值。</p>
+<ul>
+<li>flex-start：所有內層物件對齊主軸線起點</li>
+<li>flex-end：所有內層物件對齊主軸線終點</li>
+<li>center：所有內層物件置中在主軸線上</li>
+<li>space-between：內層物件頭尾在主軸線起訖點，其餘物件等距對齊</li>
+<li>space-around：所有內層物件之間等距對齊</li>
+</ul>
+<p><img src="https://upload.cc/i1/2019/12/17/S2noQc.png" alt></p>
+<h4 id="align-items-屬性"><a href="#align-items-屬性" class="headerlink" title="align-items 屬性"></a>align-items 屬性</h4><p>依據交錯軸決定內層物件的垂直對齊方式。共有五個值。</p>
+<ul>
+<li>flex-start：所有內層物件對齊交錯軸起點</li>
+<li>flex-end：所有內層物件對齊交錯軸終點</li>
+<li>center：所有內層物件在交錯軸上置中</li>
+<li>baseline：跟文字行高有關，用文字的基準線作排列（很少用）</li>
+<li>stretch：所有內層物件拉高，由交錯軸起點拉到終點</li>
+</ul>
+<p><img src="https://upload.cc/i1/2019/12/17/7n3Gbm.png" alt></p>
+<h4 id="align-self-屬性"><a href="#align-self-屬性" class="headerlink" title="align-self 屬性"></a>align-self 屬性</h4><p>個別的內層元件本身的垂直對齊方式，此屬性的值跟 <code>align-items</code> 一模一樣。</p>
+<h3 id="對齊以外的其他屬性"><a href="#對齊以外的其他屬性" class="headerlink" title="對齊以外的其他屬性"></a>對齊以外的其他屬性</h3><h4 id="flex-wrap-屬性（外層）"><a href="#flex-wrap-屬性（外層）" class="headerlink" title="flex-wrap 屬性（外層）"></a>flex-wrap 屬性（外層）</h4><p>決定物件超出範圍時要不要換行。</p>
+<p class="codepen" data-height="265" data-theme-id="default" data-default-tab="html,result" data-user="gretema" data-slug-hash="yLBqRaQ" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="bs flex flex-wrap">
+  <span>See the Pen <a href="https://codepen.io/gretema/pen/yLBqRaQ" target="_blank" rel="external nofollow noopener noreferrer">
+  bs flex flex-wrap</a> by 馬維君 (<a href="https://codepen.io/gretema" target="_blank" rel="external nofollow noopener noreferrer">@gretema</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<p>範例中，原本 <code>.col-*</code> 會被 <code>.row</code> 包裹，但因為 Bootstrap 已經幫 <code>.row</code> 內建 <code>flex-wrap</code> 換行了，所以改用 <code>.d-flex</code> 包裹 <code>.col-*</code>。</p>
+<h4 id="align-content（外層）"><a href="#align-content（外層）" class="headerlink" title="align-content（外層）"></a>align-content（外層）</h4><p>只有在換行（<code>flex-wrap</code>）的情況下可使用，用在有高度的外層容器上，會使內層物件在父元素內垂直對齊。</p>
+<p class="codepen" data-height="265" data-theme-id="default" data-default-tab="html,result" data-user="gretema" data-slug-hash="mdbjzqw" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="bs flex align-content">
+  <span>See the Pen <a href="https://codepen.io/gretema/pen/mdbjzqw" target="_blank" rel="external nofollow noopener noreferrer">
+  bs flex align-content</a> by 馬維君 (<a href="https://codepen.io/gretema" target="_blank" rel="external nofollow noopener noreferrer">@gretema</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<h4 id="order-屬性（內層）"><a href="#order-屬性（內層）" class="headerlink" title="order 屬性（內層）"></a>order 屬性（內層）</h4><p>用來更改區塊排列的順序，將 <code>order-*</code> 寫在 class 裡，<code>*</code> 代表我們希望區塊排列的順序。</p>
+<p class="codepen" data-height="265" data-theme-id="default" data-default-tab="html,result" data-user="gretema" data-slug-hash="eYOjPJx" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="bs flex order">
+  <span>See the Pen <a href="https://codepen.io/gretema/pen/eYOjPJx" target="_blank" rel="external nofollow noopener noreferrer">
+  bs flex order</a> by 馬維君 (<a href="https://codepen.io/gretema" target="_blank" rel="external nofollow noopener noreferrer">@gretema</a>)
+  on <a href="https://codepen.io" target="_blank" rel="external nofollow noopener noreferrer">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<hr>
+<p>參考資料：<a href="https://wcc723.github.io/css/2017/07/21/css-flex/" target="_blank" rel="external nofollow noopener noreferrer">圖解：CSS Flex 屬性一點也不難</a></p>
+<hr>
+<p>看完這篇，保證你可以加入六角戰隊去<a href="https://hexschool.github.io/flexbox-pirate/index.html#/" target="_blank" rel="external nofollow noopener noreferrer">打海盜</a>！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CSS3/" rel="tag"># CSS3</a>
+              <a href="/tags/flexbox/" rel="tag"># flexbox</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/SASS/20191217/3307620580/" rel="prev" title="[SASS] SASS 基礎概念 2">
+      <i class="fa fa-chevron-left"></i> [SASS] SASS 基礎概念 2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/hexo/20191217/2656253328/" rel="next" title="[Hexo] 使用 NexT 主題如何在文章中內嵌 Codepen">
+      [Hexo] 使用 NexT 主題如何在文章中內嵌 Codepen <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#軸線觀念"><span class="nav-number">1.</span> <span class="nav-text">軸線觀念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一覽-flex-相關屬性"><span class="nav-number">2.</span> <span class="nav-text">一覽 flex 相關屬性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#外層屬性"><span class="nav-number">2.1.</span> <span class="nav-text">外層屬性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#內層屬性"><span class="nav-number">2.2.</span> <span class="nav-text">內層屬性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#對齊方法"><span class="nav-number">2.3.</span> <span class="nav-text">對齊方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#flex-direction-屬性"><span class="nav-number">2.3.1.</span> <span class="nav-text">flex-direction 屬性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#justify-content-屬性"><span class="nav-number">2.3.2.</span> <span class="nav-text">justify-content 屬性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#align-items-屬性"><span class="nav-number">2.3.3.</span> <span class="nav-text">align-items 屬性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#align-self-屬性"><span class="nav-number">2.3.4.</span> <span class="nav-text">align-self 屬性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#對齊以外的其他屬性"><span class="nav-number">2.4.</span> <span class="nav-text">對齊以外的其他屬性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#flex-wrap-屬性（外層）"><span class="nav-number">2.4.1.</span> <span class="nav-text">flex-wrap 屬性（外層）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#align-content（外層）"><span class="nav-number">2.4.2.</span> <span class="nav-text">align-content（外層）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#order-屬性（內層）"><span class="nav-number">2.4.3.</span> <span class="nav-text">order 屬性（內層）</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/htmlcss/20191217/214491870/",
+            identifier: "htmlcss/20191217/214491870/",
+            title: "[CSS] CSS3 flex 屬性"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="本篇文章將記錄 RWD 的常用選單語法結構，包含多行多列選單及漢堡選單等兩種。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[RWD] 響應式網頁 - 多欄多列選單及漢堡選單">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;rwd&#x2F;20191216&#x2F;3809709620&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="本篇文章將記錄 RWD 的常用選單語法結構，包含多行多列選單及漢堡選單等兩種。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2019-12-16T07:44:51.000Z">
+<meta property="article:modified_time" content="2019-12-21T06:47:26.745Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="CSS">
+<meta property="article:tag" content="響應式網頁設計">
+<meta property="article:tag" content="HTML">
+<meta property="article:tag" content="jQuery">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/rwd/20191216/3809709620/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[RWD] 響應式網頁 - 多欄多列選單及漢堡選單 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/rwd/20191216/3809709620/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [RWD] 響應式網頁 - 多欄多列選單及漢堡選單
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2019-12-16 15:44:51" itemprop="dateCreated datePublished" datetime="2019-12-16T15:44:51+08:00">2019-12-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2019-12-21 14:47:26" itemprop="dateModified" datetime="2019-12-21T14:47:26+08:00">2019-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/rwd/" itemprop="url" rel="index">
+                    <span itemprop="name">RWD</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/rwd/20191216/3809709620/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="rwd/20191216/3809709620/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本篇文章將記錄 RWD 的常用選單語法結構，包含多行多列選單及漢堡選單等兩種。</p>
+<a id="more"></a>
+
+<h2 id="多欄多列選單排版法：以-3-2-為例"><a href="#多欄多列選單排版法：以-3-2-為例" class="headerlink" title="多欄多列選單排版法：以 3*2 為例"></a>多欄多列選單排版法：以 3*2 為例</h2><h3 id="語法："><a href="#語法：" class="headerlink" title="語法："></a>語法：</h3><h4 id="HTML："><a href="#HTML：" class="headerlink" title="HTML："></a>HTML：</h4><p><code>&lt;ul&gt;&lt;li&gt;</code> 結構，<code>&lt;li&gt;</code> 需要 6 個</p>
+<h4 id="CSS："><a href="#CSS：" class="headerlink" title="CSS："></a>CSS：</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">float: right;  // PC版排版</span><br><span class="line"><span class="keyword">@media</span> ( <span class="attribute">max-width:</span> <span class="number">767px</span>)&#123;</span><br><span class="line">  float: none;  // 自然排列，這是 RWD 的精髓</span><br><span class="line">  <span class="selector-tag">width</span>: 33<span class="selector-class">.33333</span> % ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="漢堡選單排版法"><a href="#漢堡選單排版法" class="headerlink" title="漢堡選單排版法"></a>漢堡選單排版法</h2><p>請搭配 <a href="https://codepen.io/gretema/pen/bzQveq" target="_blank" rel="external nofollow noopener noreferrer">範例程式碼</a> 一同觀看。</p>
+<h3 id="漢堡選單是怎麼出現的"><a href="#漢堡選單是怎麼出現的" class="headerlink" title="漢堡選單是怎麼出現的"></a>漢堡選單是怎麼出現的</h3><p>在寫 PC 版時，就預先寫好了漢堡選單的按鈕（<code>&lt;a&gt;.showmenu</code>），只是用 <code>display: none</code> 先隱藏起來；漢堡選單裡的選項跟 PC 版其實是同一套，只是把 <code>float</code> 拿掉而已。</p>
+<h3 id="PC-版選單怎麼變成漢堡選單的"><a href="#PC-版選單怎麼變成漢堡選單的" class="headerlink" title="PC 版選單怎麼變成漢堡選單的"></a>PC 版選單怎麼變成漢堡選單的</h3><h4 id="CSS：-1"><a href="#CSS：-1" class="headerlink" title="CSS："></a>CSS：</h4><blockquote>
+<p>以下都是寫在 <code>@media (max-width: 767px)</code> 的大括號裡，在相對應的裝置才會觸發，1~3 都是 <code>.menu</code> 的樣式。</p>
+</blockquote>
+<ol>
+<li>隱藏選單<strong>（關鍵語法）</strong>（之後會用 jQ 動態加入 <code>class</code>，就會展開）<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">max-height</span>: <span class="number">0px</span>;</span><br><span class="line"><span class="attribute">overflow</span>: hidden;</span><br></pre></td></tr></table></figure></li>
+<li>絕對定位疊在網頁上<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">z-index</span>: <span class="number">100</span>; <span class="comment">// 權重</span></span><br><span class="line"><span class="attribute">top</span>: <span class="number">81px</span>; <span class="comment">// 因為 header 80 px + border 1 px，若漢堡選單要從 header 下方展開就要這樣設</span></span><br><span class="line"><span class="attribute">left</span>: <span class="number">0</span>; <span class="comment">// 在絕對定位之下要做出滿版效果，左右都要0</span></span><br><span class="line"><span class="attribute">right</span>: <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
+<li>選單展開的漸變效果<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">transition</span>: <span class="selector-tag">max-height</span> 2<span class="selector-class">.3s</span>;</span><br></pre></td></tr></table></figure></li>
+<li>取消隱藏漢堡選單的按鈕<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.showmenu</span>&#123;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">float</span>: right;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">1</span> em;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>配合 jQ 指令的 CSS 語法：點擊後，動態在 <code>body</code> 加上 <code>class</code><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.<span class="keyword">menu</span>-show .<span class="keyword">menu</span>&#123;</span><br><span class="line">  <span class="keyword">max</span>-height: <span class="number">500</span>px; <span class="comment">// 選單的高度，原本是設成 0 px</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="jQ："><a href="#jQ：" class="headerlink" title="jQ："></a>jQ：</h4>點擊漢堡按鈕（<code>.showmenu</code>） 後，取消預設連結功能，動態在 <code>body</code> 加上 <code>class</code>（<code>.menu-show</code>）。<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'.showmenu'</span>).on(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">  e.preventDefault();</span><br><span class="line">  $(<span class="string">'body'</span>).toggleClass(<span class="string">'menu-show'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<code>body</code> 加上 <code>.menu-show</code> 之後，<code>body</code> 中的 <code>.menu</code> 才會被觸發，否則按了也不會展開。</li>
+</ol>
+<h3 id="menu-show-為何是加在-body-上"><a href="#menu-show-為何是加在-body-上" class="headerlink" title=".menu-show 為何是加在 body 上"></a>.menu-show 為何是加在 body 上</h3><p>如果 jQ 是在 <code>.menu</code> 上動態加上 <code>class</code> 會怎麼樣呢？</p>
+<p>其實要在哪裡動態加上 <code>class</code>，需要看網頁的樣式怎麼設計。像是有些設計可能不只影響 <code>.menu</code>，還會加上其他的效果，那就必須要加在 <code>body</code> 上。<br>若只有增加彈出選單的效果，那 <code>.menu-show</code> 其實不一定要在 <code>body</code> 上， 加在 <code>.header</code> 、加在 <code>.menu</code> 都可以。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CSS/" rel="tag"># CSS</a>
+              <a href="/tags/%E9%9F%BF%E6%87%89%E5%BC%8F%E7%B6%B2%E9%A0%81%E8%A8%AD%E8%A8%88/" rel="tag"># 響應式網頁設計</a>
+              <a href="/tags/HTML/" rel="tag"># HTML</a>
+              <a href="/tags/jQuery/" rel="tag"># jQuery</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/rwd/20191216/3160700070/" rel="prev" title="[RWD] 響應式網頁 - 常用選單樣式與注意事項">
+      <i class="fa fa-chevron-left"></i> [RWD] 響應式網頁 - 常用選單樣式與注意事項
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/rwd/20191216/822299504/" rel="next" title="[RWD] 響應式網頁 - 固定式選單及 off-canvas 選單">
+      [RWD] 響應式網頁 - 固定式選單及 off-canvas 選單 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#多欄多列選單排版法：以-3-2-為例"><span class="nav-number">1.</span> <span class="nav-text">多欄多列選單排版法：以 3*2 為例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#語法："><span class="nav-number">1.1.</span> <span class="nav-text">語法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTML："><span class="nav-number">1.1.1.</span> <span class="nav-text">HTML：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSS："><span class="nav-number">1.1.2.</span> <span class="nav-text">CSS：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漢堡選單排版法"><span class="nav-number">2.</span> <span class="nav-text">漢堡選單排版法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#漢堡選單是怎麼出現的"><span class="nav-number">2.1.</span> <span class="nav-text">漢堡選單是怎麼出現的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PC-版選單怎麼變成漢堡選單的"><span class="nav-number">2.2.</span> <span class="nav-text">PC 版選單怎麼變成漢堡選單的</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CSS：-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">CSS：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jQ："><span class="nav-number">2.2.2.</span> <span class="nav-text">jQ：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#menu-show-為何是加在-body-上"><span class="nav-number">2.3.</span> <span class="nav-text">.menu-show 為何是加在 body 上</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/rwd/20191216/3809709620/",
+            identifier: "rwd/20191216/3809709620/",
+            title: "[RWD] 響應式網頁 - 多欄多列選單及漢堡選單"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

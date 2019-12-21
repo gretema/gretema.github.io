@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="運用已學到的基礎與進階指令，試著寫出一個 todo-list 待辦事項清單吧！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Vue] 用 Vue 寫一個 todo-list">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Vuejs&#x2F;20191218&#x2F;266480435&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="運用已學到的基礎與進階指令，試著寫出一個 todo-list 待辦事項清單吧！">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2019-12-18T06:36:53.000Z">
+<meta property="article:modified_time" content="2019-12-21T06:47:26.747Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="todolist">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/Vuejs/20191218/266480435/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[Vue] 用 Vue 寫一個 todo-list | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/Vuejs/20191218/266480435/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [Vue] 用 Vue 寫一個 todo-list
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2019-12-18 14:36:53" itemprop="dateCreated datePublished" datetime="2019-12-18T14:36:53+08:00">2019-12-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2019-12-21 14:47:26" itemprop="dateModified" datetime="2019-12-21T14:47:26+08:00">2019-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vuejs/" itemprop="url" rel="index">
+                    <span itemprop="name">Vuejs</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/Vuejs/20191218/266480435/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Vuejs/20191218/266480435/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>運用已學到的基礎與進階指令，試著寫出一個 todo-list 待辦事項清單吧！</p>
+<a id="more"></a>
+
+<p>先附上成品 Demo，以下會一步步說明該如何實作一個 todo-list。</p>
+<iframe src="https://codepen.io/gretema/embed/rNNzKQj?height=265&theme-id=default&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<h2 id="基本架構：輸入欄及待辦事項列表"><a href="#基本架構：輸入欄及待辦事項列表" class="headerlink" title="基本架構：輸入欄及待辦事項列表"></a>基本架構：輸入欄及待辦事項列表</h2><h3 id="HTML-部分"><a href="#HTML-部分" class="headerlink" title="HTML 部分"></a>HTML 部分</h3><ul>
+<li>任務輸入欄：<code>v-model=&quot;newTodo&quot;</code></li>
+<li>輸入按鈕：<code>@click=&quot;addTodo&quot;</code></li>
+<li>渲染每項任務的 <code>&lt;li&gt;</code>：<code>v-for=&quot;items in todos&quot;</code>，<code>todos</code> 是一個陣列，用來儲存所有待辦事項</li>
+<li><code>&lt;li&gt;</code> 裡面的 checkbox：checkbox 要用 <code>v-bind</code> 綁定 <code>todos</code> 中每個物件的 <code>id</code> 特性，<code>:id=&quot;item.id&quot;</code></li>
+<li><code>&lt;li&gt;</code> 裡面的 label：要指向跟 checkbox 同樣的 <code>id</code>，所以要寫成 <code>:for=&quot;item.id&quot;</code>，<code>&lt;label&gt;</code> 中間用雙花括號包住 <code>item.title</code></li>
+<li>任務的完成狀態：在 checkbox 使用 <code>v-model=&quot;item.completed&quot;</code></li>
+<li>加上按鍵功能：為了讓按下 Enter 也能產生跟點擊一樣的效果，在 input 上綁定按鍵事件，<code>@keyup.enter=&quot;addTodo&quot;</code> </li>
+</ul>
+<h3 id="Vue-的-data-部分"><a href="#Vue-的-data-部分" class="headerlink" title="Vue 的 data 部分"></a>Vue 的 data 部分</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">newTodo:<span class="string">''</span>, <span class="comment">// 一個字串，對應到任務輸入欄</span></span><br><span class="line">todos: [] <span class="comment">// 一個陣列，用來儲存所有待辦事項，對應到 &lt;li&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// todos 陣列</span></span><br><span class="line"><span class="comment">// 裡面放物件，一個物件就代表一個任務，該物件會有以下的特性</span></span><br><span class="line">&#123;</span><br><span class="line">  id: <span class="string">''</span>,</span><br><span class="line">  title: <span class="string">''</span>,</span><br><span class="line">  completed: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vue-的-methods-部分-把新事項加到列表"><a href="#Vue-的-methods-部分-把新事項加到列表" class="headerlink" title="Vue 的 methods 部分 (把新事項加到列表)"></a>Vue 的 methods 部分 (把新事項加到列表)</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">methods: &#123;</span><br><span class="line">  addTodo: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 抓取輸入的文字</span></span><br><span class="line">    <span class="keyword">var</span> value = <span class="keyword">this</span>.newTodo;</span><br><span class="line">    <span class="comment">// 賦予 id - 將當下的時間轉為數字</span></span><br><span class="line">    <span class="keyword">var</span> timestamp = <span class="built_in">Math</span>.floor(<span class="built_in">Date</span>.now());</span><br><span class="line">    <span class="comment">// 把資料以物件格式推進 todos 陣列</span></span><br><span class="line">    <span class="keyword">this</span>.todos.push(&#123; <span class="attr">id</span>: timestamp, <span class="attr">title</span>: value, <span class="attr">completed</span>: <span class="literal">false</span> &#125;);</span><br><span class="line">    <span class="keyword">this</span>.newTodo = <span class="string">''</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="輸入欄防呆"><a href="#輸入欄防呆" class="headerlink" title="輸入欄防呆"></a>輸入欄防呆</h2><p>依照上面的設定可以順利新增任務了，但是如果沒在 <code>&lt;input&gt;</code> 打入文字也會送得出去，所以需要增加一些防止空白的效果。</p>
+<p>把 <code>addTodo()</code> 裡面的程式碼稍作修改：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">addTodo: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 加上 trim() 去除頭尾空白並防止沒鍵入文字</span></span><br><span class="line">  <span class="keyword">var</span> value = <span class="keyword">this</span>.newTodo.trim;</span><br><span class="line">  <span class="comment">// 如果輸入欄空白就不會往下執行</span></span><br><span class="line">  <span class="keyword">if</span>(!value)&#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  ... <span class="comment">// 後面一樣</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="刪除待辦事項"><a href="#刪除待辦事項" class="headerlink" title="刪除待辦事項"></a>刪除待辦事項</h2><p>刪除功能必須仰賴待辦事項在陣列中的索引值，才能辨認使用者要刪除的是哪一筆資料，所以要將索引值設參數傳入刪除按鈕綁定的事件中去處理。</p>
+<ul>
+<li>將原本 <code>&lt;li&gt;</code> 設定的 <code>v-for</code> 值改為 <code>(item, key) in todos</code>，<code>key</code> 代表待辦事項的索引值</li>
+<li>在 <code>&lt;li&gt;</code> 中的刪除按鈕綁定事件：<code>@click=&quot;removeTodo(key)&quot;</code></li>
+<li>到 <code>methods</code> 增加 <code>removeTodo()</code>：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">removeTodo: <span class="function"><span class="keyword">function</span>(<span class="params">key</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.todos.splice(key,<span class="number">1</span>);</span><br><span class="line">  <span class="comment">// 括號中的 1 代表從該索引值起，刪除 1 筆資料</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="為已完成事項加上刪除線"><a href="#為已完成事項加上刪除線" class="headerlink" title="為已完成事項加上刪除線"></a>為已完成事項加上刪除線</h2><p>寫一個 CSS 樣式，內容是在文字上加上刪除線。<br>由於 chceckbox 上已經綁定了 <code>v-model=&quot;tem.completed&quot;</code> 可以雙向修改 data 資料中 <code>completed</code> 的值，所以接下來只要在 <code>&lt;label&gt;</code> 上切換 <code>class</code> 即可。<br>在 <code>&lt;label&gt;</code> 上設定：<code>:class=&quot;{ &#39;completed&#39;: item.completed }&quot;</code>。</p>
+<h2 id="製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項"><a href="#製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項" class="headerlink" title="製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項"></a>製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項</h2><h3 id="頁籤切換"><a href="#頁籤切換" class="headerlink" title="頁籤切換"></a>頁籤切換</h3><p>在 <code>data</code> 新增一個特性，這個特性會去感應使用者點擊的是哪一個頁籤，這邊將該特性取名作 <code>visibility</code>，且它的值可以先預設成第一頁頁籤的名稱。<br>在 HTML 頁籤結構的 <code>&lt;a&gt;</code> 上使用切換 <code>class</code> 的指令：<code>:class=&quot;{&#39;active&#39;: visibility == &#39;頁籤名稱&#39;}&quot;</code>，各個頁籤 <code>&lt;a&gt;</code> 都要加這一行，名稱記得替換。頁籤名稱可以依據各頁代表的意義來取。<br>接著在頁籤 <code>&lt;a&gt;</code> 上綁定點擊事件：<code>@click=&quot;visibility = &#39;頁籤名稱&#39;&quot;</code>。</p>
+<h3 id="頁籤過濾"><a href="#頁籤過濾" class="headerlink" title="頁籤過濾"></a>頁籤過濾</h3><p>切換頁籤的功能做好後，繼續做頁面內容的替換（過濾）。<br>剛剛我們呈現在畫面上的都是從 <code>todos</code> 陣列撈出來的資料 (原始資料)，但其實畫面上應該呈現的是過濾後的資料。<br>所以要在 <code>computed</code> 裡面新增方法，運用 <code>todos</code> 進行資料的過濾。</p>
+<p>在 <code>methods</code> 同層新增一個 <code>compute</code> 物件，並宣告一個新方法（這邊取名為 <code>filteredTodos</code>），用來執行過濾功能。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">compute:&#123;</span><br><span class="line">  filteredTodos: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.visibility==<span class="string">'全部任務頁籤名'</span>)&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.todos;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.visibility==<span class="string">'進行中任務頁籤名'</span>) &#123;</span><br><span class="line">         anotherTodos = [];</span><br><span class="line">         <span class="keyword">this</span>.todos.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">           <span class="keyword">if</span>(!item.completed) &#123;</span><br><span class="line">              anotherTodos.push(item);</span><br><span class="line">           &#125;</span><br><span class="line">         &#125;)</span><br><span class="line">        <span class="keyword">return</span> anotherTodos;</span><br><span class="line">    &#125;  <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.visibility==<span class="string">'已完成任務頁籤名'</span>) &#123;</span><br><span class="line">         anotherTodos = [];</span><br><span class="line">         <span class="keyword">this</span>.todos.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">           <span class="keyword">if</span>(item.completed) &#123;</span><br><span class="line">              anotherTodos.push(item);</span><br><span class="line">           &#125;</span><br><span class="line">         &#125;)</span><br><span class="line">        <span class="keyword">return</span> anotherTodos;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把 <code>&lt;li&gt;</code> 原本寫的 <code>v-for = &quot;(item, key) in todos&quot;</code> 的 <code>todos</code> 改為 <code>filteredTodos</code>，可以這樣寫是因為 <code>filteredTodos</code> 回傳的是一個陣列。（<code>in</code> 後面可以接陣列或物件）</p>
+<h3 id="刪除功能的修正"><a href="#刪除功能的修正" class="headerlink" title="刪除功能的修正"></a>刪除功能的修正</h3><p>加入了頁籤換頁功能後，原本的刪除功能會失靈，這是因為不同頁籤就是內容不同的陣列，因此其他頁籤的待辦事項索引值會跟在原始陣列 <code>todos</code> 不同，透過修正 <code>removeTodo()</code> 的程式碼，去比對在不同頁籤中的待辦事項 <code>id</code> 是否相同，如果 <code>id</code> 相同，就回傳它在原始陣列 <code>todos</code> 的索引值，統一從 <code>todos</code> 裡刪除，這樣才不會刪錯。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">removeTodo: <span class="function"><span class="keyword">function</span>(<span class="params">todo</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> vm = <span class="keyword">this</span>;</span><br><span class="line">  <span class="keyword">var</span> newIndex = vm.todos.findIndex(<span class="function"><span class="keyword">function</span>(<span class="params">item, key</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 這裡的 item 指的是 todos 裡的元素</span></span><br><span class="line">    <span class="keyword">return</span> todo.id === item.id;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">this</span>.todos.splice(newIndex,<span class="number">1</span>);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>原本 <code>removeTodo()</code> 是傳入 <code>key</code> 當參數，要改成 <code>todo</code>，<code>todo</code> 代表所點選的項目；刪除按鈕綁定的事件 <code>@click=&quot;removeTodo(key)&quot;</code>，要把參數 <code>key</code> 改成 <code>item</code>。</p>
+<h4 id="用變數存取-this-的必要性"><a href="#用變數存取-this-的必要性" class="headerlink" title="用變數存取 this 的必要性"></a>用變數存取 this 的必要性</h4><p>若在 <code>forEach</code> 中的 callback 函式內使用 <code>this</code> 來存取 <code>data</code> 中的屬性，就會發生讀取不到的問題，為了保險起見還是會宣告個 <code>vm</code> 變數，以確保存取的屬性是 Vue 實例中的 <code>data</code> 內的屬性。</p>
+<h2 id="雙擊修改待辦事項內容"><a href="#雙擊修改待辦事項內容" class="headerlink" title="雙擊修改待辦事項內容"></a>雙擊修改待辦事項內容</h2><h3 id="lt-li-gt-的雙擊事件"><a href="#lt-li-gt-的雙擊事件" class="headerlink" title="&lt;li&gt; 的雙擊事件"></a><code>&lt;li&gt;</code> 的雙擊事件</h3><p>在設定 <code>v-for</code> 的 <code>&lt;li&gt;</code> 上，再綁一個雙擊事件的監聽：<code>@dblclick=&quot;editTodo(item)&quot;</code></p>
+<h4 id="data-預存要編輯的任務"><a href="#data-預存要編輯的任務" class="headerlink" title="data 預存要編輯的任務"></a><code>data</code> 預存要編輯的任務</h4><p>在 <code>data</code> 新增兩個特性，用來預存要編輯的物件及該物件的文字：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">cacheTodo:</span> &#123;&#125;,</span><br><span class="line"><span class="string">cacheTitle:</span> <span class="string">''</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="在-methods-增加-editTodo-方法"><a href="#在-methods-增加-editTodo-方法" class="headerlink" title="在 methods 增加 editTodo() 方法"></a>在 <code>methods</code> 增加 <code>editTodo()</code> 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">editTodo: <span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">  <span class="comment">// 將雙擊的項目傳入 data</span></span><br><span class="line">  <span class="keyword">this</span>.cacheTodo = item;</span><br><span class="line">  <span class="keyword">this</span>.cacheTitle = item.title;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加編輯任務的輸入欄"><a href="#添加編輯任務的輸入欄" class="headerlink" title="添加編輯任務的輸入欄"></a>添加編輯任務的輸入欄</h3><p>把一個 <code>&lt;input&gt;</code> 寫在待辦列表 <code>&lt;li&gt;</code> 裡面的最下方（刪除按鈕的下面）。<br>這個 <code>&lt;input&gt;</code> 就是拿來編輯待辦事項用的，<code>&lt;input&gt;</code> 跟待辦事項兩者<strong>不會同時顯示</strong>，所以要在 <code>&lt;li&gt;</code> 的下一層（包住所有表單元素的 <code>&lt;div&gt;</code>）設定判斷是否要渲染一個待辦事項出來。</p>
+<ul>
+<li>在 <code>&lt;li&gt;</code> 下判斷：<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">v-if="item.id !== cacheTodo.id"</span><br><span class="line"><span class="comment">&lt;!-- 這一行的意思是：只顯示沒有被雙擊的項目 --&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>在 <code>&lt;input&gt;</code> 上設定的判斷則相反：<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">v-if="item.id == cacheTodo.id"</span><br><span class="line"><span class="comment">&lt;!-- 項目被雙擊時被 input 取代 --&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>關於渲染的邏輯</strong><br><code>v-if</code> 條件為 <code>true</code> 時會把內容的 DOM 渲染出來，條件為 <code>false</code> 時會把 DOM 移掉。</p>
+<ol>
+<li>雙擊 <code>&lt;li&gt;</code> 時，產生 <code>cacheTodo.id</code>，讓 <code>item.id == cacheTodo.id</code> 為 <code>true</code>，所以 <code>&lt;input&gt;</code> 就會渲染出來 。</li>
+<li>沒有雙點擊 <code>&lt;li&gt;</code> 時， 不會產生 <code>cacheTodo.id</code>，讓 <code>item.id !== cacheTodo.id</code> 為 <code>true</code>，所以待辦事項就會渲染出來。</li>
+</ol>
+<h3 id="lt-input-gt-欄位中顯示被雙擊的任務文字"><a href="#lt-input-gt-欄位中顯示被雙擊的任務文字" class="headerlink" title="&lt;input&gt; 欄位中顯示被雙擊的任務文字"></a><code>&lt;input&gt;</code> 欄位中顯示被雙擊的任務文字</h3><p>在 <code>&lt;input&gt;</code> 上設定：<code>v-model=&quot;cacheTitle&quot;</code>。</p>
+<h3 id="按下-Esc-鍵時取消編輯"><a href="#按下-Esc-鍵時取消編輯" class="headerlink" title="按下 Esc 鍵時取消編輯"></a>按下 Esc 鍵時取消編輯</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML input --&gt;</span></span><br><span class="line">@keyup.esc="cancelEdit()"</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JS methods</span></span><br><span class="line">cancelEdit: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="comment">// 切換到未雙擊時的狀態</span></span><br><span class="line">  <span class="keyword">this</span>.cacheTodo = &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="項目修改完成"><a href="#項目修改完成" class="headerlink" title="項目修改完成"></a>項目修改完成</h3><p>按下 Enter 鍵就用新文字替換掉舊的，在 <code>&lt;input&gt;</code> 上設定：<code>@keyup.enter=&quot;doneEdit(item)&quot;</code>。<br>到 <code>methods</code> 去新增方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">doneEdit: <span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">  <span class="comment">// 按下 Enter 的瞬間把編輯中文字變為編輯完成的項目</span></span><br><span class="line">  item.title = <span class="keyword">this</span>.cacheTitle;</span><br><span class="line">  <span class="comment">// 回復到未點擊狀態</span></span><br><span class="line">  <span class="keyword">this</span>.cacheTitle = <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">this</span>.cacheTodo = &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>關於將暫存資料清空</strong><br>將 <code>doneEdit</code> 方法中的 <code>this.cacheTitle = &#39;&#39;;</code> 刪除也不會影響功能，是因為在 <code>editTodo</code> 方法中已經用 <code>this.cacheTitle = item.title;</code> 先把 <code>this.cacheTitle</code> 的內容用當下這筆事項的內容取代了，當編輯不同筆事項時，<code>this.cacheTitle</code> 中的值都會被使用者正在編輯的事項內容給取代。</p>
+<p>如果沒有 <code>this.cacheTitle = &#39;&#39;</code> ; 編輯完成後 <code>cacheTitle</code> 的值就會固定成改變後的值，而不是原來預設在 <code>data</code> 裡的空值。雖然 <code>editTodo</code> 方法中已經寫好了替換編輯內容的效果，但假設有要再用 <code>cacheTitle</code> 做其他資料的處理，可能就會受影響，所以保險起見把它的值歸零。</p>
+<h2 id="未完成任務數目與清除所有任務"><a href="#未完成任務數目與清除所有任務" class="headerlink" title="未完成任務數目與清除所有任務"></a>未完成任務數目與清除所有任務</h2><h3 id="未完成任務數目"><a href="#未完成任務數目" class="headerlink" title="未完成任務數目"></a>未完成任務數目</h3><ul>
+<li>在 <code>computed</code> 新增方法，目的是計算 <code>todos.completed</code> 為 <code>false</code> 的數量</li>
+<li>用 <code>filter()</code> 過濾 <code>todos</code></li>
+<li>取得一個未完成任務組成的陣列</li>
+<li>用 <code>compute</code> 方法 <code>return</code> 這個陣列的長度</li>
+<li>在 HTML 中用雙花括號插入 <code>compute 方法名</code></li>
+</ul>
+<h3 id="清除所有任務"><a href="#清除所有任務" class="headerlink" title="清除所有任務"></a>清除所有任務</h3><ul>
+<li>在「清除所有任務」<code>&lt;a&gt;</code> 上綁定事件監聽</li>
+<li>在 <code>methods</code> 新增方法，把 <code>todos</code> 宣告為空陣列即可</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+              <a href="/tags/todolist/" rel="tag"># todolist</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191218/2429605945/" rel="prev" title="[Vue] 進階指令與模板語法 (下)">
+      <i class="fa fa-chevron-left"></i> [Vue] 進階指令與模板語法 (下)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191219/1844116139/" rel="next" title="[Vue] Vue 生命週期">
+      [Vue] Vue 生命週期 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本架構：輸入欄及待辦事項列表"><span class="nav-number">1.</span> <span class="nav-text">基本架構：輸入欄及待辦事項列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML-部分"><span class="nav-number">1.1.</span> <span class="nav-text">HTML 部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-的-data-部分"><span class="nav-number">1.2.</span> <span class="nav-text">Vue 的 data 部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-的-methods-部分-把新事項加到列表"><span class="nav-number">1.3.</span> <span class="nav-text">Vue 的 methods 部分 (把新事項加到列表)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#輸入欄防呆"><span class="nav-number">2.</span> <span class="nav-text">輸入欄防呆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#刪除待辦事項"><span class="nav-number">3.</span> <span class="nav-text">刪除待辦事項</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#為已完成事項加上刪除線"><span class="nav-number">4.</span> <span class="nav-text">為已完成事項加上刪除線</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項"><span class="nav-number">5.</span> <span class="nav-text">製作「全部」、「進行中」、「已完成」頁籤切換，及過濾相對應的待辦事項</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#頁籤切換"><span class="nav-number">5.1.</span> <span class="nav-text">頁籤切換</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#頁籤過濾"><span class="nav-number">5.2.</span> <span class="nav-text">頁籤過濾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刪除功能的修正"><span class="nav-number">5.3.</span> <span class="nav-text">刪除功能的修正</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用變數存取-this-的必要性"><span class="nav-number">5.3.1.</span> <span class="nav-text">用變數存取 this 的必要性</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#雙擊修改待辦事項內容"><span class="nav-number">6.</span> <span class="nav-text">雙擊修改待辦事項內容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-li-gt-的雙擊事件"><span class="nav-number">6.1.</span> <span class="nav-text">&lt;li&gt; 的雙擊事件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#data-預存要編輯的任務"><span class="nav-number">6.1.1.</span> <span class="nav-text">data 預存要編輯的任務</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-methods-增加-editTodo-方法"><span class="nav-number">6.2.</span> <span class="nav-text">在 methods 增加 editTodo() 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加編輯任務的輸入欄"><span class="nav-number">6.3.</span> <span class="nav-text">添加編輯任務的輸入欄</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lt-input-gt-欄位中顯示被雙擊的任務文字"><span class="nav-number">6.4.</span> <span class="nav-text">&lt;input&gt; 欄位中顯示被雙擊的任務文字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按下-Esc-鍵時取消編輯"><span class="nav-number">6.5.</span> <span class="nav-text">按下 Esc 鍵時取消編輯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#項目修改完成"><span class="nav-number">6.6.</span> <span class="nav-text">項目修改完成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#未完成任務數目與清除所有任務"><span class="nav-number">7.</span> <span class="nav-text">未完成任務數目與清除所有任務</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#未完成任務數目"><span class="nav-number">7.1.</span> <span class="nav-text">未完成任務數目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清除所有任務"><span class="nav-number">7.2.</span> <span class="nav-text">清除所有任務</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/Vuejs/20191218/266480435/",
+            identifier: "Vuejs/20191218/266480435/",
+            title: "[Vue] 用 Vue 寫一個 todo-list"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
