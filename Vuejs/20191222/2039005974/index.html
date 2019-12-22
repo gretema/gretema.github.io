@@ -47,25 +47,22 @@
   };
 </script>
 
-  <meta name="description" content="由於老師耳提面命，float 及 clear 是網頁排版的基石之一，所以決定來彙整一下相關的資料，剛好某種程度上也可以承接上一篇的主題。">
+  <meta name="description" content="使用 is 屬性可以在保留語意化的 HTML 標籤的同時，也達成與元件標籤一樣的效果，更有用的是，使用 v-bind:is 可以動態切換不同的元件。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[CSS] 浮動 (float) 與清除浮動 (clear)">
-<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;htmlcss&#x2F;20191216&#x2F;714228330&#x2F;index.html">
+<meta property="og:title" content="[Vue] Vue 元件 - 動態切換元件">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Vuejs&#x2F;20191222&#x2F;2039005974&#x2F;index.html">
 <meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
-<meta property="og:description" content="由於老師耳提面命，float 及 clear 是網頁排版的基石之一，所以決定來彙整一下相關的資料，剛好某種程度上也可以承接上一篇的主題。">
+<meta property="og:description" content="使用 is 屬性可以在保留語意化的 HTML 標籤的同時，也達成與元件標籤一樣的效果，更有用的是，使用 v-bind:is 可以動態切換不同的元件。">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https:&#x2F;&#x2F;upload.cc&#x2F;i1&#x2F;2019&#x2F;12&#x2F;17&#x2F;YZure6.jpeg">
-<meta property="og:image" content="https:&#x2F;&#x2F;upload.cc&#x2F;i1&#x2F;2019&#x2F;12&#x2F;17&#x2F;cZz5wI.jpeg">
-<meta property="article:published_time" content="2019-12-16T07:19:24.000Z">
-<meta property="article:modified_time" content="2019-12-21T06:47:26.744Z">
+<meta property="article:published_time" content="2019-12-22T06:25:07.000Z">
+<meta property="article:modified_time" content="2019-12-22T06:34:30.997Z">
 <meta property="article:author" content="Grete Ma">
-<meta property="article:tag" content="CSS">
-<meta property="article:tag" content="float">
-<meta property="article:tag" content="clear">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="Vue元件">
+<meta property="article:tag" content="is屬性">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;upload.cc&#x2F;i1&#x2F;2019&#x2F;12&#x2F;17&#x2F;YZure6.jpeg">
 
-<link rel="canonical" href="http://gretema.github.io/htmlcss/20191216/714228330/">
+<link rel="canonical" href="http://gretema.github.io/Vuejs/20191222/2039005974/">
 
 
 <script id="page-configurations">
@@ -77,7 +74,7 @@
   };
 </script>
 
-  <title>[CSS] 浮動 (float) 與清除浮動 (clear) | 馬格蕾特的前端勇者日誌</title>
+  <title>[Vue] Vue 元件 - 動態切換元件 | 馬格蕾特的前端勇者日誌</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
     <script>
@@ -218,7 +215,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/htmlcss/20191216/714228330/">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/Vuejs/20191222/2039005974/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -231,7 +228,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          [CSS] 浮動 (float) 與清除浮動 (clear)
+          [Vue] Vue 元件 - 動態切換元件
         </h2>
 
         <div class="post-meta">
@@ -240,24 +237,18 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
+              
 
-              <time title="創建時間：2019-12-16 15:19:24" itemprop="dateCreated datePublished" datetime="2019-12-16T15:19:24+08:00">2019-12-16</time>
+              <time title="創建時間：2019-12-22 14:25:07 / 修改時間：14:34:30" itemprop="dateCreated datePublished" datetime="2019-12-22T14:25:07+08:00">2019-12-22</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2019-12-21 14:47:26" itemprop="dateModified" datetime="2019-12-21T14:47:26+08:00">2019-12-21</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/htmlcss/" itemprop="url" rel="index">
-                    <span itemprop="name">HTML&CSS</span>
+                  <a href="/categories/Vuejs/" itemprop="url" rel="index">
+                    <span itemprop="name">Vuejs</span>
                   </a>
                 </span>
             </span>
@@ -271,8 +262,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/htmlcss/20191216/714228330/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="htmlcss/20191216/714228330/" itemprop="commentCount"></span>
+    <a title="disqus" href="/Vuejs/20191222/2039005974/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Vuejs/20191222/2039005974/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -287,27 +278,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>由於老師耳提面命，<code>float</code> 及 <code>clear</code> 是網頁排版的基石之一，所以決定來彙整一下相關的資料，剛好某種程度上也可以承接上一篇的主題。</p>
+        <p>使用 <code>is</code> 屬性可以在保留語意化的 HTML 標籤的同時，也達成與元件標籤一樣的效果，更有用的是，使用 <code>v-bind:is</code> 可以動態切換不同的元件。</p>
 <a id="more"></a>
 
-<h2 id="float-屬性的使用時機"><a href="#float-屬性的使用時機" class="headerlink" title="float 屬性的使用時機"></a>float 屬性的使用時機</h2><p>使用諸如 <code>&lt;div&gt;</code> 之類的區塊元素排版時，預設的排列方式都是由左至右、由上至下。但如果我們今天想要做的是多欄式排版，或是讓多個區塊元素並排時，就需要使用 <code>float</code> 屬性。</p>
-<h2 id="float-屬性的值"><a href="#float-屬性的值" class="headerlink" title="float 屬性的值"></a>float 屬性的值</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">float</span>: 浮動方向 ;</span><br></pre></td></tr></table></figure>
-<p>浮動方向可以用的值有 <code>left</code>、<code>right</code>、<code>none</code>（預設值，也就是不浮動）以及 <code>inherit</code>（繼承自父層的屬性），最後這個 <code>inherit</code> 盡量不要使用，避免 IE 不支援的情況發生。</p>
-<h2 id="clear-屬性的使用時機"><a href="#clear-屬性的使用時機" class="headerlink" title="clear 屬性的使用時機"></a>clear 屬性的使用時機</h2><p>如果想控制浮動元素的排版，就一定要懂 <code>clear</code> 屬性的操作方式。</p>
-<p>有時候，浮動元素在前，而後面的元素沒有使用浮動時，後面的元素就會往上跑、疊在前一個元素的下方；有時候，父層內的元素使用浮動，會讓父層包不住子元素。</p>
-<p>遇到這種情形時，就要使用 clear 屬性來處理跑版問題。</p>
-<p><img src="https://upload.cc/i1/2019/12/17/YZure6.jpeg" alt="父層包不住子元素"></p>
-<h2 id="clear-屬性的使用方法"><a href="#clear-屬性的使用方法" class="headerlink" title="clear 屬性的使用方法"></a>clear 屬性的使用方法</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">clear</span>: 清除方向 ;</span><br></pre></td></tr></table></figure>
-<p><code>clear</code> 屬性可以用的值有 <code>left</code>、<code>right</code>、<code>both</code>、<code>none</code> 以及 <code>inherit</code>（IE不支援）， 其中以 <code>both</code> 最常用。</p>
-<p><code>clear</code> 屬性可以有 3 種使用方法：</p>
-<ol>
-<li>在浮動元素的後面多加一個 <code>&lt;div&gt;</code>（命名為 <code>.clearfix</code>），並在 <code>.clearfix</code> 使用 <code>clear: both</code> 語法。</li>
-<li>在要清除浮動內容的父層多加一個 <code>.clearfix</code> 並使用偽元素。★<br><img src="https://upload.cc/i1/2019/12/17/cZz5wI.jpeg" alt="after 僞元素：透過 content 在元素的後面生成了内容爲一個點的區塊元素"></li>
-<li>在浮動元素後面的區塊元素加上 <code>clear: both</code>。</li>
-</ol>
-<blockquote>
-<p>使用 <code>clear</code> 屬性須注意，在 <code>&lt;ul&gt;&lt;li&gt;</code> 結構中，必須在 <code>&lt;ul&gt;</code> 父元素清除子元素，沒辦法在 <code>&lt;li&gt;</code> 後面插入 <code>.clearfix</code>。</p>
-</blockquote>
+<h2 id="使用-is-顯示單一元件"><a href="#使用-is-顯示單一元件" class="headerlink" title="使用 is 顯示單一元件"></a>使用 is 顯示單一元件</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// HTML</span><br><span class="line"><span class="comment">&lt;!--以下兩種寫法效果一樣--&gt;</span></span><br><span class="line">// 使用元件標籤</span><br><span class="line"><span class="tag">&lt;<span class="name">primary-component</span> <span class="attr">:data</span>=<span class="string">"item"</span>&gt;</span><span class="tag">&lt;/<span class="name">primary-component</span>&gt;</span></span><br><span class="line">// 使用 is 屬性</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">is</span>=<span class="string">"primary-component"</span> <span class="attr">:data</span>=<span class="string">"item"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用-is-動態切換元件"><a href="#使用-is-動態切換元件" class="headerlink" title="使用 is 動態切換元件"></a>使用 is 動態切換元件</h2><p>以套用 Bootstrap 的頁籤為例，點擊頁籤可以在兩個頁面之間切換（頁面由元件 <code>primary-component</code> 及 <code>danger-component</code> 製作）。</p>
+<p>頁籤對應的頁面區塊，可以不需要使用「插入元件 + <code>v-if</code>」來切換頁面。</p>
+<p>取而代之的是：使用一個 <code>&lt;div&gt;</code> + <code>v-bind:is</code> + 控制當前頁籤的變數（<code>current</code>）+ 頁面資料內容（<code>:data=&quot;item&quot;</code>）來達成動態切換的效果。</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">// HTML</span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"nav nav-pills"</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="comment">&lt;!-- 用 @click 切換 current 的值 --&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"nav-item"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">"nav-link"</span></span></span></span><br><span class="line"><span class="xml">       :class="</span><span class="template-variable">&#123;'active': current == 'primary-component'&#125;</span><span class="xml">"</span></span><br><span class="line"><span class="xml">       href="#" @click.prevent="current = 'primary-component'"&gt;</span></span><br><span class="line"><span class="xml">       藍綠色元件</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"nav-item"</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">"nav-link"</span></span></span></span><br><span class="line"><span class="xml">       :class="</span><span class="template-variable">&#123;'active': current == 'danger-component'&#125;</span><span class="xml">"</span></span><br><span class="line"><span class="xml">       href="#" @click.prevent="current = 'danger-component'"&gt;</span></span><br><span class="line"><span class="xml">       紅色元件</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"mt-3"</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="comment">&lt;!-- 動態切換元件 --&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">:is</span>=<span class="string">"current"</span> <span class="attr">:data</span>=<span class="string">"item"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略元件及模板的程式碼</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Vue 根實例</span></span><br><span class="line"><span class="built_in">var</span> app = <span class="literal">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  <span class="built_in">data</span>: &#123;</span><br><span class="line">    item: &#123;</span><br><span class="line">      <span class="keyword">header</span>: <span class="string">'這裡是 header'</span>,</span><br><span class="line">      title: <span class="string">'這裡是 title'</span>,</span><br><span class="line">      text: <span class="string">'...'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    current: <span class="string">'primary-component'</span>  <span class="comment">// 當前頁籤</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -317,9 +298,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/CSS/" rel="tag"># CSS</a>
-              <a href="/tags/float/" rel="tag"># float</a>
-              <a href="/tags/clear/" rel="tag"># clear</a>
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+              <a href="/tags/Vue%E5%85%83%E4%BB%B6/" rel="tag"># Vue元件</a>
+              <a href="/tags/is%E5%B1%AC%E6%80%A7/" rel="tag"># is屬性</a>
           </div>
 
         
@@ -328,13 +309,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/htmlcss/20191216/3595727743/" rel="prev" title="[CSS] 沒有清除浮動，還是沒搞清楚元素特性？">
-      <i class="fa fa-chevron-left"></i> [CSS] 沒有清除浮動，還是沒搞清楚元素特性？
+    <a href="/Vuejs/20191221/4254408561/" rel="prev" title="[Vue] Vue 元件 - 插槽篇">
+      <i class="fa fa-chevron-left"></i> [Vue] Vue 元件 - 插槽篇
     </a></div>
-      <div class="post-nav-item">
-    <a href="/rwd/20191216/3160700070/" rel="next" title="[RWD] 響應式網頁 - 常用選單樣式與注意事項">
-      [RWD] 響應式網頁 - 常用選單樣式與注意事項 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -404,7 +382,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#float-屬性的使用時機"><span class="nav-number">1.</span> <span class="nav-text">float 屬性的使用時機</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#float-屬性的值"><span class="nav-number">2.</span> <span class="nav-text">float 屬性的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#clear-屬性的使用時機"><span class="nav-number">3.</span> <span class="nav-text">clear 屬性的使用時機</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#clear-屬性的使用方法"><span class="nav-number">4.</span> <span class="nav-text">clear 屬性的使用方法</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-is-顯示單一元件"><span class="nav-number">1.</span> <span class="nav-text">使用 is 顯示單一元件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-is-動態切換元件"><span class="nav-number">2.</span> <span class="nav-text">使用 is 動態切換元件</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -562,9 +540,9 @@
       DISQUS.reset({
         reload: true,
         config: {page: {
-            url: "http://gretema.github.io/htmlcss/20191216/714228330/",
-            identifier: "htmlcss/20191216/714228330/",
-            title: "[CSS] 浮動 (float) 與清除浮動 (clear)"
+            url: "http://gretema.github.io/Vuejs/20191222/2039005974/",
+            identifier: "Vuejs/20191222/2039005974/",
+            title: "[Vue] Vue 元件 - 動態切換元件"
           }
         }
       });
