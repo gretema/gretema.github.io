@@ -1,6 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[Vue] Vue 元件 - 製作空污城市關注網頁</title>
+    <url>/Vuejs/20191222/3102883103/</url>
+    <content><![CDATA[<p>大家還記得元件系列第一篇筆記中，提到的 Demo 嗎？<br>本篇筆記要帶領大家回顧元件系列中所有的觀念，一步一步拆解這個 Demo 該如何製作！</p>
+<a id="more"></a>
+
+<p>首先先把成品放在最前面供參：</p>
+<iframe src="https://codepen.io/gretema/embed/YzzjMxN?height=265&theme-id=default&default-tab=js,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<h2 id="功能一：用-lt-select-gt-篩選特定縣市的測站"><a href="#功能一：用-lt-select-gt-篩選特定縣市的測站" class="headerlink" title="功能一：用 &lt;select&gt; 篩選特定縣市的測站"></a>功能一：用 <code>&lt;select&gt;</code> 篩選特定縣市的測站</h2><h3 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h3><ol>
+<li><code>&lt;select&gt;</code> 用 <code>v-model</code> 綁定根實例的 <code>filter</code> 特性</li>
+<li><code>&lt;option&gt;</code> 用 <code>v-for=&quot;county in location&quot;</code> + <code>:value=&quot;county&quot;</code> 渲染</li>
+<li>元件模板：寫在 <code>.app</code> 外面，用 <code>&lt;script type=&quot;text/x-template&quot;&gt;</code> 製作</li>
+<li>元件置入的地方：這次是用 Bootstrap 卡片元件來製作，所以元件模板置入的地方就在 <code>.card-columns</code> 裡面</li>
+<li>元件：用 <code>v-for</code> 渲染所有城市，並且在這裡進行內外層資料傳遞 (外傳內 -&gt; 所有城市資料) (內傳外 -&gt; 關注的城市)</li>
+</ol>
+<h3 id="Vue-根實例"><a href="#Vue-根實例" class="headerlink" title="Vue 根實例"></a>Vue 根實例</h3><ol>
+<li>AJAX 取得資料，篩選出所有縣市並存到 <code>data</code></li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">"#app"</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    data: [],</span><br><span class="line">    location: [], <span class="comment">// 從 AJAX 取回來的資料中篩選不重複的縣市</span></span><br><span class="line">    stared: [],</span><br><span class="line">    filter: <span class="string">""</span> <span class="comment">// select 選擇的城市會存在這裡</span></span><br><span class="line">  &#125;,</span><br><span class="line">  created: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.getData();</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    getData() &#123;</span><br><span class="line">      <span class="keyword">const</span> vm = <span class="keyword">this</span>;</span><br><span class="line">      <span class="keyword">const</span> api =</span><br><span class="line">        <span class="string">"https://cors-anywhere.herokuapp.com/http://opendata2.epa.gov.tw/AQI.json"</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 使用 jQuery ajax</span></span><br><span class="line">      $.<span class="keyword">get</span>(api).then(function(response) &#123;</span><br><span class="line">        vm.data = response;</span><br><span class="line">        <span class="comment">//console.log(response);</span></span><br><span class="line">        <span class="comment">// 取出所有測站的所在縣市</span></span><br><span class="line">        <span class="keyword">const</span> siteCounty = [];</span><br><span class="line">        vm.data.forEach(<span class="function"><span class="params">item</span> =&gt;</span> siteCounty.push(item.County));</span><br><span class="line">        <span class="comment">// 篩選不重複的城市</span></span><br><span class="line">        vm.location = siteCounty.filter(</span><br><span class="line">          (element, index, array) =&gt; array.indexOf(element) === index</span><br><span class="line">        );</span><br><span class="line">        <span class="comment">// 陣列中第一個符合條件的索引等於本身索引的元素才會被回傳</span></span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><code>&lt;select&gt;</code> 選出縣市後，顯示符合條件的測站<br>在 <code>computed</code> 中，用 <code>if</code> 判斷 <code>&lt;select&gt;</code> 是否有選擇特定縣市，沒選的話就呈現所有測站資料。以及用 <code>filter()</code> 過濾根實例的 <code>data</code>，篩選出符合條件（縣市）的測站</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">computed: &#123;</span><br><span class="line">  filterData: function () &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.filter == <span class="string">''</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.<span class="keyword">data</span>;</span><br><span class="line">      <span class="comment">// 如果沒有選擇縣市，就顯示所有測站</span></span><br><span class="line">    &#125;</span><br><span class="line">    let filtered = <span class="keyword">this</span>.<span class="keyword">data</span>.filter((item) =&gt; &#123;</span><br><span class="line">      <span class="keyword">return</span> item.County == <span class="keyword">this</span>.filter;</span><br><span class="line">      <span class="comment">// 從所有測站中，找出所在縣市與 select 相同的測站</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> filtered; <span class="comment">// 回傳一個陣列</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vue-元件"><a href="#Vue-元件" class="headerlink" title="Vue 元件"></a>Vue 元件</h3><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'card-component'</span>, &#123;</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'cardData'</span>], <span class="comment">// 接收根實例的 data 資料</span></span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#cardTemplate'</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="功能二：點擊星星設為關注城市，且設定-localStorage"><a href="#功能二：點擊星星設為關注城市，且設定-localStorage" class="headerlink" title="功能二：點擊星星設為關注城市，且設定 localStorage"></a>功能二：點擊星星設為關注城市，且設定 localStorage</h2><p>星星按鈕是位於元件中的元素，所以就要用到 <code>$emit</code> 把內層資料傳到外層。</p>
+<h3 id="HTML-1"><a href="#HTML-1" class="headerlink" title="HTML"></a>HTML</h3><ol>
+<li>元件模板：星星按鈕為用 <code>&lt;a&gt;</code> 包住的 fontawesome icon，在 <code>&lt;a&gt;</code> 加上 <code>click</code> 事件且綁定至元件的 <code>methods</code>（用 <code>emit</code> 傳遞資料）；在 <code>&lt;i&gt;</code> 上用 <code>v-bind</code> 綁定 <code>className</code> 切換（切換星星點擊後的樣式）。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;a href=<span class="string">"#"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"float-right"</span> @click.prevent=<span class="string">"clickStar"</span>&gt;</span><br><span class="line">  &lt;i :<span class="class"><span class="keyword">class</span></span>=<span class="string">"starStyle"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/a&gt;</span></span><br><span class="line"><span class="regexp">&lt;!--clickStar 是元件的 method, 用 $emit 傳到外層--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>元件：加入 <code>:star=&quot;stared&quot;</code> 跟 <code>@change-stared=&quot;setStar&quot;</code>。前者是用於 localStorage 紀錄已關注的測站，後者是要配合 <code>emit</code> 從元件傳資料到根實例。</li>
+<li>元件 2：在「關注城市」的欄位下，貼上同一個元件，只需要把 <code>v-for</code> 的來源陣列改成 <code>staredData</code> 就好。</li>
+</ol>
+<h3 id="Vue-元件-1"><a href="#Vue-元件-1" class="headerlink" title="Vue 元件"></a>Vue 元件</h3><ol>
+<li>在 <code>props</code> 中加入 <code>star</code>，接收根實例的 localStorage 資料。</li>
+<li>在 <code>methods</code> 中寫一個 function，把星星被點擊的測站送進根實例的 <code>methods</code>。</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">methods</span>: &#123;</span><br><span class="line">  <span class="attribute">clickStar</span>: <span class="built_in">function</span>()&#123;</span><br><span class="line">    this.$<span class="built_in">emit</span>(<span class="string">'change-stared'</span>, this.cardData.SiteName);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在 <code>computed</code> 中新增 <code>starStyle()</code>，點選的城市不存在關注中時，星星為實心；已存在時，空心。</li>
+</ol>
+<h3 id="Vue-根實例-1"><a href="#Vue-根實例-1" class="headerlink" title="Vue 根實例"></a>Vue 根實例</h3><ol>
+<li>在 <code>data.stared</code> 中取出 localStorage 紀錄</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><span class="line">stared: <span class="module-access"><span class="module"><span class="identifier">JSON</span>.</span></span>parse(localStorage.get<span class="constructor">Item('<span class="params">staredSites</span>')</span>)<span class="operator"> || </span><span class="literal">[]</span>,</span><br><span class="line"><span class="comment">// staredSites 從 setStar 傳入，會再傳到元件去用</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在 <code>methods</code> 中新增 <code>setStar()</code>，接收 <code>$emit</code> 傳遞被點擊的城市名稱，並判斷是否存在 <code>stared</code> 陣列中</li>
+<li>在 <code>computed</code> 中新增 <code>staredData()</code>，從 <code>data</code> 中找出已存在於 <code>this.stared</code> 的測站</li>
+</ol>
+<h2 id="功能三：依據汙染程度呈現不同顏色"><a href="#功能三：依據汙染程度呈現不同顏色" class="headerlink" title="功能三：依據汙染程度呈現不同顏色"></a>功能三：依據汙染程度呈現不同顏色</h2><p>在 CSS 中事先寫好不同汙染程度對應的 <code>class</code>，每個 <code>class</code> 都設定不同的背景顏色，等一下要把這些 <code>class</code> 套用到卡片上。</p>
+<h3 id="HTML-2"><a href="#HTML-2" class="headerlink" title="HTML"></a>HTML</h3><ol>
+<li>元件模板：在 <code>.card</code> 上用 <code>v-bind</code> 切換 <code>className</code>，<code>:class=&quot;airColor&quot;</code>。</li>
+</ol>
+<h3 id="Vue-元件-2"><a href="#Vue-元件-2" class="headerlink" title="Vue 元件"></a>Vue 元件</h3><p>在 <code>computed</code> 新增 <code>airColor()</code>，用 <code>switch</code> 判斷汙染等級的顏色。</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line">airColor: function()&#123;</span><br><span class="line">  let status = <span class="keyword">this</span>.cardData.Status;</span><br><span class="line">  switch (status) &#123;</span><br><span class="line">    case <span class="string">'普通'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi2'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    case <span class="string">'對敏感族群不健康'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi3'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    case <span class="string">'對所有族群不健康'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi4'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    case <span class="string">'非常不健康'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi5'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    case <span class="string">'危害'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi6'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>Vue元件</tag>
+        <tag>AJAX</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[Vue] Vue 元件 - 動態切換元件</title>
     <url>/Vuejs/20191222/2039005974/</url>
     <content><![CDATA[<p>使用 <code>is</code> 屬性可以在保留語意化的 HTML 標籤的同時，也達成與元件標籤一樣的效果，更有用的是，使用 <code>v-bind:is</code> 可以動態切換不同的元件。</p>

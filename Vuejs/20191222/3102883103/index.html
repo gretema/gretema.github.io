@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="大家還記得元件系列第一篇筆記中，提到的 Demo 嗎？本篇筆記要帶領大家回顧元件系列中所有的觀念，一步一步拆解這個 Demo 該如何製作！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Vue] Vue 元件 - 製作空污城市關注網頁">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Vuejs&#x2F;20191222&#x2F;3102883103&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="大家還記得元件系列第一篇筆記中，提到的 Demo 嗎？本篇筆記要帶領大家回顧元件系列中所有的觀念，一步一步拆解這個 Demo 該如何製作！">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2019-12-22T06:38:28.000Z">
+<meta property="article:modified_time" content="2019-12-22T06:46:55.195Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="Vue元件">
+<meta property="article:tag" content="AJAX">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/Vuejs/20191222/3102883103/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[Vue] Vue 元件 - 製作空污城市關注網頁 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/Vuejs/20191222/3102883103/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [Vue] Vue 元件 - 製作空污城市關注網頁
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2019-12-22 14:38:28 / 修改時間：14:46:55" itemprop="dateCreated datePublished" datetime="2019-12-22T14:38:28+08:00">2019-12-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vuejs/" itemprop="url" rel="index">
+                    <span itemprop="name">Vuejs</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/Vuejs/20191222/3102883103/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Vuejs/20191222/3102883103/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>大家還記得元件系列第一篇筆記中，提到的 Demo 嗎？<br>本篇筆記要帶領大家回顧元件系列中所有的觀念，一步一步拆解這個 Demo 該如何製作！</p>
+<a id="more"></a>
+
+<p>首先先把成品放在最前面供參：</p>
+<iframe src="https://codepen.io/gretema/embed/YzzjMxN?height=265&theme-id=default&default-tab=js,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
+<h2 id="功能一：用-lt-select-gt-篩選特定縣市的測站"><a href="#功能一：用-lt-select-gt-篩選特定縣市的測站" class="headerlink" title="功能一：用 &lt;select&gt; 篩選特定縣市的測站"></a>功能一：用 <code>&lt;select&gt;</code> 篩選特定縣市的測站</h2><h3 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h3><ol>
+<li><code>&lt;select&gt;</code> 用 <code>v-model</code> 綁定根實例的 <code>filter</code> 特性</li>
+<li><code>&lt;option&gt;</code> 用 <code>v-for=&quot;county in location&quot;</code> + <code>:value=&quot;county&quot;</code> 渲染</li>
+<li>元件模板：寫在 <code>.app</code> 外面，用 <code>&lt;script type=&quot;text/x-template&quot;&gt;</code> 製作</li>
+<li>元件置入的地方：這次是用 Bootstrap 卡片元件來製作，所以元件模板置入的地方就在 <code>.card-columns</code> 裡面</li>
+<li>元件：用 <code>v-for</code> 渲染所有城市，並且在這裡進行內外層資料傳遞 (外傳內 -&gt; 所有城市資料) (內傳外 -&gt; 關注的城市)</li>
+</ol>
+<h3 id="Vue-根實例"><a href="#Vue-根實例" class="headerlink" title="Vue 根實例"></a>Vue 根實例</h3><ol>
+<li>AJAX 取得資料，篩選出所有縣市並存到 <code>data</code></li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">"#app"</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    data: [],</span><br><span class="line">    location: [], <span class="comment">// 從 AJAX 取回來的資料中篩選不重複的縣市</span></span><br><span class="line">    stared: [],</span><br><span class="line">    filter: <span class="string">""</span> <span class="comment">// select 選擇的城市會存在這裡</span></span><br><span class="line">  &#125;,</span><br><span class="line">  created: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.getData();</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    getData() &#123;</span><br><span class="line">      <span class="keyword">const</span> vm = <span class="keyword">this</span>;</span><br><span class="line">      <span class="keyword">const</span> api =</span><br><span class="line">        <span class="string">"https://cors-anywhere.herokuapp.com/http://opendata2.epa.gov.tw/AQI.json"</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 使用 jQuery ajax</span></span><br><span class="line">      $.<span class="keyword">get</span>(api).then(function(response) &#123;</span><br><span class="line">        vm.data = response;</span><br><span class="line">        <span class="comment">//console.log(response);</span></span><br><span class="line">        <span class="comment">// 取出所有測站的所在縣市</span></span><br><span class="line">        <span class="keyword">const</span> siteCounty = [];</span><br><span class="line">        vm.data.forEach(<span class="function"><span class="params">item</span> =&gt;</span> siteCounty.push(item.County));</span><br><span class="line">        <span class="comment">// 篩選不重複的城市</span></span><br><span class="line">        vm.location = siteCounty.filter(</span><br><span class="line">          (element, index, array) =&gt; array.indexOf(element) === index</span><br><span class="line">        );</span><br><span class="line">        <span class="comment">// 陣列中第一個符合條件的索引等於本身索引的元素才會被回傳</span></span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><code>&lt;select&gt;</code> 選出縣市後，顯示符合條件的測站<br>在 <code>computed</code> 中，用 <code>if</code> 判斷 <code>&lt;select&gt;</code> 是否有選擇特定縣市，沒選的話就呈現所有測站資料。以及用 <code>filter()</code> 過濾根實例的 <code>data</code>，篩選出符合條件（縣市）的測站</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">computed: &#123;</span><br><span class="line">  filterData: function () &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.filter == <span class="string">''</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.<span class="keyword">data</span>;</span><br><span class="line">      <span class="comment">// 如果沒有選擇縣市，就顯示所有測站</span></span><br><span class="line">    &#125;</span><br><span class="line">    let filtered = <span class="keyword">this</span>.<span class="keyword">data</span>.filter((item) =&gt; &#123;</span><br><span class="line">      <span class="keyword">return</span> item.County == <span class="keyword">this</span>.filter;</span><br><span class="line">      <span class="comment">// 從所有測站中，找出所在縣市與 select 相同的測站</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> filtered; <span class="comment">// 回傳一個陣列</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Vue-元件"><a href="#Vue-元件" class="headerlink" title="Vue 元件"></a>Vue 元件</h3><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">Vue</span><span class="selector-class">.component</span>(<span class="string">'card-component'</span>, &#123;</span><br><span class="line">  <span class="attribute">props</span>: [<span class="string">'cardData'</span>], <span class="comment">// 接收根實例的 data 資料</span></span><br><span class="line">  <span class="attribute">template</span>: <span class="string">'#cardTemplate'</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="功能二：點擊星星設為關注城市，且設定-localStorage"><a href="#功能二：點擊星星設為關注城市，且設定-localStorage" class="headerlink" title="功能二：點擊星星設為關注城市，且設定 localStorage"></a>功能二：點擊星星設為關注城市，且設定 localStorage</h2><p>星星按鈕是位於元件中的元素，所以就要用到 <code>$emit</code> 把內層資料傳到外層。</p>
+<h3 id="HTML-1"><a href="#HTML-1" class="headerlink" title="HTML"></a>HTML</h3><ol>
+<li>元件模板：星星按鈕為用 <code>&lt;a&gt;</code> 包住的 fontawesome icon，在 <code>&lt;a&gt;</code> 加上 <code>click</code> 事件且綁定至元件的 <code>methods</code>（用 <code>emit</code> 傳遞資料）；在 <code>&lt;i&gt;</code> 上用 <code>v-bind</code> 綁定 <code>className</code> 切換（切換星星點擊後的樣式）。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=<span class="string">"#"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"float-right"</span> @click.prevent=<span class="string">"clickStar"</span>&gt;</span><br><span class="line">  &lt;i :<span class="class"><span class="keyword">class</span></span>=<span class="string">"starStyle"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/a&gt;</span></span><br><span class="line"><span class="regexp">&lt;!--clickStar 是元件的 method, 用 $emit 傳到外層--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>元件：加入 <code>:star=&quot;stared&quot;</code> 跟 <code>@change-stared=&quot;setStar&quot;</code>。前者是用於 localStorage 紀錄已關注的測站，後者是要配合 <code>emit</code> 從元件傳資料到根實例。</li>
+<li>元件 2：在「關注城市」的欄位下，貼上同一個元件，只需要把 <code>v-for</code> 的來源陣列改成 <code>staredData</code> 就好。</li>
+</ol>
+<h3 id="Vue-元件-1"><a href="#Vue-元件-1" class="headerlink" title="Vue 元件"></a>Vue 元件</h3><ol>
+<li>在 <code>props</code> 中加入 <code>star</code>，接收根實例的 localStorage 資料。</li>
+<li>在 <code>methods</code> 中寫一個 function，把星星被點擊的測站送進根實例的 <code>methods</code>。</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">methods</span>: &#123;</span><br><span class="line">  <span class="attribute">clickStar</span>: <span class="built_in">function</span>()&#123;</span><br><span class="line">    this.$<span class="built_in">emit</span>(<span class="string">'change-stared'</span>, this.cardData.SiteName);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在 <code>computed</code> 中新增 <code>starStyle()</code>，點選的城市不存在關注中時，星星為實心；已存在時，空心。</li>
+</ol>
+<h3 id="Vue-根實例-1"><a href="#Vue-根實例-1" class="headerlink" title="Vue 根實例"></a>Vue 根實例</h3><ol>
+<li>在 <code>data.stared</code> 中取出 localStorage 紀錄</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">stared: <span class="module-access"><span class="module"><span class="identifier">JSON</span>.</span></span>parse(localStorage.get<span class="constructor">Item('<span class="params">staredSites</span>')</span>)<span class="operator"> || </span><span class="literal">[]</span>,</span><br><span class="line"><span class="comment">// staredSites 從 setStar 傳入，會再傳到元件去用</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在 <code>methods</code> 中新增 <code>setStar()</code>，接收 <code>$emit</code> 傳遞被點擊的城市名稱，並判斷是否存在 <code>stared</code> 陣列中</li>
+<li>在 <code>computed</code> 中新增 <code>staredData()</code>，從 <code>data</code> 中找出已存在於 <code>this.stared</code> 的測站</li>
+</ol>
+<h2 id="功能三：依據汙染程度呈現不同顏色"><a href="#功能三：依據汙染程度呈現不同顏色" class="headerlink" title="功能三：依據汙染程度呈現不同顏色"></a>功能三：依據汙染程度呈現不同顏色</h2><p>在 CSS 中事先寫好不同汙染程度對應的 <code>class</code>，每個 <code>class</code> 都設定不同的背景顏色，等一下要把這些 <code>class</code> 套用到卡片上。</p>
+<h3 id="HTML-2"><a href="#HTML-2" class="headerlink" title="HTML"></a>HTML</h3><ol>
+<li>元件模板：在 <code>.card</code> 上用 <code>v-bind</code> 切換 <code>className</code>，<code>:class=&quot;airColor&quot;</code>。</li>
+</ol>
+<h3 id="Vue-元件-2"><a href="#Vue-元件-2" class="headerlink" title="Vue 元件"></a>Vue 元件</h3><p>在 <code>computed</code> 新增 <code>airColor()</code>，用 <code>switch</code> 判斷汙染等級的顏色。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">airColor: function()&#123;</span><br><span class="line">  let status = <span class="keyword">this</span>.cardData.Status;</span><br><span class="line">  switch (status) &#123;</span><br><span class="line">    case <span class="string">'普通'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi2'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    case <span class="string">'對敏感族群不健康'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi3'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    case <span class="string">'對所有族群不健康'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi4'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    case <span class="string">'非常不健康'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi5'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    case <span class="string">'危害'</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="string">'status-aqi6'</span>;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+              <a href="/tags/Vue%E5%85%83%E4%BB%B6/" rel="tag"># Vue元件</a>
+              <a href="/tags/AJAX/" rel="tag"># AJAX</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191222/2039005974/" rel="prev" title="[Vue] Vue 元件 - 動態切換元件">
+      <i class="fa fa-chevron-left"></i> [Vue] Vue 元件 - 動態切換元件
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+	        <div style>
+	          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+	        </div>
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#功能一：用-lt-select-gt-篩選特定縣市的測站"><span class="nav-number">1.</span> <span class="nav-text">功能一：用 &lt;select&gt; 篩選特定縣市的測站</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML"><span class="nav-number">1.1.</span> <span class="nav-text">HTML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-根實例"><span class="nav-number">1.2.</span> <span class="nav-text">Vue 根實例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-元件"><span class="nav-number">1.3.</span> <span class="nav-text">Vue 元件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能二：點擊星星設為關注城市，且設定-localStorage"><span class="nav-number">2.</span> <span class="nav-text">功能二：點擊星星設為關注城市，且設定 localStorage</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML-1"><span class="nav-number">2.1.</span> <span class="nav-text">HTML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-元件-1"><span class="nav-number">2.2.</span> <span class="nav-text">Vue 元件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-根實例-1"><span class="nav-number">2.3.</span> <span class="nav-text">Vue 根實例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能三：依據汙染程度呈現不同顏色"><span class="nav-number">3.</span> <span class="nav-text">功能三：依據汙染程度呈現不同顏色</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML-2"><span class="nav-number">3.1.</span> <span class="nav-text">HTML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-元件-2"><span class="nav-number">3.2.</span> <span class="nav-text">Vue 元件</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/Vuejs/20191222/3102883103/",
+            identifier: "Vuejs/20191222/3102883103/",
+            title: "[Vue] Vue 元件 - 製作空污城市關注網頁"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
