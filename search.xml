@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>[Vue] Vue Router 配置與運作</title>
-    <url>/uncategorized/20191226/433566073/</url>
+    <url>/Vuejs/20191226/433566073/</url>
     <content><![CDATA[<p>在 SPA 的架構下，頁面切換不是由後端操控，而是由前端模擬路由器來替換畫面上的內容。<br>而我們可以透過 Vue Router 來達成這件事。</p>
 <a id="more"></a>
 
@@ -88,6 +88,12 @@
 </li>
 </ol>
 ]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>VueRouter</tag>
+      </tags>
   </entry>
   <entry>
     <title>[Vue] Vue Cli 2 建置與運作</title>
