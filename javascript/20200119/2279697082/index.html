@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content=" 這篇筆記來自於 2020.1.9 六角學院的線上研討會，講者為蘇泰安老師，老師不只講解了如何善用函數來幫助程式碼更簡潔，也介紹了一些以函數為編寫基礎的語言（例如 Elixir），不過由於我對 Javascript 以外的語言並不了解，所以這篇筆記並不會著墨於其他語言。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JS] 講座筆記：函數式程式設計">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;javascript&#x2F;20200119&#x2F;2279697082&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content=" 這篇筆記來自於 2020.1.9 六角學院的線上研討會，講者為蘇泰安老師，老師不只講解了如何善用函數來幫助程式碼更簡潔，也介紹了一些以函數為編寫基礎的語言（例如 Elixir），不過由於我對 Javascript 以外的語言並不了解，所以這篇筆記並不會著墨於其他語言。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-01-19T09:38:56.000Z">
+<meta property="article:modified_time" content="2020-01-19T09:55:29.434Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="functionalprogramming">
+<meta property="article:tag" content="function">
+<meta property="article:tag" content="函式">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/javascript/20200119/2279697082/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[JS] 講座筆記：函數式程式設計 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/javascript/20200119/2279697082/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [JS] 講座筆記：函數式程式設計
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2020-01-19 17:38:56 / 修改時間：17:55:29" itemprop="dateCreated datePublished" datetime="2020-01-19T17:38:56+08:00">2020-01-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/javascript/20200119/2279697082/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="javascript/20200119/2279697082/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p> 這篇筆記來自於 2020.1.9 六角學院的線上研討會，講者為蘇泰安老師，老師不只講解了如何善用函數來幫助程式碼更簡潔，也介紹了一些以函數為編寫基礎的語言（例如 Elixir），不過由於我對 Javascript 以外的語言並不了解，所以這篇筆記並不會著墨於其他語言。</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在 JavaScript 函式是一級公民，可以傳入另一個函式作為參數。<br>傳入其他函式作為參數的函式稱為 Callback function。<br>而接收其他函式當作自己的參數的則稱為高階函式。</p>
+<h2 id="高階函式-High-order-function-：處理函式的函式"><a href="#高階函式-High-order-function-：處理函式的函式" class="headerlink" title="高階函式(High order function)：處理函式的函式"></a>高階函式(High order function)：處理函式的函式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cook</span> (<span class="params">food1,food2, f</span>) </span>&#123;</span><br><span class="line">  f(food1);</span><br><span class="line">  f(food2);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;food1&#125;</span> in <span class="subst">$&#123;food2&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cook(<span class="string">'beef'</span>, <span class="string">'curry'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">x</span>) </span>&#123;<span class="built_in">console</span>.log(x)&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="高階函式三大台柱：map-、reduce-、filter"><a href="#高階函式三大台柱：map-、reduce-、filter" class="headerlink" title="高階函式三大台柱：map()、reduce()、filter()"></a>高階函式三大台柱：<code>map()</code>、<code>reduce()</code>、<code>filter()</code></h2><h3 id="map"><a href="#map" class="headerlink" title="map()"></a>map()</h3><p>對 A 陣列進行某種處理，回傳處理過後的新陣列 B。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let result = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>].map(i =&gt; i * <span class="number">10</span>);</span><br><span class="line">console.log(result);</span><br><span class="line"><span class="comment">// [10,20,30,40,50]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="filter"><a href="#filter" class="headerlink" title="filter()"></a>filter()</h3><p>從 A 陣列中篩選符合某條件的值，符合條件的值以新陣列 B 回傳。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let result = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>].map(i =&gt; i % <span class="number">2</span> == <span class="number">0</span>);</span><br><span class="line">console.log(result);</span><br><span class="line"><span class="comment">// [2,4,6]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="reduce"><a href="#reduce" class="headerlink" title="reduce()"></a>reduce()</h3><p>有順序上的依賴，依序對陣列內的值進行處理（累加、相乘等等）。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// for 迴圈的累加寫法</span></span><br><span class="line">let ary = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>];</span><br><span class="line">let result = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (let i of ary)&#123;</span><br><span class="line">  result = result + i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// reduce() 的累加寫法</span></span><br><span class="line"><span class="keyword">let</span> result = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>].reduce(reducer, <span class="number">0</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">accu, i</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> accu + i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 起始值為 0</span></span><br><span class="line"><span class="comment">// accu 為一個暫存、累加的值，就如同上一段在 for 迴圈之前宣告的 result</span></span><br><span class="line"><span class="comment">// 第一次遞迴：accu 為 0，i 為 1，相加為 1</span></span><br><span class="line"><span class="comment">// 第二次遞迴：accu 為 1，i 為 2，相加為 3</span></span><br><span class="line"><span class="comment">// 以下類推</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 起始值的型別跟最後運算完的型別一致</span></span><br><span class="line"><span class="comment">// 常用的起始值：0, 1, [], '', &#123;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="迴圈跟-map-、reduce-、filter-的差別："><a href="#迴圈跟-map-、reduce-、filter-的差別：" class="headerlink" title="迴圈跟 map()、reduce()、filter() 的差別："></a>迴圈跟 <code>map()</code>、<code>reduce()</code>、<code>filter()</code> 的差別：</h3><p>迴圈一定要依序對值進行處理，就像手搖店員對一個接一個的客人進行結帳；陣列方法不強調值的處理順序，只強調處理的手法。</p>
+<h2 id="閉包-Closure"><a href="#閉包-Closure" class="headerlink" title="閉包 Closure"></a>閉包 Closure</h2><p>利用閉包（closure）的作法，讓函式有自己的私有變數，避免函式受到外在值的變動而被污染。當你看到一個函式內 return 了另一個函式，通常就是有用到閉包的概念。<br>參照：<a href="https://taian.su/2012-10-17-explaining-javascript-scope-and-closures-by-robert-nyman/" target="_blank" rel="external nofollow noopener noreferrer">Robert Nyman: 解釋 JavaScript 的 scope 及 closures</a>、<a href="https://pjchender.blogspot.com/2017/05/javascript-closure.html" target="_blank" rel="external nofollow noopener noreferrer">深入淺出瞭解 JavaScript 閉包（closure）</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下情形會讓函式的結果受到外在變數的污染</span></span><br><span class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> foo = <span class="function"><span class="keyword">function</span>(<span class="params">i</span>) </span>&#123; <span class="keyword">return</span> a + i&#125;</span><br><span class="line"><span class="built_in">console</span>.log(foo(<span class="number">100</span>));</span><br><span class="line">a = <span class="number">99</span>;</span><br><span class="line"><span class="built_in">console</span>.log(foo(<span class="number">100</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 兩次 console 結果不一樣</span></span><br><span class="line"><span class="comment">// 因為函式會吃到參數以外的變數值</span></span><br><span class="line"><span class="comment">// 而且改變變數值時，也會影響到函式結果</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fooDad</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">i</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + i;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> foo;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> foo = fooDad();</span><br><span class="line"><span class="built_in">console</span>.log(foo(<span class="number">100</span>));  <span class="comment">// 101</span></span><br><span class="line">a = <span class="number">99</span>;</span><br><span class="line"><span class="built_in">console</span>.log(foo(<span class="number">100</span>));  <span class="comment">// 101，不受污染</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="學員提問"><a href="#學員提問" class="headerlink" title="學員提問"></a>學員提問</h2><p>Q: 具名函式 VS 匿名函式的區別？<br>A: 具名函式可提升，匿名不能提升（會 <code>undefined</code>）。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/functionalprogramming/" rel="tag"># functionalprogramming</a>
+              <a href="/tags/function/" rel="tag"># function</a>
+              <a href="/tags/%E5%87%BD%E5%BC%8F/" rel="tag"># 函式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Vuejs/20191226/433566073/" rel="prev" title="[Vue] Vue Router 配置與運作">
+      <i class="fa fa-chevron-left"></i> [Vue] Vue Router 配置與運作
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+	        <div style>
+	          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+	        </div>
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高階函式-High-order-function-：處理函式的函式"><span class="nav-number">2.</span> <span class="nav-text">高階函式(High order function)：處理函式的函式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高階函式三大台柱：map-、reduce-、filter"><span class="nav-number">3.</span> <span class="nav-text">高階函式三大台柱：map()、reduce()、filter()</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#map"><span class="nav-number">3.1.</span> <span class="nav-text">map()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filter"><span class="nav-number">3.2.</span> <span class="nav-text">filter()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reduce"><span class="nav-number">3.3.</span> <span class="nav-text">reduce()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迴圈跟-map-、reduce-、filter-的差別："><span class="nav-number">3.4.</span> <span class="nav-text">迴圈跟 map()、reduce()、filter() 的差別：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#閉包-Closure"><span class="nav-number">4.</span> <span class="nav-text">閉包 Closure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學員提問"><span class="nav-number">5.</span> <span class="nav-text">學員提問</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/javascript/20200119/2279697082/",
+            identifier: "javascript/20200119/2279697082/",
+            title: "[JS] 講座筆記：函數式程式設計"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
