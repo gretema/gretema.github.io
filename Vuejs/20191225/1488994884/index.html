@@ -47,17 +47,17 @@
   };
 </script>
 
-  <meta name="description" content="雖然 Vue Cli 2 現在已經出到 3 了，但還是把自己學習使用 2 所做的筆記放上來，說不定依然能提供給各位做參考（？">
+  <meta name="description" content="雖然 Vue CLI 2 現在已經出到 3 了，但還是把自己學習使用 2 所做的筆記放上來，說不定依然能提供給各位做參考（？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[Vue] Vue Cli 2 建置與運作">
+<meta property="og:title" content="[Vue] Vue CLI 2 建置與運作">
 <meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Vuejs&#x2F;20191225&#x2F;1488994884&#x2F;index.html">
 <meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
-<meta property="og:description" content="雖然 Vue Cli 2 現在已經出到 3 了，但還是把自己學習使用 2 所做的筆記放上來，說不定依然能提供給各位做參考（？">
+<meta property="og:description" content="雖然 Vue CLI 2 現在已經出到 3 了，但還是把自己學習使用 2 所做的筆記放上來，說不定依然能提供給各位做參考（？">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2019-12-25T05:47:53.000Z">
-<meta property="article:modified_time" content="2019-12-25T05:54:25.728Z">
+<meta property="article:modified_time" content="2020-01-21T15:39:30.381Z">
 <meta property="article:author" content="Grete Ma">
-<meta property="article:tag" content="VueCli2">
+<meta property="article:tag" content="VueCLI">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://gretema.github.io/Vuejs/20191225/1488994884/">
@@ -72,7 +72,7 @@
   };
 </script>
 
-  <title>[Vue] Vue Cli 2 建置與運作 | 馬格蕾特的前端勇者日誌</title>
+  <title>[Vue] Vue CLI 2 建置與運作 | 馬格蕾特的前端勇者日誌</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
     <script>
@@ -226,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          [Vue] Vue Cli 2 建置與運作
+          [Vue] Vue CLI 2 建置與運作
         </h2>
 
         <div class="post-meta">
@@ -235,10 +235,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              
 
-              <time title="創建時間：2019-12-25 13:47:53 / 修改時間：13:54:25" itemprop="dateCreated datePublished" datetime="2019-12-25T13:47:53+08:00">2019-12-25</time>
+              <time title="創建時間：2019-12-25 13:47:53" itemprop="dateCreated datePublished" datetime="2019-12-25T13:47:53+08:00">2019-12-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2020-01-21 23:39:30" itemprop="dateModified" datetime="2020-01-21T23:39:30+08:00">2020-01-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -276,10 +282,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>雖然 Vue Cli 2 現在已經出到 3 了，但還是把自己學習使用 2 所做的筆記放上來，說不定依然能提供給各位做參考（？</p>
+        <p>雖然 Vue CLI 2 現在已經出到 3 了，但還是把自己學習使用 2 所做的筆記放上來，說不定依然能提供給各位做參考（？</p>
 <a id="more"></a>
 
-<h2 id="什麼是-Vue-Cli？"><a href="#什麼是-Vue-Cli？" class="headerlink" title="什麼是 Vue Cli？"></a>什麼是 Vue Cli？</h2><ul>
+<h2 id="什麼是-Vue-CLI？"><a href="#什麼是-Vue-CLI？" class="headerlink" title="什麼是 Vue CLI？"></a>什麼是 Vue CLI？</h2><ul>
 <li>基於 Webpack 所建置的開發工具</li>
 <li>便於使用各種第三方工具（BS4, Vue Router…）</li>
 <li>可運行 Sass, Bebel 等編譯工具</li>
@@ -291,12 +297,12 @@
 <li>輸入 <code>vue</code>：出現許多可使用的指令，例如輸入 <code>vue list</code> 能夠選擇下載的樣板，選擇 <code>webpack</code> 樣板即可</li>
 <li>新增專案：輸入 <code>vue init 樣板名稱 專案名稱</code></li>
 </ol>
-<h2 id="Vue-Cli-指令"><a href="#Vue-Cli-指令" class="headerlink" title="Vue Cli 指令"></a>Vue Cli 指令</h2><p><code>npm install</code>：安裝所有套件<br><code>npm run dev</code>：運行開發的環境<br><code>npm run build</code>：運行正式版的環境，將所有網頁內容打包壓縮</p>
+<h2 id="Vue-CLI-指令"><a href="#Vue-CLI-指令" class="headerlink" title="Vue CLI 指令"></a>Vue CLI 指令</h2><p><code>npm install</code>：安裝所有套件<br><code>npm run dev</code>：運行開發的環境<br><code>npm run build</code>：運行正式版的環境，將所有網頁內容打包壓縮</p>
 <p><code>npm run</code> 是運行 <code>package.json</code> 內的 <code>script</code>，運行時可以直接執行 <code>node_modules</code> 內的模組。</p>
-<h2 id="Vue-Cli-產生的資料夾結構"><a href="#Vue-Cli-產生的資料夾結構" class="headerlink" title="Vue Cli 產生的資料夾結構"></a>Vue Cli 產生的資料夾結構</h2><ul>
+<h2 id="Vue-CLI-產生的資料夾結構"><a href="#Vue-CLI-產生的資料夾結構" class="headerlink" title="Vue CLI 產生的資料夾結構"></a>Vue CLI 產生的資料夾結構</h2><ul>
 <li><p><code>dist</code>：這資料夾下的檔案都要放在 server 下才能正常運作，主要是透過 <code>npm run bulid</code> 生成的。每次輸入 <code>npm run build</code> 的時候 <code>dist</code> 會自動重新生成，並加上不同的 hash 在資源上，避免有暫存而沒有取到新資源。</p>
 </li>
-<li><p>根目錄的 <code>index.html</code>：不需要動，Vue Cli 會自動把 JS 資源注入在 <code>#app</code> 下方註解的位置。</p>
+<li><p>根目錄的 <code>index.html</code>：不需要動，Vue CLI 會自動把 JS 資源注入在 <code>#app</code> 下方註解的位置。</p>
 </li>
 <li><p><code>static</code>：放入不會被編譯的檔案。</p>
 </li>
@@ -329,10 +335,10 @@
 
 <p><code>NODE_ENV</code> 是寫在 <code>dev.env</code> 及 <code>prod.env</code> 中的變數，值要記得用 <code>&#39;&quot;&quot;&#39;</code> 包住，否則會讀取失敗。</p>
 <p>環境變數常用於 AJAX，因為 AJAX 使用的路徑在開發版跟正式版中往往是不同的，所以就可以用環境變數去區分。</p>
-<h2 id="透過-Vue-Cli-載入外部套件"><a href="#透過-Vue-Cli-載入外部套件" class="headerlink" title="透過 Vue Cli 載入外部套件"></a>透過 Vue Cli 載入外部套件</h2><h3 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h3><p>下載 BS，順便把 node-sass 及 sass loader 等兩個套件一起下載：</p>
+<h2 id="透過-Vue-CLI-載入外部套件"><a href="#透過-Vue-CLI-載入外部套件" class="headerlink" title="透過 Vue CLI 載入外部套件"></a>透過 Vue CLI 載入外部套件</h2><h3 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h3><p>下載 BS，順便把 node-sass 及 sass loader 等兩個套件一起下載：</p>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install bootstrap <span class="keyword">node</span><span class="title">-sass</span> sass-loader --save</span><br></pre></td></tr></table></figure>
 
-<p>下載完成後，Vue Cli 需要重新運行：</p>
+<p>下載完成後，Vue CLI 需要重新運行：</p>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">run</span><span class="bash"> dev</span></span><br></pre></td></tr></table></figure>
 
 <p>打開 <code>App.vue</code>，在 <code>&lt;style&gt;</code> 上加上 <code>lang=&quot;scss&quot;</code>，並且把原本的 <code>style</code> 內容改成 <code>sass</code> 的格式，測試 <code>sass</code> 是否能正確運行：</p>
@@ -350,7 +356,7 @@
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">run</span><span class="bash"> dev</span></span><br></pre></td></tr></table></figure>
 
 <p>axios 文件中有寫該如何使用，在進入點檔案中加入以下程式碼：</p>
-<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span> <span class="comment">// Vue Cli 已經載入好了</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span> <span class="comment">// 主要的 AJAX 套件</span></span><br><span class="line"><span class="keyword">import</span> VueAxios <span class="keyword">from</span> <span class="string">'vue-axios'</span> <span class="comment">// 將它轉為 Vue 的套件</span></span><br><span class="line"></span><br><span class="line">Vue.use(VueAxios, axios) <span class="comment">// 執行 axios</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span> <span class="comment">// Vue CLI 已經載入好了</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span> <span class="comment">// 主要的 AJAX 套件</span></span><br><span class="line"><span class="keyword">import</span> VueAxios <span class="keyword">from</span> <span class="string">'vue-axios'</span> <span class="comment">// 將它轉為 Vue 的套件</span></span><br><span class="line"></span><br><span class="line">Vue.use(VueAxios, axios) <span class="comment">// 執行 axios</span></span><br></pre></td></tr></table></figure>
 
 <p>測試 AJAX 是否能成功：在 <code>App.vue</code> 的 <code>export default</code> 中，加入 <code>created()</code>。</p>
 <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">created() &#123;</span><br><span class="line">  <span class="keyword">this</span>.$http.get(<span class="string">'https://randomuser.me/api/'</span>).<span class="keyword">then</span>(<span class="function"><span class="params">(response)</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(response.data);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -365,7 +371,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/VueCli2/" rel="tag"># VueCli2</a>
+              <a href="/tags/VueCLI/" rel="tag"># VueCLI</a>
           </div>
 
         
@@ -450,7 +456,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什麼是-Vue-Cli？"><span class="nav-number">1.</span> <span class="nav-text">什麼是 Vue Cli？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下載"><span class="nav-number">2.</span> <span class="nav-text">下載</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-Cli-指令"><span class="nav-number">3.</span> <span class="nav-text">Vue Cli 指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-Cli-產生的資料夾結構"><span class="nav-number">4.</span> <span class="nav-text">Vue Cli 產生的資料夾結構</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Webpack-腳本結構"><span class="nav-number">5.</span> <span class="nav-text">Webpack 腳本結構</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Webpack-如何運作"><span class="nav-number">5.1.</span> <span class="nav-text">Webpack 如何運作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#build-資料夾"><span class="nav-number">5.2.</span> <span class="nav-text">build 資料夾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-資料夾"><span class="nav-number">5.3.</span> <span class="nav-text">config 資料夾</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過-Vue-Cli-載入外部套件"><span class="nav-number">6.</span> <span class="nav-text">透過 Vue Cli 載入外部套件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bootstrap"><span class="nav-number">6.1.</span> <span class="nav-text">Bootstrap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#元件的-lt-style-gt-scoped-屬性"><span class="nav-number">6.1.1.</span> <span class="nav-text">元件的 &lt;style&gt; scoped 屬性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vue-axios"><span class="nav-number">6.2.</span> <span class="nav-text">vue-axios</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什麼是-Vue-CLI？"><span class="nav-number">1.</span> <span class="nav-text">什麼是 Vue CLI？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下載"><span class="nav-number">2.</span> <span class="nav-text">下載</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-CLI-指令"><span class="nav-number">3.</span> <span class="nav-text">Vue CLI 指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-CLI-產生的資料夾結構"><span class="nav-number">4.</span> <span class="nav-text">Vue CLI 產生的資料夾結構</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Webpack-腳本結構"><span class="nav-number">5.</span> <span class="nav-text">Webpack 腳本結構</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Webpack-如何運作"><span class="nav-number">5.1.</span> <span class="nav-text">Webpack 如何運作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#build-資料夾"><span class="nav-number">5.2.</span> <span class="nav-text">build 資料夾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-資料夾"><span class="nav-number">5.3.</span> <span class="nav-text">config 資料夾</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過-Vue-CLI-載入外部套件"><span class="nav-number">6.</span> <span class="nav-text">透過 Vue CLI 載入外部套件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bootstrap"><span class="nav-number">6.1.</span> <span class="nav-text">Bootstrap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#元件的-lt-style-gt-scoped-屬性"><span class="nav-number">6.1.1.</span> <span class="nav-text">元件的 &lt;style&gt; scoped 屬性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vue-axios"><span class="nav-number">6.2.</span> <span class="nav-text">vue-axios</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -465,7 +471,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -610,7 +616,7 @@
         config: {page: {
             url: "http://gretema.github.io/Vuejs/20191225/1488994884/",
             identifier: "Vuejs/20191225/1488994884/",
-            title: "[Vue] Vue Cli 2 建置與運作"
+            title: "[Vue] Vue CLI 2 建置與運作"
           }
         }
       });

@@ -1,6 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[Vue] Vue CLI 3 使用筆記及如何將專案升級至 CLI 3</title>
+    <url>/Vuejs/20200121/3810438936/</url>
+    <content><![CDATA[<p>之前介紹過 Vue CLI 2 的基本用法了，這次來介紹 Vue CLI 3 囉！<br>CLI 3 最讚的地方就是有了視覺介面，在管理專案上更加直覺了，<br>這篇文章就要來介紹如何用 CLI 3 建置專案。</p>
+<a id="more"></a>
+
+<h2 id="Vue-CLI-2-跟-3-的差異"><a href="#Vue-CLI-2-跟-3-的差異" class="headerlink" title="Vue CLI 2 跟 3 的差異"></a>Vue CLI 2 跟 3 的差異</h2><ol>
+<li>CLI 3 增加 GUI 介面，取代之前需要指令才能達成的事。</li>
+<li>可以在 Webpack 新增編譯插件，例如 TypeScript。</li>
+</ol>
+<h2 id="創建-Vue-CLI-3-的專案"><a href="#創建-Vue-CLI-3-的專案" class="headerlink" title="創建 Vue CLI 3 的專案"></a>創建 Vue CLI 3 的專案</h2><p>可以使用終端指令來創建，也可以使用 GUI 來創建。</p>
+<h3 id="終端指令創建法"><a href="#終端指令創建法" class="headerlink" title="終端指令創建法"></a>終端指令創建法</h3><figure class="highlight gauss"><table><tr><td class="code"><pre><span class="line">vue <span class="keyword">create</span> 專案資料夾名稱</span><br></pre></td></tr></table></figure>
+
+<p>接著選擇專案要內建的設定檔，可以先從手動選擇 (Manually select features) 開始。<br>需要選擇的項目有：</p>
+<ul>
+<li>Babel: 把 ES6 編譯成大部分瀏覽器都能運行的版本</li>
+<li>CSS Pre-processors: SASS 之類的預處理器</li>
+</ul>
+<p>以上項目選好之後，還要決定這些設定檔要寫在獨立的檔案還是寫在 package.json，這邊可以按自己習慣來選擇，我個人是選擇 package.json。</p>
+<p>最後，還有一個問題是問說：是否要把以上的設定儲存為設置偏好，下次創建專案時可以沿用。這邊也是看個人習慣來選擇。</p>
+<h3 id="GUI-介面創建法"><a href="#GUI-介面創建法" class="headerlink" title="GUI 介面創建法"></a>GUI 介面創建法</h3><ol>
+<li>在終端機輸入指令：<code>vue ui</code></li>
+<li>接下來專案建立過程很直覺，按照提示一步步往下推進即可。</li>
+<li>建立好後，可以在側欄看到 Plugins 跟 Dependencies，前者是 Vue Cli 運行環境中需要用到的功能，後者是前端開發需要用於專案的套件。</li>
+<li>Configuration 是依據 Plugins 而生成的設定檔。</li>
+<li>Tasks 就是 <code>package.json</code> <code>&quot;scripts&quot;</code> 中的項目，所以要運行特定的 mode 時可以在這邊直接按下 Run task 按鈕與 Open app 按鈕。</li>
+</ol>
+<h2 id="資料夾結構"><a href="#資料夾結構" class="headerlink" title="資料夾結構"></a>資料夾結構</h2><p>CLI 3 與 2 比較不同的地方在於，比較看不到那麼多設定檔，因為它其實不想讓我們去動那些設定。那些我們看不到的設定檔，其實都在 <code>node_modules</code> 裡面。</p>
+<h3 id="node-modules-vue"><a href="#node-modules-vue" class="headerlink" title="node_modules/@vue"></a>node_modules/@vue</h3><p><code>node_modules</code> 的 <code>@vue</code> 資料夾中，有個 <code>webpack.config</code> 檔案，另外還有一個 <code>lib</code> 資料夾，裡面有 Webpack 其他的設定，這些都<strong>不需要去動</strong>。</p>
+<p><code>public</code> 跟 <code>src</code> 是主要撰寫程式碼的地方，尤其 <code>src</code> 最為重要。</p>
+<h3 id="src"><a href="#src" class="headerlink" title="src"></a>src</h3><p><code>src</code> 裡面的檔案（包括圖檔）都會被編譯，<code>main.js</code> 依然是進入點，<code>asset</code> 資料夾裡面則可以放需要編譯的 sass 檔跟 js 檔。</p>
+<p>回顧 CLI 2，是把所有元件都放在 components 資料夾，而 CLI 3 則分成 <code>views</code> 資料夾及 <code>components</code> 資料夾。</p>
+<p><code>components</code> 資料夾裡面放內部元件，<code>views</code> 資料夾則放外部元件（也就是用 router 切換的分頁）。</p>
+<p>在 CLI 3 中，<strong>.vue 附檔名預設不能省略</strong>，引用檔案時要注意。</p>
+<h3 id="public"><a href="#public" class="headerlink" title="public"></a>public</h3><p><code>public</code> 資料夾裡面檔案則不會被編譯，以前 <code>index.html</code> 是放在根目錄，現在則是放在這裡。但是 <code>index.html</code> 其實會被編譯，主要是壓縮並將 src 資料夾內的檔案放進去，在打包時會注入 css 及 js。</p>
+<h3 id="如何打包：產生-dist-資料夾"><a href="#如何打包：產生-dist-資料夾" class="headerlink" title="如何打包：產生 dist 資料夾"></a>如何打包：產生 dist 資料夾</h3><p>在 <code>package.json</code> 的 <code>&quot;scripts&quot;</code> 項目中，有關於打包的設定。</p>
+<p>輸入指令 <code>npm run build</code> 就能執行打包，然後根目錄就會出現一個 <code>dist</code> 資料夾，交付專案時只需要要交出 <code>dist</code> 資料夾。</p>
+<h3 id="dist"><a href="#dist" class="headerlink" title="dist"></a>dist</h3><p>打開 <code>dist</code> 資料夾中的 <code>index.html</code>，拉到最下面就能看到注入的 js 檔，分別有 <code>vender.js</code> 及 <code>app.js</code>，前者是指從外部載入的資源（來自 <code>node_modules</code>），後者是我們自己撰寫的 JS。</p>
+<p>由於 <code>dist</code> 中的 <code>index.html</code> 裡面注入的資源都是從根目錄開始讀起，所以<strong>要運行這個 index.html，需要把 dist 資料夾用獨立的 VS code 開起來，才能使用 web server。</strong></p>
+<h2 id="環境變數設定"><a href="#環境變數設定" class="headerlink" title="環境變數設定"></a>環境變數設定</h2><p>環境變數用來區分開發中版本及正式發布版本的資料庫路徑。<br>環境變數設定檔名及變數撰寫方式可參考<a href="https://cli.vuejs.org/zh/guide/mode-and-env.html" target="_blank" rel="external nofollow noopener noreferrer">官網</a>。</p>
+<ol>
+<li>在根目錄新增一個專門放環境變數的檔案，例如叫做 <code>.env</code>。</li>
+<li>變數撰寫方式要採用第二種（<code>VUE_APP_自己命名的變數名稱</code>），例如在測試環境下讀出同一個 API 網址的話，就寫成：<br><code>VUE_APP_API=http://localhost:3000/</code></li>
+<li>到一個元件內，增加一個 hook，讀出剛剛的環境變數，例如：</li>
+</ol>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">created() &#123;</span><br><span class="line">  console.<span class="built_in">log</span>(<span class="built_in">process</span>.env.VUE_APP_API);</span><br><span class="line">  <span class="comment">// 讀取環境變數要在開頭加上 process</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>使用 <code>npm run serve</code> 重整，即可讀取出環境變數。</li>
+</ol>
+<h3 id="如果環境變數設定檔不只一個要如何切換？"><a href="#如果環境變數設定檔不只一個要如何切換？" class="headerlink" title="如果環境變數設定檔不只一個要如何切換？"></a>如果環境變數設定檔不只一個要如何切換？</h3><ol>
+<li>如果在 <code>.env</code> 以外還有別的環境變數檔，且檔案名稱是<strong>預設的名稱</strong>，例如 <strong>.env.development</strong>（serve 預設環境）或 <strong>.env.production</strong>（build 預設環境），在變數名稱相同的情況下，<strong>權重比 .env 高</strong>，所以會優先讀取它們的值。</li>
+<li>也可以自訂檔案名稱，例如 <code>.env</code> 以外的另一個環境變數檔叫做 <code>.env.KK</code>，裡面的變數名稱跟 <code>.env</code> 的一樣但值不一樣。</li>
+<li>到 <code>package.json</code> 的 <code>&quot;scripts&quot;</code> 項目下，該項目原本的值是 <code>&quot;vue-cli-service serve&quot;</code>，在後面多加 <code>--mode KK</code>，整串變成 <code>&quot;vue-cli-service serve --mode KK&quot;</code>。</li>
+<li>使用 <code>npm run serve</code> 重整，就能切換成 <code>.env.KK</code> 設定的變數值了。</li>
+</ol>
+<h2 id="安裝-Vue-Router-跟-Vuex"><a href="#安裝-Vue-Router-跟-Vuex" class="headerlink" title="安裝 Vue Router 跟 Vuex"></a>安裝 Vue Router 跟 Vuex</h2><p>安裝 Vue Router 跟 Vuex 的方法很簡單，在 GUI 中選擇 Plugins 後，就可以在最上方點選「Add vue-router」及「Add vuex」。</p>
+<h2 id="GUI-中關於-CLI-的設定"><a href="#GUI-中關於-CLI-的設定" class="headerlink" title="GUI 中關於 CLI 的設定"></a>GUI 中關於 CLI 的設定</h2><p>在 Configuration 中，Vue CLI 最常被更動的設定是第一個 Base URL，這個項目負責的是 <code>dist</code> 資料夾中所有檔案之間的路徑關係，預設的網頁路徑是從根目錄開始。在這邊可以把它改成專案資料夾名稱，例如 <code>/vuehw/</code>，然後把所有檔案都放進這個資料夾內。<br>交出去的資料夾結構：</p>
+<ul>
+<li>dist<ul>
+<li>vuehw<ul>
+<li>css</li>
+<li>img</li>
+<li>js</li>
+<li>index.html</li>
+<li>favicon.ico</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>至於 Router 的引入，在 CLI 3 有新的寫法，不須在檔案最前頭先 import 元件，可以在 routes 用<strong>箭頭函式</strong>導入：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attribute">path</span>: <span class="string">'/about'</span>,</span><br><span class="line">  name: <span class="string">'about'</span>,</span><br><span class="line">  component: () =&gt; import (<span class="string">'./views/About.vue'</span>)</span><br><span class="line">  // <span class="built_in">import</span>() 是一個方法</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何把-CLI-2-的專案搬到-CLI-3"><a href="#如何把-CLI-2-的專案搬到-CLI-3" class="headerlink" title="如何把 CLI 2 的專案搬到 CLI 3"></a>如何把 CLI 2 的專案搬到 CLI 3</h2><ol>
+<li>先用 GUI 建立一個新專案。</li>
+<li>選擇需要的工具：Babel / CSS Pre-processor / Router</li>
+<li>打開舊專案的 <code>package.json</code>，安裝 CLI 2 所用到的套件：axios / bootstrap / jQuery / popper.js / vue-axios / vue-loading-overlay 等等。</li>
+<li>安裝完以後，打開 <code>src/main.js</code>，把相依套件都載入。這邊可從舊專案的 <code>main.js</code> 複製 import 程式碼以及啟用程式碼。</li>
+<li>打開舊專案的 <code>App.vue</code>，複製全部程式碼到新專案的 <code>App.vue</code>。</li>
+<li>完成上一步以後會發現 console 跳錯，這是因為我們還沒加入環境變數，所以 AJAX 失敗。所以接下來要加入環境變數到新專案中。</li>
+<li>在 <code>src</code> 新增檔案 <code>.env.development</code>，按照 CLI 3 的方式命名環境變數，再把對應的值從舊專案的 <code>dev.env.js</code> 貼過來。</li>
+</ol>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">VUE_APP_APIPATH</span>=https://vue-course-api.hexschool.io</span><br><span class="line"><span class="attr">VUE_APP_CUSTOMPATH</span>=gretema</span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li>加入環境變數後，要再把所有 AJAX 用到的 API 位址改成新的變數名稱。</li>
+<li>載入其他元件，把舊專案 <code>components/Home.vue</code> 貼到新專案同名檔案裡。</li>
+<li>接下來打開新專案 <code>router.js</code>，可以發現這邊引入元件的方式不同，是直接在 <code>routes.物件.component</code> 中用箭頭函式引入元件，而不是在檔案最上方 import。</li>
+</ol>
+<figure class="highlight coffeescript"><table><tr><td class="code"><pre><span class="line">routes: [</span><br><span class="line">  &#123;</span><br><span class="line">    path: <span class="string">'/'</span>,</span><br><span class="line">    name: <span class="string">'home'</span>,</span><br><span class="line">    component: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'./views/Home.vue'</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="regexp">//</span> <span class="keyword">import</span>() 中放入元件路徑</span><br></pre></td></tr></table></figure>
+
+<h2 id="Vue-CLI-快速原型開發"><a href="#Vue-CLI-快速原型開發" class="headerlink" title="Vue CLI 快速原型開發"></a>Vue CLI 快速原型開發</h2><p>使用 Webpack 針對單一 <code>.vue</code> 檔案進行管理，適用於較小型的專案<br>參照官網「<a href="https://cli.vuejs.org/zh/guide/prototyping.html" target="_blank" rel="external nofollow noopener noreferrer">快速原型開發</a>」。</p>
+<ol>
+<li>安裝全域的 cli service。</li>
+<li>準備一個 <code>.html</code> 檔（裡面有 Vue 原始碼）以及一個 <code>all.css</code>。</li>
+<li>新增一個 <code>index.vue</code>，在裡面新增 <code>&lt;template&gt;</code> 標籤，把 <code>.html</code> 中的 <code>&lt;div id=&quot;app&quot;&gt;</code> 整段貼進來，貼好後 <code>id=&quot;app&quot;</code> 就刪掉。</li>
+<li>在 <code>index.vue</code> 新增 <code>&lt;script&gt;</code> 段落，把 <code>.html</code> 中 Vue 的原始碼貼進來，但在 <code>var app = new Vue({})</code> 前一行要加上 <code>export default {}</code>，原本 data 開始到最後的程式碼，要貼進這個物件裡。貼好之後，原本的寫法是根實例的寫法，現在必須用元件的寫法，所以 data 要改成 function return 的形式。</li>
+<li>原本 <code>var app = new Vue({})</code> 可以刪掉了。</li>
+<li>在終端機下指令：<code>vue serve index.vue</code>。</li>
+<li>在 <code>&lt;script&gt;</code> 下方增加 <code>&lt;style&gt;</code>，並在裡面 import <code>all.css</code>。</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css"><span class="keyword">@import</span> url(<span class="string">'css/all.css'</span>);</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li>專案完成後打包：<code>vue build index.vue</code>。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>VueCLI</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[JS] 講座筆記：函數式程式設計</title>
     <url>/javascript/20200119/2279697082/</url>
     <content><![CDATA[<p> 這篇筆記來自於 2020.1.9 六角學院的線上研討會，講者為蘇泰安老師，老師不只講解了如何善用函數來幫助程式碼更簡潔，也介紹了一些以函數為編寫基礎的語言（例如 Elixir），不過由於我對 Javascript 以外的語言並不了解，所以這篇筆記並不會著墨於其他語言。</p>
@@ -133,12 +248,12 @@
       </tags>
   </entry>
   <entry>
-    <title>[Vue] Vue Cli 2 建置與運作</title>
+    <title>[Vue] Vue CLI 2 建置與運作</title>
     <url>/Vuejs/20191225/1488994884/</url>
-    <content><![CDATA[<p>雖然 Vue Cli 2 現在已經出到 3 了，但還是把自己學習使用 2 所做的筆記放上來，說不定依然能提供給各位做參考（？</p>
+    <content><![CDATA[<p>雖然 Vue CLI 2 現在已經出到 3 了，但還是把自己學習使用 2 所做的筆記放上來，說不定依然能提供給各位做參考（？</p>
 <a id="more"></a>
 
-<h2 id="什麼是-Vue-Cli？"><a href="#什麼是-Vue-Cli？" class="headerlink" title="什麼是 Vue Cli？"></a>什麼是 Vue Cli？</h2><ul>
+<h2 id="什麼是-Vue-CLI？"><a href="#什麼是-Vue-CLI？" class="headerlink" title="什麼是 Vue CLI？"></a>什麼是 Vue CLI？</h2><ul>
 <li>基於 Webpack 所建置的開發工具</li>
 <li>便於使用各種第三方工具（BS4, Vue Router…）</li>
 <li>可運行 Sass, Bebel 等編譯工具</li>
@@ -150,12 +265,12 @@
 <li>輸入 <code>vue</code>：出現許多可使用的指令，例如輸入 <code>vue list</code> 能夠選擇下載的樣板，選擇 <code>webpack</code> 樣板即可</li>
 <li>新增專案：輸入 <code>vue init 樣板名稱 專案名稱</code></li>
 </ol>
-<h2 id="Vue-Cli-指令"><a href="#Vue-Cli-指令" class="headerlink" title="Vue Cli 指令"></a>Vue Cli 指令</h2><p><code>npm install</code>：安裝所有套件<br><code>npm run dev</code>：運行開發的環境<br><code>npm run build</code>：運行正式版的環境，將所有網頁內容打包壓縮</p>
+<h2 id="Vue-CLI-指令"><a href="#Vue-CLI-指令" class="headerlink" title="Vue CLI 指令"></a>Vue CLI 指令</h2><p><code>npm install</code>：安裝所有套件<br><code>npm run dev</code>：運行開發的環境<br><code>npm run build</code>：運行正式版的環境，將所有網頁內容打包壓縮</p>
 <p><code>npm run</code> 是運行 <code>package.json</code> 內的 <code>script</code>，運行時可以直接執行 <code>node_modules</code> 內的模組。</p>
-<h2 id="Vue-Cli-產生的資料夾結構"><a href="#Vue-Cli-產生的資料夾結構" class="headerlink" title="Vue Cli 產生的資料夾結構"></a>Vue Cli 產生的資料夾結構</h2><ul>
+<h2 id="Vue-CLI-產生的資料夾結構"><a href="#Vue-CLI-產生的資料夾結構" class="headerlink" title="Vue CLI 產生的資料夾結構"></a>Vue CLI 產生的資料夾結構</h2><ul>
 <li><p><code>dist</code>：這資料夾下的檔案都要放在 server 下才能正常運作，主要是透過 <code>npm run bulid</code> 生成的。每次輸入 <code>npm run build</code> 的時候 <code>dist</code> 會自動重新生成，並加上不同的 hash 在資源上，避免有暫存而沒有取到新資源。</p>
 </li>
-<li><p>根目錄的 <code>index.html</code>：不需要動，Vue Cli 會自動把 JS 資源注入在 <code>#app</code> 下方註解的位置。</p>
+<li><p>根目錄的 <code>index.html</code>：不需要動，Vue CLI 會自動把 JS 資源注入在 <code>#app</code> 下方註解的位置。</p>
 </li>
 <li><p><code>static</code>：放入不會被編譯的檔案。</p>
 </li>
@@ -188,10 +303,10 @@
 
 <p><code>NODE_ENV</code> 是寫在 <code>dev.env</code> 及 <code>prod.env</code> 中的變數，值要記得用 <code>&#39;&quot;&quot;&#39;</code> 包住，否則會讀取失敗。</p>
 <p>環境變數常用於 AJAX，因為 AJAX 使用的路徑在開發版跟正式版中往往是不同的，所以就可以用環境變數去區分。</p>
-<h2 id="透過-Vue-Cli-載入外部套件"><a href="#透過-Vue-Cli-載入外部套件" class="headerlink" title="透過 Vue Cli 載入外部套件"></a>透過 Vue Cli 載入外部套件</h2><h3 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h3><p>下載 BS，順便把 node-sass 及 sass loader 等兩個套件一起下載：</p>
+<h2 id="透過-Vue-CLI-載入外部套件"><a href="#透過-Vue-CLI-載入外部套件" class="headerlink" title="透過 Vue CLI 載入外部套件"></a>透過 Vue CLI 載入外部套件</h2><h3 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h3><p>下載 BS，順便把 node-sass 及 sass loader 等兩個套件一起下載：</p>
 <figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">npm install bootstrap <span class="keyword">node</span><span class="title">-sass</span> sass-loader --save</span><br></pre></td></tr></table></figure>
 
-<p>下載完成後，Vue Cli 需要重新運行：</p>
+<p>下載完成後，Vue CLI 需要重新運行：</p>
 <figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line">npm <span class="keyword">run</span><span class="bash"> dev</span></span><br></pre></td></tr></table></figure>
 
 <p>打開 <code>App.vue</code>，在 <code>&lt;style&gt;</code> 上加上 <code>lang=&quot;scss&quot;</code>，並且把原本的 <code>style</code> 內容改成 <code>sass</code> 的格式，測試 <code>sass</code> 是否能正確運行：</p>
@@ -209,7 +324,7 @@
 <figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line">npm <span class="keyword">run</span><span class="bash"> dev</span></span><br></pre></td></tr></table></figure>
 
 <p>axios 文件中有寫該如何使用，在進入點檔案中加入以下程式碼：</p>
-<figure class="highlight clean"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span> <span class="comment">// Vue Cli 已經載入好了</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span> <span class="comment">// 主要的 AJAX 套件</span></span><br><span class="line"><span class="keyword">import</span> VueAxios <span class="keyword">from</span> <span class="string">'vue-axios'</span> <span class="comment">// 將它轉為 Vue 的套件</span></span><br><span class="line"></span><br><span class="line">Vue.use(VueAxios, axios) <span class="comment">// 執行 axios</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span> <span class="comment">// Vue CLI 已經載入好了</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span> <span class="comment">// 主要的 AJAX 套件</span></span><br><span class="line"><span class="keyword">import</span> VueAxios <span class="keyword">from</span> <span class="string">'vue-axios'</span> <span class="comment">// 將它轉為 Vue 的套件</span></span><br><span class="line"></span><br><span class="line">Vue.use(VueAxios, axios) <span class="comment">// 執行 axios</span></span><br></pre></td></tr></table></figure>
 
 <p>測試 AJAX 是否能成功：在 <code>App.vue</code> 的 <code>export default</code> 中，加入 <code>created()</code>。</p>
 <figure class="highlight coffeescript"><table><tr><td class="code"><pre><span class="line">created() &#123;</span><br><span class="line">  <span class="keyword">this</span>.$http.get(<span class="string">'https://randomuser.me/api/'</span>).<span class="keyword">then</span>(<span class="function"><span class="params">(response)</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(response.data);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -220,7 +335,7 @@
         <category>Vuejs</category>
       </categories>
       <tags>
-        <tag>VueCli2</tag>
+        <tag>VueCLI</tag>
       </tags>
   </entry>
   <entry>
