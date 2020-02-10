@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[JS] 講座筆記：工程師必須了解的 UX 設計</title>
+    <url>/UI-UX/20200210/3766866311/</url>
+    <content><![CDATA[<p>這篇筆記來自於 2020.2.6 六角學院的線上研討會，講者為獸群之心 / Soking，講者在這一節講座中分享了設計使用者體驗時需要掌握的基本原則，並且以豐富的實務經驗來回答許多學員的發問。</p>
+<a id="more"></a>
+
+<h2 id="UX-的起源"><a href="#UX-的起源" class="headerlink" title="UX 的起源"></a>UX 的起源</h2><blockquote>
+<p>使用者經驗或用戶體驗（User Experience，UX），一詞由美國學者唐·諾曼所提出⋯⋯「使用者經驗」包含使用者與公司的產品與服務互動中的所有面向。—— 維基百科</p>
+</blockquote>
+<p>UX 其實相當程度地根基於認知心理學。美國有名的認知心理學者 Don Norman 可說是 UX 祖師爺，他被邀請進入 Apple，協助 Apple 重視人類如何使用電腦、重視美學。</p>
+<p>在以前的時代是由技術主導設計，現在則是設計師研究如何更 user friendly，電腦於是普及化。而當網路蓬勃發展後，UX 開始大量被需要。</p>
+<p>Don Norman 創立的公司 Nielsen Norman Group 有提供 UX 培訓，公司官網跟 YT 有一些 UX 文章。但是這些 UX 文章還是偏理論，所以容易看了很多但不知道怎麼開始，這也是在台灣學 UX 容易遇到的問題。</p>
+<p>不過使用者體驗應該是所有團隊成員的責任，只要把用戶需求放在心裡，而不是只有商業面、技術面的話，其實就是在做 UX。</p>
+<h2 id="產品可用性原則"><a href="#產品可用性原則" class="headerlink" title="產品可用性原則"></a>產品可用性原則</h2><p>產品可用性有三個指標：<br>有效性 (must have)：沒有搞定產品就完蛋。例如：電商不能購物、地圖不能定位。<br>效率 (good to have)：沒做到會很麻煩。<br>滿意度：沒做到會有人不開心，不一定所有人都能滿足，需要參考自己產品定位目標。</p>
+<p>有效性跟效率之間的選擇，應該看客戶需要的是什麼而提供，並不是追求兩個都要有。</p>
+<p>想了解網頁 UX 更細節的優化建議可以參考 Google 研究員寫的 <a href="https://services.google.com/fh/files/events/pdf_retail_ux_playbook.pdf?fbclid=IwAR2ATmQ-bsUuTfo5kyNqt1n0EulwDucB0m060Am4cHvHNtSYk5oC5Wn6mDI" target="_blank" rel="external nofollow noopener noreferrer">UX Playbook</a>（<a href="https://medium.com/@yachenyu/google-uxplaybook-ux%E8%A8%AD%E8%A8%88%E5%BB%BA%E8%AD%B0%E6%8C%87%E5%8D%97-%E9%9B%BB%E5%95%86-%E9%9B%B6%E5%94%AE%E9%87%8D%E9%BB%9E%E7%BF%BB%E8%AD%AF-3ae3585b6769" target="_blank" rel="external nofollow noopener noreferrer">中文版</a>），裡面有列出一些共通的原則，做到的話體驗會比較好。</p>
+<h2 id="設計思考"><a href="#設計思考" class="headerlink" title="設計思考"></a>設計思考</h2><p>歡迎錯誤，也歡迎不同背景的人貢獻想法。<br>UX 沒有一步到位，必須先做出一個東西，測試使用者的反應，再趕快改善。</p>
+<h2 id="Site-Map"><a href="#Site-Map" class="headerlink" title="Site Map"></a>Site Map</h2><p>規範出頁面層級、標明各頁面的編號，頁面中有共用元件、有要求權限的話也會標明。</p>
+<h2 id="用戶旅程地圖"><a href="#用戶旅程地圖" class="headerlink" title="用戶旅程地圖"></a>用戶旅程地圖</h2><p>可以做得簡單也可以做得複雜，可以把前中後台、用戶場景、商業邏輯都用<strong>視覺化</strong>的方式呈現。<br>視覺化是 UX 設計師很重要的工作，把抽象的事情變具體，也能幫助討論不要發散。</p>
+<h2 id="Wireframe"><a href="#Wireframe" class="headerlink" title="Wireframe"></a>Wireframe</h2><p>工程師可以在 Wireframe 上確認規格跟使用流程。</p>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q &amp; A"></a>Q &amp; A</h2><p>Q: 沒辦法從過去的 UX 案例來預估成效嗎？<br>A: 過去的成功無法代表未來的成功。<del>跟投資買股票一樣。</del></p>
+<p>Q: 哪個階段會開始請工程師？<br>A: 在第一天就會跟工程師討論，畫出一個邊界，確認解決問題到什麼程度，這其實是商業模式層次的問題。<br>UX 會先定義用戶角色，接著做用戶研究、線上訪談，使用產品的場景、頻率、需求、流程，然後把蒐集到的資訊拿去跟客戶做討論。如果發現有些指標適合量化，就會先列出來，提供之後規格的參考。</p>
+<p>Q: 請問每一個案子都會做用戶測試嗎？如果會的話用戶測試大約會找多少人測試呢？<br>A: 依照尼爾森原則，找 5<del>8 個人就能找出 85% 的問題。在做測試時應該追求快速有效的方法，找越多人測試就越曠日費時、成本越高。測試時，也會把時間限縮在 5</del>10 分鐘就做完，並會對測試者進行放聲思考法，引導他們講出對特定介面、元素的認知。</p>
+<p>Q: 在判斷客戶的使用情況是否流暢，可否觀察用戶在按下某個按鈕後，過了多久時間才按下設計師所期待的用戶的按鈕，可以這樣來判斷嗎? （如果很快就按下的話, 可以代表這個設計是符合UX嗎？）<br>A: 我們會設定一個特定的任務，針對一定數量的用戶去測他們進行任務的秒數，可以用 GA 查看有些比較久才進行特定任務的人是先去幹嘛了。</p>
+<p>Q: 請問, 目前 UX 設計遇到的大環境威脅有哪些？例如：</p>
+<ol>
+<li>移動設備越做越小，導致能夠設計的空間變少</li>
+<li>客戶會為了省錢，而直接要求你們做過的案例框架拿來套用，為了不願多花設計費</li>
+<li>案例越做越多，模仿的競爭者越來越多</li>
+<li>其他？</li>
+</ol>
+<p>面對這些，你們是怎麼克服的？</p>
+<p>A:</p>
+<ol>
+<li>有限制是好的，因為畫面小反而塞不了太多東西，Web 畫面較大，可以塞的東西就多，業主常常會希望把畫面塞得滿滿的，導致畫面臃腫不堪，所以 Web 比 APP 還難設計。</li>
+<li>每個業主的商業模式都不一樣，所以不太會拿其他人的來套用。</li>
+<li>市面上越多流暢的產品，越能夠帶動業界品質提升，所以競爭多是好事。</li>
+</ol>
+<p>Q: 有沒有案子是在 iPad 上面做相關的測試？<br>A: 有，但當時客戶不想單獨測試 iPad，iPad 可以直著看也可以橫著看，所以 UI 有把尺寸設計好就沒問題。</p>
+<p>Q: UI 報價高還是 UX？<br>A: 如果客戶只想做 UI，我們會問他是否有能力自己做出 Wireframe？能做到什麼程度？我們在跟客戶告知我們的專業能力後，通常客戶也願意讓我們同時做 UX 跟 UI。我們現在新客戶都不會接只做 UI 的案子。</p>
+<h2 id="彩蛋：UI-設計師是否該學-HTML-CSS？"><a href="#彩蛋：UI-設計師是否該學-HTML-CSS？" class="headerlink" title="彩蛋：UI 設計師是否該學 HTML CSS？"></a>彩蛋：UI 設計師是否該學 HTML CSS？</h2><p>講者認為 UI 設計師應該要碰 HTML CSS，尤其現在案子要 RWD，如果畫面都只用繪圖軟體做，其實設計師會有盲點，會不知道實際畫面是怎麼變化的。</p>
+]]></content>
+      <categories>
+        <category>UI/UX</category>
+      </categories>
+      <tags>
+        <tag>UX</tag>
+        <tag>userexperience</tag>
+        <tag>使用者體驗</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[Vue] Vue CLI 3 使用筆記及如何將專案升級至 CLI 3</title>
     <url>/Vuejs/20200121/3810438936/</url>
     <content><![CDATA[<p>之前介紹過 Vue CLI 2 的基本用法了，這次來介紹 Vue CLI 3 囉！<br>CLI 3 最讚的地方就是有了視覺介面，在管理專案上更加直覺了，<br>這篇文章就要來介紹如何用 CLI 3 建置專案。</p>
@@ -118,7 +169,7 @@
   <entry>
     <title>[JS] 講座筆記：函數式程式設計</title>
     <url>/javascript/20200119/2279697082/</url>
-    <content><![CDATA[<p> 這篇筆記來自於 2020.1.9 六角學院的線上研討會，講者為蘇泰安老師，老師不只講解了如何善用函數來幫助程式碼更簡潔，也介紹了一些以函數為編寫基礎的語言（例如 Elixir），不過由於我對 Javascript 以外的語言並不了解，所以這篇筆記並不會著墨於其他語言。</p>
+    <content><![CDATA[<p>這篇筆記來自於 2020.1.9 六角學院的線上研討會，講者為蘇泰安老師，老師不只講解了如何善用函數來幫助程式碼更簡潔，也介紹了一些以函數為編寫基礎的語言（例如 Elixir），不過由於我對 Javascript 以外的語言並不了解，所以這篇筆記並不會著墨於其他語言。</p>
 <a id="more"></a>
 
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在 JavaScript 函式是一級公民，可以傳入另一個函式作為參數。<br>傳入其他函式作為參數的函式稱為 Callback function。<br>而接收其他函式當作自己的參數的則稱為高階函式。</p>

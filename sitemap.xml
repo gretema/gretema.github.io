@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gretema.github.io/UI-UX/20200210/3766866311/</loc>
+    
+    <lastmod>2020-02-10T03:59:01.955Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://gretema.github.io/javascript/20200119/2279697082/</loc>
+    
+    <lastmod>2020-02-10T03:53:45.132Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gretema.github.io/Vuejs/20200121/3810438936/</loc>
     
     <lastmod>2020-01-21T16:06:20.951Z</lastmod>
@@ -12,13 +26,6 @@
     <loc>http://gretema.github.io/Vuejs/20191225/1488994884/</loc>
     
     <lastmod>2020-01-21T15:39:30.381Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gretema.github.io/javascript/20200119/2279697082/</loc>
-    
-    <lastmod>2020-01-19T09:55:29.434Z</lastmod>
     
   </url>
   
