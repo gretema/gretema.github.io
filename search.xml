@@ -1,6 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>D3.js 超超超基礎入門</title>
+    <url>/D3-js/20200217/1734732239/</url>
+    <content><![CDATA[<p>之前接案時為了要實現一個動畫效果而學過一點 D3.js，雖然最後沒有派上用場，但當時我寫下一些入門筆記，如果你沒學過 D3.js 而想要嘗試的話，可以參考這篇筆記。</p>
+<a id="more"></a>
+
+<h2 id="什麼是-D3-js"><a href="#什麼是-D3-js" class="headerlink" title="什麼是 D3.js"></a>什麼是 D3.js</h2><blockquote>
+<p>D3.js（Data-Driven Documents）是一個使用動態圖形進行資料視覺化的 JavaScript 程式庫。與 W3C 標準相容，並且利用廣泛實現的 SVG、JavaScript 和 CSS 標準⋯⋯最常被運用在線上新聞網站呈現互動式圖形、呈現資料資料的圖表和呈現含有地理資訊的資料。——維基百科</p>
+</blockquote>
+<p>簡單來說，D3.js 能以圖像的方式來呈現資料，並用資料來驅動 DOM。</p>
+<h2 id="SVG-標籤"><a href="#SVG-標籤" class="headerlink" title="SVG 標籤"></a>SVG 標籤</h2><p>D3.js 是用 SVG 來繪製圖像的，所以需要具備一些 SVG 繪圖的背景知識。SVG 與 HTML 一樣是有標籤的，以下就是常見的 SVG 標籤：</p>
+<ul>
+<li><code>&lt;text&gt;</code> - 文字標籤</li>
+<li><code>&lt;circle&gt;</code> - 圓形標籤</li>
+<li><code>&lt;line&gt;</code> - 線段標籤</li>
+<li><code>&lt;path&gt;</code> - 弧形標籤</li>
+<li><code>&lt;g&gt;</code> - 整合以上的物件，在 <code>&lt;g&gt;</code> 裡面可以放各類型的標籤</li>
+</ul>
+<h2 id="創建-D3-js-畫布"><a href="#創建-D3-js-畫布" class="headerlink" title="創建 D3.js 畫布"></a>創建 D3.js 畫布</h2><p>首先先來了解如何用 D3.js 選取 DOM。</p>
+<ul>
+<li>選取單個 DOM：d3.select(‘.className’)</li>
+<li>選取多個 DOM：d3.selectAll(‘.className’)</li>
+</ul>
+<p>了解如何選取 DOM 後，接著先選取一個空的 <code>&lt;div&gt;</code>，動態新增一個 SVG 畫布，再用 <code>attr()</code> 動態加上屬性來設定寬高，注意，<code>attr()</code> 內的格式是物件。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">d3.<span class="keyword">select</span>(<span class="string">'.chart-d3'</span>)</span><br><span class="line">  .<span class="built_in">append</span>(<span class="string">'svg'</span>)</span><br><span class="line">  .attr(&#123;</span><br><span class="line">    <span class="string">"width"</span>: <span class="string">"75px"</span>,</span><br><span class="line">    <span class="string">"height"</span>: <span class="string">"75px"</span></span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="將資料導入"><a href="#將資料導入" class="headerlink" title="將資料導入"></a>將資料導入</h2><p>已經準備好畫布之後，就可以開始用資料來繪製 DOM 了。</p>
+<ol>
+<li>準備一個陣列當作資料基礎。<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">var vote</span> = [<span class="string">'30'</span>,<span class="string">'50'</span>,<span class="string">'100'</span>,<span class="string">'20'</span>];</span><br></pre></td></tr></table></figure></li>
+<li>HTML 中準備一個空的 <code>&lt;ul&gt;</code>，className 為 <code>.list</code>。</li>
+<li>用 D3 選擇 <code>.list</code>。<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">d3</span><span class="selector-class">.select</span>(<span class="string">'.list'</span>)</span><br><span class="line"><span class="selector-class">.selectAll</span>(<span class="string">'li'</span>) <span class="comment">// 預先選取等一下會創建的與資料數相同的 li</span></span><br><span class="line"><span class="selector-class">.data</span>(vote)  <span class="comment">// 導入資料</span></span><br><span class="line"><span class="selector-class">.enter</span>()  <span class="comment">// 自動生成與資料對應數量的元素</span></span><br><span class="line"><span class="selector-class">.append</span>(<span class="string">'li'</span>) <span class="comment">// 插入元素</span></span><br><span class="line"><span class="selector-class">.text</span>(function(d)&#123;</span><br><span class="line">  <span class="selector-tag">return</span> <span class="selector-tag">d</span>;</span><br><span class="line">  <span class="comment">// d 指的是資料陣列中的每個元素(如果陣列內是物件，帶進來的就是物件)</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="如何繪製長條圖"><a href="#如何繪製長條圖" class="headerlink" title="如何繪製長條圖"></a>如何繪製長條圖</h2><ol>
+<li>準備一個陣列，裡面是物件，每個物件都是等一下會呈現的長條。<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">var vote</span> =[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Grete"</span>,</span><br><span class="line">    <span class="string">"num"</span>: 80</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Steffi"</span>,</span><br><span class="line">    <span class="string">"num"</span>: 100</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Lala"</span>,</span><br><span class="line">    <span class="string">"num"</span>: 200</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure></li>
+<li>在 HTML 準備一個空的 <code>&lt;div&gt;</code>，className 取為 <code>.chart</code>。</li>
+<li>插入資料。<figure class="highlight scilab"><table><tr><td class="code"><pre><span class="line">d3.<span class="keyword">select</span>(<span class="string">'.chart'</span>)</span><br><span class="line">  .selectAll(<span class="string">'div'</span>)</span><br><span class="line">  .data(vote)</span><br><span class="line">  .enter()</span><br><span class="line">  .append(<span class="string">'div'</span>)</span><br><span class="line">  .html(<span class="function"><span class="keyword">function</span><span class="params">(d)</span>&#123;</span></span><br><span class="line">    <span class="comment">// .html() 類似 .innerHTML，D3 允許 SVG 跟 HTML 標籤混用</span></span><br><span class="line">    <span class="keyword">return</span> d.name + <span class="string">'&lt;br&gt;'</span> + d.num</span><br><span class="line">  &#125;)</span><br><span class="line">  .style(<span class="string">"height"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span>&#123;</span></span><br><span class="line">    <span class="keyword">return</span> d.num + <span class="string">'px'</span>  <span class="comment">// 調整每個長條的高度</span></span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="如何更新圖表"><a href="#如何更新圖表" class="headerlink" title="如何更新圖表"></a>如何更新圖表</h2>完成上一段的長條圖之後，如果之後有新數據要更新圖表，應該怎麼做呢？<br>以下的例子從原始資料創建圖表開始，示範如何用新資料蓋過舊資料。</li>
+<li>準備原始資料陣列與新資料陣列。<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 這是原始的資料</span></span><br><span class="line"><span class="keyword">var</span> vote =[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Grete"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">80</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Steffi"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">100</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Lala"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">200</span></span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 這是新的資料</span></span><br><span class="line"><span class="keyword">var</span> voteUpdate =[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Grete"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">120</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Steffi"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">80</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Lala"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">60</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br></pre></td></tr></table></figure></li>
+<li>使用上一段繪製長條圖的技巧，用原始資料把節點 (<code>node</code>) 都先創建出來。<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> node = d3</span><br><span class="line">  .<span class="keyword">select</span>(<span class="string">'.chart'</span>)</span><br><span class="line">  .selectAll(<span class="string">'div'</span>)</span><br><span class="line">  .data(vote)</span><br><span class="line">  .enter()</span><br><span class="line">  .<span class="built_in">append</span>(<span class="string">'div'</span>)</span><br></pre></td></tr></table></figure></li>
+<li>把繪製圖像的程式碼都放到一個函式裡 (<code>update()</code>)，直接選擇 <code>node</code> 進行渲染。函式化的目的是讓每次替換節點裡塞入的資料時，可以透過呼叫函式就重新繪製圖像。<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  node</span><br><span class="line">  .html(<span class="function"><span class="keyword">function</span><span class="params">(d)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> d.name + <span class="string">'&lt;br&gt;'</span> + d.num</span><br><span class="line">  &#125;)</span><br><span class="line">  .style(<span class="string">"height"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> d.num + <span class="string">'px'</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">update();</span><br></pre></td></tr></table></figure></li>
+<li>最後，變更 <code>node</code> 塞入的 data，然後呼叫更新函式。<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line"><span class="keyword">node</span>.<span class="title">data</span>(voteUpdate); // 帶入新資料</span><br><span class="line">update();  // 重新渲染</span><br></pre></td></tr></table></figure>
+<h2 id="小補充"><a href="#小補充" class="headerlink" title="小補充"></a>小補充</h2><h3 id="加入-className-的方法"><a href="#加入-className-的方法" class="headerlink" title="加入 className 的方法"></a>加入 className 的方法</h3>用這個方法可以把自己寫的樣式動態加到 DOM 上面：<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.attr</span>(<span class="string">"class"</span>, <span class="string">".d3-tip"</span>) <span class="comment">// 加入自訂的 className</span></span><br></pre></td></tr></table></figure>
+<h2 id="插入字串的方法"><a href="#插入字串的方法" class="headerlink" title="插入字串的方法"></a>插入字串的方法</h2>用這個方法就等同於用 <code>.innerHTML</code> 插入字串到 DOM 裡面：<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line">.html(<span class="function"><span class="keyword">function</span><span class="params">(d)</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"字串"</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2>本篇筆記是我在<a href="https://www.youtube.com/watch?v=0PQ8VOsyjzw" target="_blank" rel="external nofollow noopener noreferrer">觀看六角學院放在 Youtube 的教學</a>時寫下的，不過我也搜集了一些跟 D3.js 相關的文章，也放在這裡提供給大家參考。</li>
+</ol>
+<ul>
+<li><a href="https://medium.com/@mybaseball52/%E5%A2%9E%E5%BC%B7-d3-js-%E7%9A%84%E8%A6%96%E8%A6%BA%E5%8C%96%E5%8A%9F%E8%83%BD-68eaa66eef98" target="_blank" rel="external nofollow noopener noreferrer">增強 D3.js 的視覺化功能</a></li>
+<li><a href="https://ithelp.ithome.com.tw/users/20105602/ironman/1582?page=3" target="_blank" rel="external nofollow noopener noreferrer">讓你資料美美的(d3.js+vue.js) 系列</a></li>
+<li><a href="https://www.oxxostudio.tw/articles/201509/svg-d3-18-enter-update-exit.html" target="_blank" rel="external nofollow noopener noreferrer">SVG D3.js - Enter、Update 和 Exit</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>D3.js</category>
+      </categories>
+      <tags>
+        <tag>D3.js</tag>
+        <tag>DataDrivenDocuments</tag>
+        <tag>資料視覺化</tag>
+        <tag>長條圖</tag>
+        <tag>SVG</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[UX] 講座筆記：工程師必須了解的 UX 設計</title>
     <url>/UI-UX/20200210/3766866311/</url>
     <content><![CDATA[<p>這篇筆記來自於 2020.2.6 六角學院的線上研討會，講者為獸群之心 / Soking，講者在這一節講座中分享了設計使用者體驗時需要掌握的基本原則，並且以豐富的實務經驗來回答許多學員的發問。</p>

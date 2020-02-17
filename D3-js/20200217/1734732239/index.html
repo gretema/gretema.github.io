@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="之前接案時為了要實現一個動畫效果而學過一點 D3.js，雖然最後沒有派上用場，但當時我寫下一些入門筆記，如果你沒學過 D3.js 而想要嘗試的話，可以參考這篇筆記。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D3.js 超超超基礎入門">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;D3-js&#x2F;20200217&#x2F;1734732239&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="之前接案時為了要實現一個動畫效果而學過一點 D3.js，雖然最後沒有派上用場，但當時我寫下一些入門筆記，如果你沒學過 D3.js 而想要嘗試的話，可以參考這篇筆記。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-02-17T14:29:33.000Z">
+<meta property="article:modified_time" content="2020-02-17T14:41:10.272Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="D3.js">
+<meta property="article:tag" content="DataDrivenDocuments">
+<meta property="article:tag" content="資料視覺化">
+<meta property="article:tag" content="長條圖">
+<meta property="article:tag" content="SVG">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/D3-js/20200217/1734732239/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>D3.js 超超超基礎入門 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/D3-js/20200217/1734732239/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          D3.js 超超超基礎入門
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2020-02-17 22:29:33 / 修改時間：22:41:10" itemprop="dateCreated datePublished" datetime="2020-02-17T22:29:33+08:00">2020-02-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/D3-js/" itemprop="url" rel="index">
+                    <span itemprop="name">D3.js</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/D3-js/20200217/1734732239/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="D3-js/20200217/1734732239/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>之前接案時為了要實現一個動畫效果而學過一點 D3.js，雖然最後沒有派上用場，但當時我寫下一些入門筆記，如果你沒學過 D3.js 而想要嘗試的話，可以參考這篇筆記。</p>
+<a id="more"></a>
+
+<h2 id="什麼是-D3-js"><a href="#什麼是-D3-js" class="headerlink" title="什麼是 D3.js"></a>什麼是 D3.js</h2><blockquote>
+<p>D3.js（Data-Driven Documents）是一個使用動態圖形進行資料視覺化的 JavaScript 程式庫。與 W3C 標準相容，並且利用廣泛實現的 SVG、JavaScript 和 CSS 標準⋯⋯最常被運用在線上新聞網站呈現互動式圖形、呈現資料資料的圖表和呈現含有地理資訊的資料。——維基百科</p>
+</blockquote>
+<p>簡單來說，D3.js 能以圖像的方式來呈現資料，並用資料來驅動 DOM。</p>
+<h2 id="SVG-標籤"><a href="#SVG-標籤" class="headerlink" title="SVG 標籤"></a>SVG 標籤</h2><p>D3.js 是用 SVG 來繪製圖像的，所以需要具備一些 SVG 繪圖的背景知識。SVG 與 HTML 一樣是有標籤的，以下就是常見的 SVG 標籤：</p>
+<ul>
+<li><code>&lt;text&gt;</code> - 文字標籤</li>
+<li><code>&lt;circle&gt;</code> - 圓形標籤</li>
+<li><code>&lt;line&gt;</code> - 線段標籤</li>
+<li><code>&lt;path&gt;</code> - 弧形標籤</li>
+<li><code>&lt;g&gt;</code> - 整合以上的物件，在 <code>&lt;g&gt;</code> 裡面可以放各類型的標籤</li>
+</ul>
+<h2 id="創建-D3-js-畫布"><a href="#創建-D3-js-畫布" class="headerlink" title="創建 D3.js 畫布"></a>創建 D3.js 畫布</h2><p>首先先來了解如何用 D3.js 選取 DOM。</p>
+<ul>
+<li>選取單個 DOM：d3.select(‘.className’)</li>
+<li>選取多個 DOM：d3.selectAll(‘.className’)</li>
+</ul>
+<p>了解如何選取 DOM 後，接著先選取一個空的 <code>&lt;div&gt;</code>，動態新增一個 SVG 畫布，再用 <code>attr()</code> 動態加上屬性來設定寬高，注意，<code>attr()</code> 內的格式是物件。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">d3.<span class="keyword">select</span>(<span class="string">'.chart-d3'</span>)</span><br><span class="line">  .<span class="built_in">append</span>(<span class="string">'svg'</span>)</span><br><span class="line">  .attr(&#123;</span><br><span class="line">    <span class="string">"width"</span>: <span class="string">"75px"</span>,</span><br><span class="line">    <span class="string">"height"</span>: <span class="string">"75px"</span></span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="將資料導入"><a href="#將資料導入" class="headerlink" title="將資料導入"></a>將資料導入</h2><p>已經準備好畫布之後，就可以開始用資料來繪製 DOM 了。</p>
+<ol>
+<li>準備一個陣列當作資料基礎。<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">var vote</span> = [<span class="string">'30'</span>,<span class="string">'50'</span>,<span class="string">'100'</span>,<span class="string">'20'</span>];</span><br></pre></td></tr></table></figure></li>
+<li>HTML 中準備一個空的 <code>&lt;ul&gt;</code>，className 為 <code>.list</code>。</li>
+<li>用 D3 選擇 <code>.list</code>。<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">d3</span><span class="selector-class">.select</span>(<span class="string">'.list'</span>)</span><br><span class="line"><span class="selector-class">.selectAll</span>(<span class="string">'li'</span>) <span class="comment">// 預先選取等一下會創建的與資料數相同的 li</span></span><br><span class="line"><span class="selector-class">.data</span>(vote)  <span class="comment">// 導入資料</span></span><br><span class="line"><span class="selector-class">.enter</span>()  <span class="comment">// 自動生成與資料對應數量的元素</span></span><br><span class="line"><span class="selector-class">.append</span>(<span class="string">'li'</span>) <span class="comment">// 插入元素</span></span><br><span class="line"><span class="selector-class">.text</span>(function(d)&#123;</span><br><span class="line">  <span class="selector-tag">return</span> <span class="selector-tag">d</span>;</span><br><span class="line">  <span class="comment">// d 指的是資料陣列中的每個元素(如果陣列內是物件，帶進來的就是物件)</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="如何繪製長條圖"><a href="#如何繪製長條圖" class="headerlink" title="如何繪製長條圖"></a>如何繪製長條圖</h2><ol>
+<li>準備一個陣列，裡面是物件，每個物件都是等一下會呈現的長條。<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">var vote</span> =[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Grete"</span>,</span><br><span class="line">    <span class="string">"num"</span>: 80</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Steffi"</span>,</span><br><span class="line">    <span class="string">"num"</span>: 100</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Lala"</span>,</span><br><span class="line">    <span class="string">"num"</span>: 200</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure></li>
+<li>在 HTML 準備一個空的 <code>&lt;div&gt;</code>，className 取為 <code>.chart</code>。</li>
+<li>插入資料。<figure class="highlight scilab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">d3.<span class="keyword">select</span>(<span class="string">'.chart'</span>)</span><br><span class="line">  .selectAll(<span class="string">'div'</span>)</span><br><span class="line">  .data(vote)</span><br><span class="line">  .enter()</span><br><span class="line">  .append(<span class="string">'div'</span>)</span><br><span class="line">  .html(<span class="function"><span class="keyword">function</span><span class="params">(d)</span>&#123;</span></span><br><span class="line">    <span class="comment">// .html() 類似 .innerHTML，D3 允許 SVG 跟 HTML 標籤混用</span></span><br><span class="line">    <span class="keyword">return</span> d.name + <span class="string">'&lt;br&gt;'</span> + d.num</span><br><span class="line">  &#125;)</span><br><span class="line">  .style(<span class="string">"height"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span>&#123;</span></span><br><span class="line">    <span class="keyword">return</span> d.num + <span class="string">'px'</span>  <span class="comment">// 調整每個長條的高度</span></span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="如何更新圖表"><a href="#如何更新圖表" class="headerlink" title="如何更新圖表"></a>如何更新圖表</h2>完成上一段的長條圖之後，如果之後有新數據要更新圖表，應該怎麼做呢？<br>以下的例子從原始資料創建圖表開始，示範如何用新資料蓋過舊資料。</li>
+<li>準備原始資料陣列與新資料陣列。<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 這是原始的資料</span></span><br><span class="line"><span class="keyword">var</span> vote =[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Grete"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">80</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Steffi"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">100</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Lala"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">200</span></span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 這是新的資料</span></span><br><span class="line"><span class="keyword">var</span> voteUpdate =[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Grete"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">120</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Steffi"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">80</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"Lala"</span>,</span><br><span class="line">    <span class="string">"num"</span>: <span class="number">60</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br></pre></td></tr></table></figure></li>
+<li>使用上一段繪製長條圖的技巧，用原始資料把節點 (<code>node</code>) 都先創建出來。<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> node = d3</span><br><span class="line">  .<span class="keyword">select</span>(<span class="string">'.chart'</span>)</span><br><span class="line">  .selectAll(<span class="string">'div'</span>)</span><br><span class="line">  .data(vote)</span><br><span class="line">  .enter()</span><br><span class="line">  .<span class="built_in">append</span>(<span class="string">'div'</span>)</span><br></pre></td></tr></table></figure></li>
+<li>把繪製圖像的程式碼都放到一個函式裡 (<code>update()</code>)，直接選擇 <code>node</code> 進行渲染。函式化的目的是讓每次替換節點裡塞入的資料時，可以透過呼叫函式就重新繪製圖像。<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  node</span><br><span class="line">  .html(<span class="function"><span class="keyword">function</span><span class="params">(d)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> d.name + <span class="string">'&lt;br&gt;'</span> + d.num</span><br><span class="line">  &#125;)</span><br><span class="line">  .style(<span class="string">"height"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> d.num + <span class="string">'px'</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">update();</span><br></pre></td></tr></table></figure></li>
+<li>最後，變更 <code>node</code> 塞入的 data，然後呼叫更新函式。<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">node</span>.<span class="title">data</span>(voteUpdate); // 帶入新資料</span><br><span class="line">update();  // 重新渲染</span><br></pre></td></tr></table></figure>
+<h2 id="小補充"><a href="#小補充" class="headerlink" title="小補充"></a>小補充</h2><h3 id="加入-className-的方法"><a href="#加入-className-的方法" class="headerlink" title="加入 className 的方法"></a>加入 className 的方法</h3>用這個方法可以把自己寫的樣式動態加到 DOM 上面：<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.attr</span>(<span class="string">"class"</span>, <span class="string">".d3-tip"</span>) <span class="comment">// 加入自訂的 className</span></span><br></pre></td></tr></table></figure>
+<h2 id="插入字串的方法"><a href="#插入字串的方法" class="headerlink" title="插入字串的方法"></a>插入字串的方法</h2>用這個方法就等同於用 <code>.innerHTML</code> 插入字串到 DOM 裡面：<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.html(<span class="function"><span class="keyword">function</span><span class="params">(d)</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"字串"</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2>本篇筆記是我在<a href="https://www.youtube.com/watch?v=0PQ8VOsyjzw" target="_blank" rel="external nofollow noopener noreferrer">觀看六角學院放在 Youtube 的教學</a>時寫下的，不過我也搜集了一些跟 D3.js 相關的文章，也放在這裡提供給大家參考。</li>
+</ol>
+<ul>
+<li><a href="https://medium.com/@mybaseball52/%E5%A2%9E%E5%BC%B7-d3-js-%E7%9A%84%E8%A6%96%E8%A6%BA%E5%8C%96%E5%8A%9F%E8%83%BD-68eaa66eef98" target="_blank" rel="external nofollow noopener noreferrer">增強 D3.js 的視覺化功能</a></li>
+<li><a href="https://ithelp.ithome.com.tw/users/20105602/ironman/1582?page=3" target="_blank" rel="external nofollow noopener noreferrer">讓你資料美美的(d3.js+vue.js) 系列</a></li>
+<li><a href="https://www.oxxostudio.tw/articles/201509/svg-d3-18-enter-update-exit.html" target="_blank" rel="external nofollow noopener noreferrer">SVG D3.js - Enter、Update 和 Exit</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/D3-js/" rel="tag"># D3.js</a>
+              <a href="/tags/DataDrivenDocuments/" rel="tag"># DataDrivenDocuments</a>
+              <a href="/tags/%E8%B3%87%E6%96%99%E8%A6%96%E8%A6%BA%E5%8C%96/" rel="tag"># 資料視覺化</a>
+              <a href="/tags/%E9%95%B7%E6%A2%9D%E5%9C%96/" rel="tag"># 長條圖</a>
+              <a href="/tags/SVG/" rel="tag"># SVG</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/UI-UX/20200210/3766866311/" rel="prev" title="[UX] 講座筆記：工程師必須了解的 UX 設計">
+      <i class="fa fa-chevron-left"></i> [UX] 講座筆記：工程師必須了解的 UX 設計
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+	        <div style>
+	          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+	        </div>
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什麼是-D3-js"><span class="nav-number">1.</span> <span class="nav-text">什麼是 D3.js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SVG-標籤"><span class="nav-number">2.</span> <span class="nav-text">SVG 標籤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#創建-D3-js-畫布"><span class="nav-number">3.</span> <span class="nav-text">創建 D3.js 畫布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#將資料導入"><span class="nav-number">4.</span> <span class="nav-text">將資料導入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何繪製長條圖"><span class="nav-number">5.</span> <span class="nav-text">如何繪製長條圖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何更新圖表"><span class="nav-number">6.</span> <span class="nav-text">如何更新圖表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小補充"><span class="nav-number">7.</span> <span class="nav-text">小補充</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加入-className-的方法"><span class="nav-number">7.1.</span> <span class="nav-text">加入 className 的方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入字串的方法"><span class="nav-number">8.</span> <span class="nav-text">插入字串的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#參考資料"><span class="nav-number">9.</span> <span class="nav-text">參考資料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/D3-js/20200217/1734732239/",
+            identifier: "D3-js/20200217/1734732239/",
+            title: "D3.js 超超超基礎入門"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
