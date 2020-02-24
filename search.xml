@@ -1,6 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[JS] 講座筆記：AJAX 非同步 / Event Queue 詳解</title>
+    <url>/javascript/20200224/3747532111/</url>
+    <content><![CDATA[<p>本篇筆記來自 2020.2.19 六角學院線上研討會，講者為偷米奇巴哥的 Tommy。在這一次講座中，Tommy 老師用許多 Demo 示範了非同步行為與 Queue 之間的關係。</p>
+<a id="more"></a>
+<h2 id="Event-Queue-事件佇列"><a href="#Event-Queue-事件佇列" class="headerlink" title="Event Queue 事件佇列"></a>Event Queue 事件佇列</h2><p>JavaScript 是 Single Thread（單執行緒）語言，只用一顆 CPU 運轉，一次只能做一件事。但是，計時器（setTimeout）、AJAX、Promise 是屬於 Web APIs，不受單執行緒限制，它們會被放到 Queue 中，等待 JavaScript 執行。</p>
+<p>因此，整個流程（Event Loop）就像這樣：</p>
+<p>所有要執行的任務會被放到 Call Stack 裡面，JavaScript 的執行緒會逐一執行 Stack 裡的任務，當碰上非同步事件時，為了不讓程式被這些<strong>需要等待的事件</strong>卡著，就會繼續執行後續的動作。</p>
+<p>那這些非同步事件什麼時候才能被執行？答案是，它們會在 Queue 中排隊，等到 JavaScript 的執行緒把 Stack 的任務都消化完了，才輪到 Queue 中的非同步事件依序執行。</p>
+<p><strong>觀念重點：非同步事件會被放進排隊序列，先進先出。</strong></p>
+<p>單執行緒與 Event Queue 的概念可以參照<a href="https://wcc723.github.io/javascript/2017/12/07/javascript-event-queue/" target="_blank" rel="external nofollow noopener noreferrer">鐵人賽：一次只能做一件事情的 JavaScript</a>，有動圖更好理解。</p>
+<h2 id="單執行緒與-Queue"><a href="#單執行緒與-Queue" class="headerlink" title="單執行緒與 Queue"></a>單執行緒與 Queue</h2><p>JavaScript 單執行緒會按照順序執行在 Stack 中的任務。</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">console.<span class="built_in">log</span>(a);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">'b'</span>);</span><br><span class="line">&#125;</span><br><span class="line">console.<span class="built_in">log</span>(<span class="string">'c'</span>);</span><br><span class="line"></span><br><span class="line">// <span class="string">'a'</span> <span class="string">'b'</span> <span class="string">'c'</span></span><br></pre></td></tr></table></figure>
+<p>如果在這個例子中，穿插一個非同步事件進去，那麼執行順序會是如何呢？</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">console.<span class="built_in">log</span>(<span class="string">'a'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">'b'</span>);</span><br><span class="line">&#125;</span><br><span class="line">setTimeout(run, <span class="number">3000</span>)</span><br><span class="line">console.<span class="built_in">log</span>(<span class="string">'c'</span>);</span><br><span class="line">// <span class="string">'a'</span> <span class="string">'c'</span> <span class="string">'b'</span></span><br></pre></td></tr></table></figure>
+<p>透過這個例子可以發現，非同步事件會被放到其他行為的後面執行。<br>我們可以把 <code>setTimeout()</code> 的秒數改成 0，來驗證這個結論是否為真。</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">console.<span class="built_in">log</span>(<span class="string">'a'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">'b'</span>);</span><br><span class="line">&#125;</span><br><span class="line">setTimeout(run, <span class="number">0</span>)</span><br><span class="line">console.<span class="built_in">log</span>(<span class="string">'c'</span>);</span><br><span class="line">// <span class="string">'a'</span> <span class="string">'c'</span> <span class="string">'b'</span></span><br></pre></td></tr></table></figure>
+<p>秒數改成 0 以後，<code>&#39;c&#39;</code> 依然是最後才印出來，就是因為非同步事件都必須在 Queue 中等待 Stack 裡其他任務結束，才能被執行。</p>
+<p>再來看另一個例子，也可以看出在 Queue 中的事件永遠會被放到最後才執行的特徵。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'a'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'b'</span>);</span><br><span class="line">&#125;</span><br><span class="line">setTimeout(run, <span class="number">3000</span>)</span><br><span class="line"><span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line"><span class="comment">// 讓迴圈重複一直跑，5 秒後跳出</span></span><br><span class="line"><span class="keyword">while</span> (<span class="built_in">Date</span>.now() - start &lt;= <span class="number">5000</span>) &#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'c'</span>);</span><br><span class="line"><span class="comment">// 'a'</span></span><br><span class="line"><span class="comment">// 5 秒後</span></span><br><span class="line"><span class="comment">// 'c'</span></span><br><span class="line"><span class="comment">// 'b'</span></span><br></pre></td></tr></table></figure>
+<p>這個例子中，<code>setTimeout()</code> 應該在 3 秒後印出 <code>&#39;b&#39;</code>，但結果卻是在 5 秒後，排在 <code>&#39;c&#39;</code> 的後面出現，為什麼呢？</p>
+<p>這是因為，當 3 秒到時，<code>setTimeout()</code> 就已回來 JavaScript 的執行緒了，但在 Stack 中還有 5 秒 <code>while</code> 迴圈及 <code>console.log(&#39;c&#39;);</code> 還沒執行完畢。<br>因此，當迴圈終於跑完時，<code>&#39;c&#39;</code> 接著印出來，而時間早就到了的 <code>&#39;b&#39;</code> 也就緊跟著印出來了。</p>
+<h3 id="for-迴圈-以-Vue-環境為例"><a href="#for-迴圈-以-Vue-環境為例" class="headerlink" title="for 迴圈 - 以 Vue 環境為例"></a>for 迴圈 - 以 Vue 環境為例</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li v-<span class="keyword">for</span>=<span class="string">"i in list"</span>&gt; &#123;&#123; i &#125;&#125; &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/u</span>l&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ JS</span></span><br><span class="line"><span class="regexp">new Vue(&#123;</span></span><br><span class="line"><span class="regexp">  el: '#app',</span></span><br><span class="line"><span class="regexp">  data() &#123;</span></span><br><span class="line"><span class="regexp">    return &#123;</span></span><br><span class="line"><span class="regexp">      list: [],</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125;,</span></span><br><span class="line"><span class="regexp">  mounted() &#123;</span></span><br><span class="line"><span class="regexp">   for(let i = 0; i &lt; 5; i++)&#123;</span></span><br><span class="line"><span class="regexp">     debugger;</span></span><br><span class="line"><span class="regexp">     this.list.push(i+1);</span></span><br><span class="line"><span class="regexp">   &#125;;</span></span><br><span class="line"><span class="regexp">  &#125;,</span></span><br><span class="line"><span class="regexp">&#125;)</span></span><br></pre></td></tr></table></figure>
+<p>透過 <code>debugger</code> 可以在開發人員工具中看到迴圈的分解動作，我們可以看到 <code>for</code> 迴圈是等所有次數都跑完，數字才渲染出來；而不是像我們所想像的，跑一次迴圈就渲染一個數字在畫面上。</p>
+<p>那麼，要如何每跑一次迴圈就渲染一次數字？</p>
+<p>答案是，可以用 <code>setTiomeiut()</code> 來達成。</p>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">for(<span class="name">let</span> i = <span class="number">0</span><span class="comment">;i &lt; 5; i++)&#123;</span></span><br><span class="line">  setTimout(<span class="name">function</span>()&#123;</span><br><span class="line">    this.list.push(<span class="name">i+1</span>)<span class="comment">;</span></span><br><span class="line">  &#125;.bind(<span class="name">this</span>, i)) // 指定 callback 的 this 指向外層的物件</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>為什麼用 <code>setTiomeiut()</code> 就能達成呢？</p>
+<p>因為 <code>for</code> 迴圈一開始沒用 <code>setTimeout()</code> 時，只有 <code>for</code> 自己一個任務在 Stack 中；而使用 <code>setTimeout()</code> 後，就變成每跑一次迴圈就產生一個存放在 Queue 中的任務，每個 Queue 中的任務又會被依序插入 Stack 中，於是就能一個執行（渲染）完才換成下一個執行（渲染）。</p>
+<h2 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h2><p>傳統網頁在跟後端撈資料時，流程是這樣的：請求 =&gt; 回應 =&gt; 請求 =&gt; 回應；而使用了 AJAX 技術的網頁撈取資料的方法，則是在背景送出請求取得回應。</p>
+<h3 id="常見底層"><a href="#常見底層" class="headerlink" title="常見底層"></a>常見底層</h3><ul>
+<li>XMLHttpRequest (可支援 IE 7 以上, jQuery, axios)</li>
+<li>HTML5 Fetch API (IE 11 以下都不支援)</li>
+</ul>
+<h3 id="測試用-API"><a href="#測試用-API" class="headerlink" title="測試用 API"></a>測試用 API</h3><p>以下兩個網站都可以用來製作測試用的 API，也可以客製化 AJAX 成功後的回傳訊息。</p>
+<ul>
+<li><a href="http://www.mocky.io" target="_blank" rel="external nofollow noopener noreferrer">Mocky: Real HTTP mocking</a></li>
+<li><a href="https://www.mockable.io/" target="_blank" rel="external nofollow noopener noreferrer">Mockable.io</a></li>
+</ul>
+<h3 id="XMLHttpRequest-DEMO"><a href="#XMLHttpRequest-DEMO" class="headerlink" title="XMLHttpRequest DEMO"></a>XMLHttpRequest DEMO</h3><ol>
+<li><p>非同步 GET 請求</p>
+<figure class="highlight qml"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.addEventListener(<span class="string">'load'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);</span><br><span class="line">&#125;)</span><br><span class="line">xhr.open(<span class="string">'GET'</span>, <span class="built_in">url</span>);</span><br><span class="line">xhr.send();</span><br></pre></td></tr></table></figure>
+<p>AJAX 行為會被丟到 Queue，等取得回應後才回到 JS 執行緒。</p>
+</li>
+<li><p>同步 GET 請求</p>
+<figure class="highlight qml"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'start'</span>);</span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.open(<span class="string">'GET'</span>, <span class="built_in">url</span>, <span class="literal">false</span>);</span><br><span class="line">xhr.send();</span><br><span class="line"><span class="built_in">console</span>.log(xhr.responseText);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'end'</span>);</span><br><span class="line"><span class="comment">// 'start'</span></span><br><span class="line"><span class="comment">// responseText</span></span><br><span class="line"><span class="comment">// 'end'</span></span><br></pre></td></tr></table></figure>
+<p>這邊只是示範同步的 AJAX 是長什麼樣，實務上盡量還是用非同步 AJAX 才能讓網頁效能較好。</p>
+</li>
+<li><p>非同步 POST 請求</p>
+<figure class="highlight qml"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如何把參數發送到後端</span></span><br><span class="line"><span class="keyword">var</span> data = <span class="keyword">new</span> FormData(); <span class="comment">// 宣告 FormData 物件</span></span><br><span class="line">data.append(<span class="string">'id'</span>, <span class="string">'5'</span>);  <span class="comment">// 在 FormData 中塞入資料</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.addEventListener(<span class="string">'load'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);</span><br><span class="line">&#125;)</span><br><span class="line">xhr.open(<span class="string">'POST'</span>, <span class="built_in">url</span>);</span><br><span class="line">xhr.send(data); <span class="comment">// 把帶有資料的 FormData 傳送到後端</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="Fetch-DEMO"><a href="#Fetch-DEMO" class="headerlink" title="Fetch DEMO"></a>Fetch DEMO</h3><ol>
+<li><p>Fetch 發送 GET 請求</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">fetch(<span class="string">'url'</span>).then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> response.json(); <span class="comment">//解讀 JSON 格式</span></span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="params">data</span> =&gt;</span> </span><br><span class="line">  <span class="built_in">console</span>.log(data)) <span class="comment">// 取得資料</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Fetch 發送 POST 請求</p>
+<figure class="highlight lasso"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 把資料參數傳到後端，一樣要先宣告 FormData</span></span><br><span class="line"><span class="built_in">var</span> <span class="built_in">data</span> = <span class="literal">new</span> FormData();</span><br><span class="line"><span class="built_in">data</span>.append(<span class="string">'id'</span>, <span class="string">'5'</span>);</span><br><span class="line"></span><br><span class="line">fetch(<span class="string">'url'</span>, &#123; method: <span class="string">'POST'</span>, body: <span class="built_in">data</span> &#125;) <span class="comment">// 帶入參數</span></span><br><span class="line">.then(response =&gt; response.json();) <span class="comment">// 解讀JSON格式</span></span><br><span class="line">.then(<span class="built_in">data</span> =&gt; </span><br><span class="line">  console.<span class="keyword">log</span>(<span class="built_in">data</span>)) <span class="comment">// 取得資料</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><p><a href="http://slides.com/yi-tailin/event-queue-ajax/#/" target="_blank" rel="external nofollow noopener noreferrer">slide 簡報</a></p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>AJAX</tag>
+        <tag>EventQueue</tag>
+        <tag>EventLoop</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>D3.js 超超超基礎入門</title>
     <url>/D3-js/20200217/1734732239/</url>
     <content><![CDATA[<p>之前接案時為了要實現一個動畫效果而學過一點 D3.js，雖然最後沒有派上用場，但當時我寫下一些入門筆記，如果你沒學過 D3.js 而想要嘗試的話，可以參考這篇筆記。</p>

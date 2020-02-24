@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="本篇筆記來自 2020.2.19 六角學院線上研討會，講者為偷米奇巴哥的 Tommy。在這一次講座中，Tommy 老師用許多 Demo 示範了非同步行為與 Queue 之間的關係。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JS] 講座筆記：AJAX 非同步 &#x2F; Event Queue 詳解">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;javascript&#x2F;20200224&#x2F;3747532111&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="本篇筆記來自 2020.2.19 六角學院線上研討會，講者為偷米奇巴哥的 Tommy。在這一次講座中，Tommy 老師用許多 Demo 示範了非同步行為與 Queue 之間的關係。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-02-24T15:22:55.000Z">
+<meta property="article:modified_time" content="2020-02-24T15:33:52.585Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="AJAX">
+<meta property="article:tag" content="EventQueue">
+<meta property="article:tag" content="EventLoop">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gretema.github.io/javascript/20200224/3747532111/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[JS] 講座筆記：AJAX 非同步 / Event Queue 詳解 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/javascript/20200224/3747532111/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [JS] 講座筆記：AJAX 非同步 / Event Queue 詳解
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2020-02-24 23:22:55 / 修改時間：23:33:52" itemprop="dateCreated datePublished" datetime="2020-02-24T23:22:55+08:00">2020-02-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/javascript/20200224/3747532111/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="javascript/20200224/3747532111/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本篇筆記來自 2020.2.19 六角學院線上研討會，講者為偷米奇巴哥的 Tommy。在這一次講座中，Tommy 老師用許多 Demo 示範了非同步行為與 Queue 之間的關係。</p>
+<a id="more"></a>
+<h2 id="Event-Queue-事件佇列"><a href="#Event-Queue-事件佇列" class="headerlink" title="Event Queue 事件佇列"></a>Event Queue 事件佇列</h2><p>JavaScript 是 Single Thread（單執行緒）語言，只用一顆 CPU 運轉，一次只能做一件事。但是，計時器（setTimeout）、AJAX、Promise 是屬於 Web APIs，不受單執行緒限制，它們會被放到 Queue 中，等待 JavaScript 執行。</p>
+<p>因此，整個流程（Event Loop）就像這樣：</p>
+<p>所有要執行的任務會被放到 Call Stack 裡面，JavaScript 的執行緒會逐一執行 Stack 裡的任務，當碰上非同步事件時，為了不讓程式被這些<strong>需要等待的事件</strong>卡著，就會繼續執行後續的動作。</p>
+<p>那這些非同步事件什麼時候才能被執行？答案是，它們會在 Queue 中排隊，等到 JavaScript 的執行緒把 Stack 的任務都消化完了，才輪到 Queue 中的非同步事件依序執行。</p>
+<p><strong>觀念重點：非同步事件會被放進排隊序列，先進先出。</strong></p>
+<p>單執行緒與 Event Queue 的概念可以參照<a href="https://wcc723.github.io/javascript/2017/12/07/javascript-event-queue/" target="_blank" rel="external nofollow noopener noreferrer">鐵人賽：一次只能做一件事情的 JavaScript</a>，有動圖更好理解。</p>
+<h2 id="單執行緒與-Queue"><a href="#單執行緒與-Queue" class="headerlink" title="單執行緒與 Queue"></a>單執行緒與 Queue</h2><p>JavaScript 單執行緒會按照順序執行在 Stack 中的任務。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">console.<span class="built_in">log</span>(a);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">'b'</span>);</span><br><span class="line">&#125;</span><br><span class="line">console.<span class="built_in">log</span>(<span class="string">'c'</span>);</span><br><span class="line"></span><br><span class="line">// <span class="string">'a'</span> <span class="string">'b'</span> <span class="string">'c'</span></span><br></pre></td></tr></table></figure>
+<p>如果在這個例子中，穿插一個非同步事件進去，那麼執行順序會是如何呢？</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">console.<span class="built_in">log</span>(<span class="string">'a'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">'b'</span>);</span><br><span class="line">&#125;</span><br><span class="line">setTimeout(run, <span class="number">3000</span>)</span><br><span class="line">console.<span class="built_in">log</span>(<span class="string">'c'</span>);</span><br><span class="line">// <span class="string">'a'</span> <span class="string">'c'</span> <span class="string">'b'</span></span><br></pre></td></tr></table></figure>
+<p>透過這個例子可以發現，非同步事件會被放到其他行為的後面執行。<br>我們可以把 <code>setTimeout()</code> 的秒數改成 0，來驗證這個結論是否為真。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">console.<span class="built_in">log</span>(<span class="string">'a'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">'b'</span>);</span><br><span class="line">&#125;</span><br><span class="line">setTimeout(run, <span class="number">0</span>)</span><br><span class="line">console.<span class="built_in">log</span>(<span class="string">'c'</span>);</span><br><span class="line">// <span class="string">'a'</span> <span class="string">'c'</span> <span class="string">'b'</span></span><br></pre></td></tr></table></figure>
+<p>秒數改成 0 以後，<code>&#39;c&#39;</code> 依然是最後才印出來，就是因為非同步事件都必須在 Queue 中等待 Stack 裡其他任務結束，才能被執行。</p>
+<p>再來看另一個例子，也可以看出在 Queue 中的事件永遠會被放到最後才執行的特徵。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'a'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'b'</span>);</span><br><span class="line">&#125;</span><br><span class="line">setTimeout(run, <span class="number">3000</span>)</span><br><span class="line"><span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line"><span class="comment">// 讓迴圈重複一直跑，5 秒後跳出</span></span><br><span class="line"><span class="keyword">while</span> (<span class="built_in">Date</span>.now() - start &lt;= <span class="number">5000</span>) &#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'c'</span>);</span><br><span class="line"><span class="comment">// 'a'</span></span><br><span class="line"><span class="comment">// 5 秒後</span></span><br><span class="line"><span class="comment">// 'c'</span></span><br><span class="line"><span class="comment">// 'b'</span></span><br></pre></td></tr></table></figure>
+<p>這個例子中，<code>setTimeout()</code> 應該在 3 秒後印出 <code>&#39;b&#39;</code>，但結果卻是在 5 秒後，排在 <code>&#39;c&#39;</code> 的後面出現，為什麼呢？</p>
+<p>這是因為，當 3 秒到時，<code>setTimeout()</code> 就已回來 JavaScript 的執行緒了，但在 Stack 中還有 5 秒 <code>while</code> 迴圈及 <code>console.log(&#39;c&#39;);</code> 還沒執行完畢。<br>因此，當迴圈終於跑完時，<code>&#39;c&#39;</code> 接著印出來，而時間早就到了的 <code>&#39;b&#39;</code> 也就緊跟著印出來了。</p>
+<h3 id="for-迴圈-以-Vue-環境為例"><a href="#for-迴圈-以-Vue-環境為例" class="headerlink" title="for 迴圈 - 以 Vue 環境為例"></a>for 迴圈 - 以 Vue 環境為例</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HTML</span></span><br><span class="line">&lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">  &lt;ul&gt;</span><br><span class="line">    &lt;li v-<span class="keyword">for</span>=<span class="string">"i in list"</span>&gt; &#123;&#123; i &#125;&#125; &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/u</span>l&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ JS</span></span><br><span class="line"><span class="regexp">new Vue(&#123;</span></span><br><span class="line"><span class="regexp">  el: '#app',</span></span><br><span class="line"><span class="regexp">  data() &#123;</span></span><br><span class="line"><span class="regexp">    return &#123;</span></span><br><span class="line"><span class="regexp">      list: [],</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125;,</span></span><br><span class="line"><span class="regexp">  mounted() &#123;</span></span><br><span class="line"><span class="regexp">   for(let i = 0; i &lt; 5; i++)&#123;</span></span><br><span class="line"><span class="regexp">     debugger;</span></span><br><span class="line"><span class="regexp">     this.list.push(i+1);</span></span><br><span class="line"><span class="regexp">   &#125;;</span></span><br><span class="line"><span class="regexp">  &#125;,</span></span><br><span class="line"><span class="regexp">&#125;)</span></span><br></pre></td></tr></table></figure>
+<p>透過 <code>debugger</code> 可以在開發人員工具中看到迴圈的分解動作，我們可以看到 <code>for</code> 迴圈是等所有次數都跑完，數字才渲染出來；而不是像我們所想像的，跑一次迴圈就渲染一個數字在畫面上。</p>
+<p>那麼，要如何每跑一次迴圈就渲染一次數字？</p>
+<p>答案是，可以用 <code>setTiomeiut()</code> 來達成。</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for(<span class="name">let</span> i = <span class="number">0</span><span class="comment">;i &lt; 5; i++)&#123;</span></span><br><span class="line">  setTimout(<span class="name">function</span>()&#123;</span><br><span class="line">    this.list.push(<span class="name">i+1</span>)<span class="comment">;</span></span><br><span class="line">  &#125;.bind(<span class="name">this</span>, i)) // 指定 callback 的 this 指向外層的物件</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>為什麼用 <code>setTiomeiut()</code> 就能達成呢？</p>
+<p>因為 <code>for</code> 迴圈一開始沒用 <code>setTimeout()</code> 時，只有 <code>for</code> 自己一個任務在 Stack 中；而使用 <code>setTimeout()</code> 後，就變成每跑一次迴圈就產生一個存放在 Queue 中的任務，每個 Queue 中的任務又會被依序插入 Stack 中，於是就能一個執行（渲染）完才換成下一個執行（渲染）。</p>
+<h2 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h2><p>傳統網頁在跟後端撈資料時，流程是這樣的：請求 =&gt; 回應 =&gt; 請求 =&gt; 回應；而使用了 AJAX 技術的網頁撈取資料的方法，則是在背景送出請求取得回應。</p>
+<h3 id="常見底層"><a href="#常見底層" class="headerlink" title="常見底層"></a>常見底層</h3><ul>
+<li>XMLHttpRequest (可支援 IE 7 以上, jQuery, axios)</li>
+<li>HTML5 Fetch API (IE 11 以下都不支援)</li>
+</ul>
+<h3 id="測試用-API"><a href="#測試用-API" class="headerlink" title="測試用 API"></a>測試用 API</h3><p>以下兩個網站都可以用來製作測試用的 API，也可以客製化 AJAX 成功後的回傳訊息。</p>
+<ul>
+<li><a href="http://www.mocky.io" target="_blank" rel="external nofollow noopener noreferrer">Mocky: Real HTTP mocking</a></li>
+<li><a href="https://www.mockable.io/" target="_blank" rel="external nofollow noopener noreferrer">Mockable.io</a></li>
+</ul>
+<h3 id="XMLHttpRequest-DEMO"><a href="#XMLHttpRequest-DEMO" class="headerlink" title="XMLHttpRequest DEMO"></a>XMLHttpRequest DEMO</h3><ol>
+<li><p>非同步 GET 請求</p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.addEventListener(<span class="string">'load'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);</span><br><span class="line">&#125;)</span><br><span class="line">xhr.open(<span class="string">'GET'</span>, <span class="built_in">url</span>);</span><br><span class="line">xhr.send();</span><br></pre></td></tr></table></figure>
+<p>AJAX 行為會被丟到 Queue，等取得回應後才回到 JS 執行緒。</p>
+</li>
+<li><p>同步 GET 請求</p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'start'</span>);</span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.open(<span class="string">'GET'</span>, <span class="built_in">url</span>, <span class="literal">false</span>);</span><br><span class="line">xhr.send();</span><br><span class="line"><span class="built_in">console</span>.log(xhr.responseText);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'end'</span>);</span><br><span class="line"><span class="comment">// 'start'</span></span><br><span class="line"><span class="comment">// responseText</span></span><br><span class="line"><span class="comment">// 'end'</span></span><br></pre></td></tr></table></figure>
+<p>這邊只是示範同步的 AJAX 是長什麼樣，實務上盡量還是用非同步 AJAX 才能讓網頁效能較好。</p>
+</li>
+<li><p>非同步 POST 請求</p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如何把參數發送到後端</span></span><br><span class="line"><span class="keyword">var</span> data = <span class="keyword">new</span> FormData(); <span class="comment">// 宣告 FormData 物件</span></span><br><span class="line">data.append(<span class="string">'id'</span>, <span class="string">'5'</span>);  <span class="comment">// 在 FormData 中塞入資料</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xhr.addEventListener(<span class="string">'load'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);</span><br><span class="line">&#125;)</span><br><span class="line">xhr.open(<span class="string">'POST'</span>, <span class="built_in">url</span>);</span><br><span class="line">xhr.send(data); <span class="comment">// 把帶有資料的 FormData 傳送到後端</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="Fetch-DEMO"><a href="#Fetch-DEMO" class="headerlink" title="Fetch DEMO"></a>Fetch DEMO</h3><ol>
+<li><p>Fetch 發送 GET 請求</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'url'</span>).then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> response.json(); <span class="comment">//解讀 JSON 格式</span></span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="params">data</span> =&gt;</span> </span><br><span class="line">  <span class="built_in">console</span>.log(data)) <span class="comment">// 取得資料</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Fetch 發送 POST 請求</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 把資料參數傳到後端，一樣要先宣告 FormData</span></span><br><span class="line"><span class="built_in">var</span> <span class="built_in">data</span> = <span class="literal">new</span> FormData();</span><br><span class="line"><span class="built_in">data</span>.append(<span class="string">'id'</span>, <span class="string">'5'</span>);</span><br><span class="line"></span><br><span class="line">fetch(<span class="string">'url'</span>, &#123; method: <span class="string">'POST'</span>, body: <span class="built_in">data</span> &#125;) <span class="comment">// 帶入參數</span></span><br><span class="line">.then(response =&gt; response.json();) <span class="comment">// 解讀JSON格式</span></span><br><span class="line">.then(<span class="built_in">data</span> =&gt; </span><br><span class="line">  console.<span class="keyword">log</span>(<span class="built_in">data</span>)) <span class="comment">// 取得資料</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><p><a href="http://slides.com/yi-tailin/event-queue-ajax/#/" target="_blank" rel="external nofollow noopener noreferrer">slide 簡報</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AJAX/" rel="tag"># AJAX</a>
+              <a href="/tags/EventQueue/" rel="tag"># EventQueue</a>
+              <a href="/tags/EventLoop/" rel="tag"># EventLoop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/D3-js/20200217/1734732239/" rel="prev" title="D3.js 超超超基礎入門">
+      <i class="fa fa-chevron-left"></i> D3.js 超超超基礎入門
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+	        <div style>
+	          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+	        </div>
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Event-Queue-事件佇列"><span class="nav-number">1.</span> <span class="nav-text">Event Queue 事件佇列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#單執行緒與-Queue"><span class="nav-number">2.</span> <span class="nav-text">單執行緒與 Queue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#for-迴圈-以-Vue-環境為例"><span class="nav-number">2.1.</span> <span class="nav-text">for 迴圈 - 以 Vue 環境為例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AJAX"><span class="nav-number">3.</span> <span class="nav-text">AJAX</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常見底層"><span class="nav-number">3.1.</span> <span class="nav-text">常見底層</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#測試用-API"><span class="nav-number">3.2.</span> <span class="nav-text">測試用 API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XMLHttpRequest-DEMO"><span class="nav-number">3.3.</span> <span class="nav-text">XMLHttpRequest DEMO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fetch-DEMO"><span class="nav-number">3.4.</span> <span class="nav-text">Fetch DEMO</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#參考資料"><span class="nav-number">4.</span> <span class="nav-text">參考資料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/javascript/20200224/3747532111/",
+            identifier: "javascript/20200224/3747532111/",
+            title: "[JS] 講座筆記：AJAX 非同步 / Event Queue 詳解"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
