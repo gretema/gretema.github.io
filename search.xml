@@ -1,6 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[JS] 講座筆記：JS Promise 實戰教學</title>
+    <url>/javascript/20200302/2110342105/</url>
+    <content><![CDATA[<p>本篇筆記來自 2020.2.26 六角學院線上研討會，講者為偷米騎巴哥的 Tommy。在這一次講座中，Tommy 老師為大家複習了非同步行為與 Queue 的概念，並接續介紹了使非同步行為依序進行的四種方法。</p>
+<a id="more"></a>
+
+<p>當我們有 3 個 <code>setTimeout()</code> 時，我們可以使它們按照順序執行；但是當我們有 3 個 AJAX 時，由於變因太多、無法確定各自回傳的時間，因此不一定能照順序執行。</p>
+<p>要解決非同步無法依序執行的問題，第一個方法是使用 callback function。</p>
+<h2 id="讓非同步依序執行-解法一：callback"><a href="#讓非同步依序執行-解法一：callback" class="headerlink" title="讓非同步依序執行 解法一：callback"></a>讓非同步依序執行 解法一：callback</h2><p>三個 <code>setTimeout()</code> 個別用 function 包起來，且各個 function 都帶入一個 callback 參數。</p>
+<p><img src="https://i.imgur.com/flYXHnz.png" alt></p>
+<p>呼叫 function A 時，同時定義 callback 的任務內容，如此一來就可以先印出 <code>&#39;A&#39;</code> 再印出 <code>&#39;OK&#39;</code>。</p>
+<p><img src="https://i.imgur.com/a8Pnnxr.png" alt></p>
+<p>運用這個原理，就可以把 function B 當作 function A 的 callback，把 function C 當作 function B 的 callback。</p>
+<p><img src="https://i.imgur.com/rUBofui.png" alt></p>
+<p>但是這種做法一旦遇到<strong>太多函式要依序執行時</strong>，就會變成 <em>callback hell</em>，將會很難去分辨程式碼。</p>
+<h2 id="讓非同步依序執行-解法二：Generator"><a href="#讓非同步依序執行-解法二：Generator" class="headerlink" title="讓非同步依序執行 解法二：Generator"></a>讓非同步依序執行 解法二：Generator</h2><ul>
+<li>在 function 後面加一個 <code>*</code>，執行時會得到一個 <code>generator</code> 物件。</li>
+<li>在 for 迴圈中使用 <code>yield</code> 關鍵字：代表<strong>暫停</strong>，先跳出 function，等之後在 function 外面用 <code>函式名稱.next()</code> 呼叫時，才會再回到 function 內部繼續執行。</li>
+<li><code>generator</code> 物件會帶出 <code>done</code> 特性</li>
+<li><code>arguments</code> : 類陣列物件，可取得所有傳入 function 的參數</li>
+<li>遞迴：在函式裡呼叫函式本身</li>
+</ul>
+<p><img src="https://i.imgur.com/tIwffhZ.png" alt></p>
+<p><code>for</code> 迴圈跑到最後一次時，<code>done</code> 的值為 <code>true</code>：</p>
+<p><img src="https://i.imgur.com/PPGVq6s.png" alt></p>
+<p>在 <code>recursion()</code> 中使用 <code>.next()</code> 呼叫函式與遞迴，讓 function A, function B, function C 依序執行：</p>
+<p><img src="https://i.imgur.com/AXlstmC.png" alt></p>
+<p>小結：最後一行，在 <code>generator()</code> 帶入多個函式作為參數，就能依序執行並避免 callback hell。</p>
+<h2 id="讓非同步依序執行-解法三：Promise"><a href="#讓非同步依序執行-解法三：Promise" class="headerlink" title="讓非同步依序執行 解法三：Promise"></a>讓非同步依序執行 解法三：Promise</h2><ul>
+<li>一個封裝 <code>Promise</code> 的函式</li>
+<li><code>Promise</code> 的 callback function 要帶入兩個參數：<code>resolve</code> (成功時呼叫)，以及 <code>reject</code> (失敗時呼叫)。</li>
+</ul>
+<p><img src="https://i.imgur.com/7m78XIL.png" alt></p>
+<p>非同步成功時，就會執行 <code>resolve</code>；<code>resolve</code> 執行後，就會執行 <code>.then()</code> 的內容；反過來說，<code>.then()</code> 的執行仰賴 <code>resolve</code> 是否執行。</p>
+<p><img src="https://i.imgur.com/guI0D2w.png" alt></p>
+<p>非同步失敗時，<code>Promise</code> 會執行 <code>reject</code>，<code>reject</code> 必須準備對應的函式，這個函式是針對單一的 <code>Promise</code>，在失敗時執行的方案。</p>
+<p>在非同步失敗時執行對應的行為也能用 <code>catch</code> 達成，<code>catch</code> 的意思是，只要其中一個 <code>Promise</code> 沒成功執行，就跳到 <code>catch</code>。</p>
+<p><img src="https://i.imgur.com/tkBRQMP.png" alt></p>
+<h2 id="讓非同步依序執行-解法四：async…await"><a href="#讓非同步依序執行-解法四：async…await" class="headerlink" title="讓非同步依序執行 解法四：async…await"></a>讓非同步依序執行 解法四：async…await</h2><ul>
+<li>ES7 語法，要搭配 <code>Promise</code> 使用</li>
+<li><code>async</code> + function：宣告這個函式是非同步</li>
+<li><code>await</code> + <code>Promise</code>：依序執行函式</li>
+<li>條件：<code>async</code> 跟 <code>await</code> 一定要搭配使用，不能只用 <code>await</code> 卻不用 <code>async</code>。</li>
+</ul>
+<p><img src="https://i.imgur.com/0nEubbT.png" alt></p>
+<p><code>reject</code> 時與 <code>try...catch</code> 搭配使用，<code>reject()</code> 括號內的內容會傳到 <code>catch(e)</code> 的 <code>e</code> 參數，也可以直接在 <code>reject()</code> 括號內放入 <code>Error</code> 物件（JS 原生錯誤物件）。</p>
+<p><img src="https://i.imgur.com/6yejkHH.png" alt></p>
+<p>三個函式非同步失敗時想要不同的錯誤訊息：</p>
+<p><img src="https://i.imgur.com/Yi3LpB1.png" alt></p>
+<p>實務上使用 <code>XMLHttpRequest</code> 時的寫法：</p>
+<p><img src="https://i.imgur.com/IBlkZKh.png" alt></p>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><p><a href="https://slides.com/yi-tailin/deck-e329c0#/" target="_blank" rel="external nofollow noopener noreferrer">slides 簡報</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Statements/function*" target="_blank" rel="external nofollow noopener noreferrer">function*</a><br><a href="https://developers.google.com/web/fundamentals/primers/promises?hl=zh-tw#top_of_page" target="_blank" rel="external nofollow noopener noreferrer">JavaScript Promise：簡介</a><br><a href="https://wcc723.github.io/development/2020/02/16/all-new-promise/" target="_blank" rel="external nofollow noopener noreferrer">JavaScript Promise 全介紹</a></p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>w3HexSchool</tag>
+        <tag>Promise</tag>
+        <tag>async...await</tag>
+        <tag>callback</tag>
+        <tag>Generator</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[JS] 講座筆記：AJAX 非同步 / Event Queue 詳解</title>
     <url>/javascript/20200224/3747532111/</url>
     <content><![CDATA[<p>本篇筆記來自 2020.2.19 六角學院線上研討會，講者為偷米騎巴哥的 Tommy。在這一次講座中，Tommy 老師用許多 Demo 示範了非同步行為與 Queue 之間的關係。</p>
@@ -69,6 +133,7 @@
       </categories>
       <tags>
         <tag>AJAX</tag>
+        <tag>w3HexSchool</tag>
         <tag>EventQueue</tag>
         <tag>EventLoop</tag>
       </tags>

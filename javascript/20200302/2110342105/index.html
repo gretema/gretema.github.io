@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="本篇筆記來自 2020.2.26 六角學院線上研討會，講者為偷米騎巴哥的 Tommy。在這一次講座中，Tommy 老師為大家複習了非同步行為與 Queue 的概念，並接續介紹了使非同步行為依序進行的四種方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[JS] 講座筆記：JS Promise 實戰教學">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;javascript&#x2F;20200302&#x2F;2110342105&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="本篇筆記來自 2020.2.26 六角學院線上研討會，講者為偷米騎巴哥的 Tommy。在這一次講座中，Tommy 老師為大家複習了非同步行為與 Queue 的概念，並接續介紹了使非同步行為依序進行的四種方法。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;flYXHnz.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;a8Pnnxr.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;rUBofui.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;tIwffhZ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;PPGVq6s.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;AXlstmC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;7m78XIL.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;guI0D2w.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;tkBRQMP.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;0nEubbT.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;6yejkHH.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;Yi3LpB1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;IBlkZKh.png">
+<meta property="article:published_time" content="2020-03-02T03:02:39.000Z">
+<meta property="article:modified_time" content="2020-03-02T03:16:49.031Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="w3HexSchool">
+<meta property="article:tag" content="Promise">
+<meta property="article:tag" content="async...await">
+<meta property="article:tag" content="callback">
+<meta property="article:tag" content="Generator">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;flYXHnz.png">
+
+<link rel="canonical" href="http://gretema.github.io/javascript/20200302/2110342105/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>[JS] 講座筆記：JS Promise 實戰教學 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/javascript/20200302/2110342105/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          [JS] 講座筆記：JS Promise 實戰教學
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2020-03-02 11:02:39 / 修改時間：11:16:49" itemprop="dateCreated datePublished" datetime="2020-03-02T11:02:39+08:00">2020-03-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/javascript/20200302/2110342105/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="javascript/20200302/2110342105/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本篇筆記來自 2020.2.26 六角學院線上研討會，講者為偷米騎巴哥的 Tommy。在這一次講座中，Tommy 老師為大家複習了非同步行為與 Queue 的概念，並接續介紹了使非同步行為依序進行的四種方法。</p>
+<a id="more"></a>
+
+<p>當我們有 3 個 <code>setTimeout()</code> 時，我們可以使它們按照順序執行；但是當我們有 3 個 AJAX 時，由於變因太多、無法確定各自回傳的時間，因此不一定能照順序執行。</p>
+<p>要解決非同步無法依序執行的問題，第一個方法是使用 callback function。</p>
+<h2 id="讓非同步依序執行-解法一：callback"><a href="#讓非同步依序執行-解法一：callback" class="headerlink" title="讓非同步依序執行 解法一：callback"></a>讓非同步依序執行 解法一：callback</h2><p>三個 <code>setTimeout()</code> 個別用 function 包起來，且各個 function 都帶入一個 callback 參數。</p>
+<p><img src="https://i.imgur.com/flYXHnz.png" alt></p>
+<p>呼叫 function A 時，同時定義 callback 的任務內容，如此一來就可以先印出 <code>&#39;A&#39;</code> 再印出 <code>&#39;OK&#39;</code>。</p>
+<p><img src="https://i.imgur.com/a8Pnnxr.png" alt></p>
+<p>運用這個原理，就可以把 function B 當作 function A 的 callback，把 function C 當作 function B 的 callback。</p>
+<p><img src="https://i.imgur.com/rUBofui.png" alt></p>
+<p>但是這種做法一旦遇到<strong>太多函式要依序執行時</strong>，就會變成 <em>callback hell</em>，將會很難去分辨程式碼。</p>
+<h2 id="讓非同步依序執行-解法二：Generator"><a href="#讓非同步依序執行-解法二：Generator" class="headerlink" title="讓非同步依序執行 解法二：Generator"></a>讓非同步依序執行 解法二：Generator</h2><ul>
+<li>在 function 後面加一個 <code>*</code>，執行時會得到一個 <code>generator</code> 物件。</li>
+<li>在 for 迴圈中使用 <code>yield</code> 關鍵字：代表<strong>暫停</strong>，先跳出 function，等之後在 function 外面用 <code>函式名稱.next()</code> 呼叫時，才會再回到 function 內部繼續執行。</li>
+<li><code>generator</code> 物件會帶出 <code>done</code> 特性</li>
+<li><code>arguments</code> : 類陣列物件，可取得所有傳入 function 的參數</li>
+<li>遞迴：在函式裡呼叫函式本身</li>
+</ul>
+<p><img src="https://i.imgur.com/tIwffhZ.png" alt></p>
+<p><code>for</code> 迴圈跑到最後一次時，<code>done</code> 的值為 <code>true</code>：</p>
+<p><img src="https://i.imgur.com/PPGVq6s.png" alt></p>
+<p>在 <code>recursion()</code> 中使用 <code>.next()</code> 呼叫函式與遞迴，讓 function A, function B, function C 依序執行：</p>
+<p><img src="https://i.imgur.com/AXlstmC.png" alt></p>
+<p>小結：最後一行，在 <code>generator()</code> 帶入多個函式作為參數，就能依序執行並避免 callback hell。</p>
+<h2 id="讓非同步依序執行-解法三：Promise"><a href="#讓非同步依序執行-解法三：Promise" class="headerlink" title="讓非同步依序執行 解法三：Promise"></a>讓非同步依序執行 解法三：Promise</h2><ul>
+<li>一個封裝 <code>Promise</code> 的函式</li>
+<li><code>Promise</code> 的 callback function 要帶入兩個參數：<code>resolve</code> (成功時呼叫)，以及 <code>reject</code> (失敗時呼叫)。</li>
+</ul>
+<p><img src="https://i.imgur.com/7m78XIL.png" alt></p>
+<p>非同步成功時，就會執行 <code>resolve</code>；<code>resolve</code> 執行後，就會執行 <code>.then()</code> 的內容；反過來說，<code>.then()</code> 的執行仰賴 <code>resolve</code> 是否執行。</p>
+<p><img src="https://i.imgur.com/guI0D2w.png" alt></p>
+<p>非同步失敗時，<code>Promise</code> 會執行 <code>reject</code>，<code>reject</code> 必須準備對應的函式，這個函式是針對單一的 <code>Promise</code>，在失敗時執行的方案。</p>
+<p>在非同步失敗時執行對應的行為也能用 <code>catch</code> 達成，<code>catch</code> 的意思是，只要其中一個 <code>Promise</code> 沒成功執行，就跳到 <code>catch</code>。</p>
+<p><img src="https://i.imgur.com/tkBRQMP.png" alt></p>
+<h2 id="讓非同步依序執行-解法四：async…await"><a href="#讓非同步依序執行-解法四：async…await" class="headerlink" title="讓非同步依序執行 解法四：async…await"></a>讓非同步依序執行 解法四：async…await</h2><ul>
+<li>ES7 語法，要搭配 <code>Promise</code> 使用</li>
+<li><code>async</code> + function：宣告這個函式是非同步</li>
+<li><code>await</code> + <code>Promise</code>：依序執行函式</li>
+<li>條件：<code>async</code> 跟 <code>await</code> 一定要搭配使用，不能只用 <code>await</code> 卻不用 <code>async</code>。</li>
+</ul>
+<p><img src="https://i.imgur.com/0nEubbT.png" alt></p>
+<p><code>reject</code> 時與 <code>try...catch</code> 搭配使用，<code>reject()</code> 括號內的內容會傳到 <code>catch(e)</code> 的 <code>e</code> 參數，也可以直接在 <code>reject()</code> 括號內放入 <code>Error</code> 物件（JS 原生錯誤物件）。</p>
+<p><img src="https://i.imgur.com/6yejkHH.png" alt></p>
+<p>三個函式非同步失敗時想要不同的錯誤訊息：</p>
+<p><img src="https://i.imgur.com/Yi3LpB1.png" alt></p>
+<p>實務上使用 <code>XMLHttpRequest</code> 時的寫法：</p>
+<p><img src="https://i.imgur.com/IBlkZKh.png" alt></p>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><p><a href="https://slides.com/yi-tailin/deck-e329c0#/" target="_blank" rel="external nofollow noopener noreferrer">slides 簡報</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Statements/function*" target="_blank" rel="external nofollow noopener noreferrer">function*</a><br><a href="https://developers.google.com/web/fundamentals/primers/promises?hl=zh-tw#top_of_page" target="_blank" rel="external nofollow noopener noreferrer">JavaScript Promise：簡介</a><br><a href="https://wcc723.github.io/development/2020/02/16/all-new-promise/" target="_blank" rel="external nofollow noopener noreferrer">JavaScript Promise 全介紹</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/w3HexSchool/" rel="tag"># w3HexSchool</a>
+              <a href="/tags/Promise/" rel="tag"># Promise</a>
+              <a href="/tags/async-await/" rel="tag"># async...await</a>
+              <a href="/tags/callback/" rel="tag"># callback</a>
+              <a href="/tags/Generator/" rel="tag"># Generator</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/javascript/20200224/3747532111/" rel="prev" title="[JS] 講座筆記：AJAX 非同步 / Event Queue 詳解">
+      <i class="fa fa-chevron-left"></i> [JS] 講座筆記：AJAX 非同步 / Event Queue 詳解
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+	        <div style>
+	          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+	        </div>
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#讓非同步依序執行-解法一：callback"><span class="nav-number">1.</span> <span class="nav-text">讓非同步依序執行 解法一：callback</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#讓非同步依序執行-解法二：Generator"><span class="nav-number">2.</span> <span class="nav-text">讓非同步依序執行 解法二：Generator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#讓非同步依序執行-解法三：Promise"><span class="nav-number">3.</span> <span class="nav-text">讓非同步依序執行 解法三：Promise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#讓非同步依序執行-解法四：async…await"><span class="nav-number">4.</span> <span class="nav-text">讓非同步依序執行 解法四：async…await</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#參考資料"><span class="nav-number">5.</span> <span class="nav-text">參考資料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/javascript/20200302/2110342105/",
+            identifier: "javascript/20200302/2110342105/",
+            title: "[JS] 講座筆記：JS Promise 實戰教學"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
