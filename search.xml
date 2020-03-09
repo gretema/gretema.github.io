@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[Gulp] 安裝 PostCSS 的地雷</title>
+    <url>/Gulp/20200310/2050018576/</url>
+    <content><![CDATA[<p>最近在學怎麼使用 Gulp 來管理專案，於是按照 Ray 的教學文慢慢跟著寫 gulpfile，不過在安裝 PostCSS 時有踩到一個文章中沒提到的地雷，解決的過程一波二折，於是讓我決定紀錄一下拆地雷的經過。</p>
+<a id="more"></a>
+
+<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Ray 的教學文：<a href="https://hsiangfeng.github.io/gulp/20190610/4048666562/" target="_blank" rel="external nofollow noopener noreferrer">這是在講 Gulp 不是飲料是任務自動化工具這件事：安裝 PostCSS 篇</a>中，有提到要安裝 <code>gulp-cssnano</code>，並且將它引入 gulpfile 中。</p>
+<p>我照做之後，執行 <code>gulp scss</code>，此時出現一個錯誤訊息：</p>
+<p><img src="https://i.imgur.com/94aMhVj.png" alt="錯誤訊息1"></p>
+<blockquote>
+<p>Error in plugin “gulp-postcss”<br>Message: [object Object] is not a PostCSS plugin</p>
+</blockquote>
+<h2 id="嘗試解決"><a href="#嘗試解決" class="headerlink" title="嘗試解決"></a>嘗試解決</h2><p>由於在 Ray 的教學文章中沒有提到會發生這個錯誤，所以我就自行估狗了一些 StackOverflow 的文章，試了好幾篇解答後，終於找到了一個能成功解決問題的回答！</p>
+<p>就是這一篇：<a href="https://stackoverflow.com/questions/48506482/gulpfile-autoprefixer-must-change-to-postcss" target="_blank" rel="external nofollow noopener noreferrer">gulpfile autoprefixer must change to postcss</a></p>
+<p>我研究了回答者提供的程式碼，發現他引入 <code>gulp-cssnano</code> 的方式有點不一樣。Ray 的文章以及 <code>gulp-cssnano</code> 本身的<a href="https://www.npmjs.com/package/gulp-cssnano" target="_blank" rel="external nofollow noopener noreferrer">文件</a>都說要這樣引入：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> cssnano = <span class="built_in">require</span>(<span class="string">'gulp-cssnano'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>但是不知道為何，在 <code>require()</code> 內寫 <code>gulp-cssnano</code> 似乎找不到檔案。而如果是改成在括號內寫 <code>cssnano</code>，重新運行 <code>gulp scss</code>，錯誤訊息就消失了！</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> cssnano = <span class="built_in">require</span>(<span class="string">'cssnano'</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="壓縮-CSS-時又報錯"><a href="#壓縮-CSS-時又報錯" class="headerlink" title="壓縮 CSS 時又報錯"></a>壓縮 CSS 時又報錯</h2><p>改了 require 之後，我接著處理 CSS 的壓縮以及判斷開發環境與正視環境，結果在輸入 <code>gulp scss --env prod</code> 時又跳出錯誤：</p>
+<p><img src="https://i.imgur.com/oJEVrYs.png" alt="錯誤訊息2"></p>
+<blockquote>
+<p>TypeError: dest.on is not a function</p>
+</blockquote>
+<p>這一次我只好找上原作者 Ray，麻煩他幫我看看是怎麼回事。原來，require 內一定要寫 <code>gulp-cssnano</code>，因為原始 <code>cssnano</code> 並沒有 gulp 相關功能。如果 require 裡面寫 <code>gulp-cssnano</code> 卻沒有正確載入檔案，可以重新安裝一次 <code>gulp-cssnano</code>，可能是安裝時沒裝好。</p>
+<p>於是我重新安裝 <code>gulp-cssnano</code> 並且又改回原本寫的 require：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> cssnano = <span class="built_in">require</span>(<span class="string">'gulp-cssnano'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>之後就順利運行了～</p>
+<h2 id="Special-Thanks"><a href="#Special-Thanks" class="headerlink" title="Special Thanks"></a>Special Thanks</h2><p>感謝 Ray 撥空看我的原始碼，協助我抓蟲成功 🐛</p>
+]]></content>
+      <categories>
+        <category>Gulp</category>
+      </categories>
+      <tags>
+        <tag>w3HexSchool</tag>
+        <tag>Gulp</tag>
+        <tag>PostCSS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[JS] 講座筆記：JS Promise 實戰教學</title>
     <url>/javascript/20200302/2110342105/</url>
     <content><![CDATA[<p>本篇筆記來自 2020.2.26 六角學院線上研討會，講者為偷米騎巴哥的 Tommy。在這一次講座中，Tommy 老師為大家複習了非同步行為與 Queue 的概念，並接續介紹了使非同步行為依序進行的四種方法。</p>
