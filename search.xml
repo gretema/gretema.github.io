@@ -15,7 +15,7 @@
 <li>Bootstrap 4</li>
 <li>JavaScript（ES6）</li>
 <li>SCSS</li>
-<li>ESlint Aribnb</li>
+<li>ESlint Airbnb</li>
 </ul>
 <h2 id="使用-Vue-Plugin"><a href="#使用-Vue-Plugin" class="headerlink" title="使用 Vue-Plugin"></a>使用 Vue-Plugin</h2><ul>
 <li><a href="https://github.com/nuxt/vue-meta" target="_blank" rel="external nofollow noopener noreferrer">Vue Meta</a></li>
