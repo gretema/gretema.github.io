@@ -40,13 +40,13 @@
 <p>各項托育特色的標題，以偽元素製造出 highlight 的效果；所搭配的圖片，hover 時會動態 zoom in（一樣，其實是 CSS3 <code>transform: scale()</code>）。</p>
 <h3 id="FAQ-Page"><a href="#FAQ-Page" class="headerlink" title="FAQ Page"></a>FAQ Page</h3><p><img src="https://i.imgur.com/u7bQhGH.png" alt="FAQ main"></p>
 <p>常見問答中，對該問題的回覆是以手風琴式折疊呈現；當 hover 至問題文字時，會動態 highlight。</p>
-<h3 id="部署、買域名"><a href="#部署、買域名" class="headerlink" title="部署、買域名"></a>部署、買域名</h3><p>由於之前寫作品時都是直接使用 GitHub Pages，所以都沒有研究過如何買域名，也不知道如何把做好的網站跟域名綁在一起。剛好藉這個機會，參照了以下的網站，學習如何把網站弄上線（雖然遠端伺服器還是使用 GitHub 啦）。</p>
+<h2 id="部署、買域名"><a href="#部署、買域名" class="headerlink" title="部署、買域名"></a>部署、買域名</h2><p>由於之前寫作品時都是直接使用 GitHub Pages，所以都沒有研究過如何買域名，也不知道如何把做好的網站跟域名綁在一起。剛好藉這個機會，參照了以下的網站，學習如何把網站弄上線（雖然遠端伺服器還是使用 GitHub 啦）。</p>
 <ul>
 <li><a href="https://hsiangfeng.github.io/vue/20200214/1055437216/" target="_blank" rel="external nofollow noopener noreferrer">一個指令快速部署 Vue Cli 到 GitHub Pages</a></li>
 <li><a href="https://medium.com/@moojing/%E5%80%8B%E4%BA%BA%E6%8A%80%E8%A1%93%E7%AB%99%E4%B8%80%E6%8A%8A%E7%BD%A9-%E9%83%A8%E8%90%BD%E6%A0%BC%E5%BB%BA%E7%BD%AE%E5%A4%A7%E5%85%A8-%E4%BA%8C-%E5%B0%87-github-page-%E4%B8%B2%E4%B8%8A%E8%87%AA%E5%B7%B1%E7%9A%84%E5%9F%9F%E5%90%8D-8f7e11cf2687" target="_blank" rel="external nofollow noopener noreferrer">個人技術站一把罩！部落格建置大全（二）- 將 Github Page 串上自己的域名</a></li>
 </ul>
 <p>不過這中間也是踩到蠻多雷的，大家可以看我自己寫的<a href="https://github.com/gretema/nanny-yingju-personal-page/issues/1" target="_blank" rel="external nofollow noopener noreferrer">每日進度 issue</a> 最後一則 comment。</p>
-<h3 id="Bug"><a href="#Bug" class="headerlink" title="Bug"></a>Bug</h3><p>寫這個網站雖然沒有串到後端，照理來說應該不太會有什麼問題。不過也是有產生一個 Bug 是在我今天上線後才發現的，那就是我明明有使用 animate.css + wow.js，在本機的 Web Server 也都看得到效果，結果推上線後效果就不見了，我回到開發環境檢查也是一切正常，不知道是發生什麼事。</p>
+<h2 id="Bug"><a href="#Bug" class="headerlink" title="Bug"></a>Bug</h2><p>寫這個網站雖然沒有串到後端，照理來說應該不太會有什麼問題。不過也是有產生一個 Bug 是在我今天上線後才發現的，那就是我明明有使用 animate.css + wow.js，在本機的 Web Server 也都看得到效果，結果推上線後效果就不見了，我回到開發環境檢查也是一切正常，不知道是發生什麼事。</p>
 <h2 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h2><p>老實說我現在正開始如火如荼地尋求第一份前端工程師正職，結果我媽硬是要我在這段緊張忙碌的期間做她的個人網站，真的是蠻負擔的，尤其這位不給 Pay 的業主在我寫扣的時候總是站在我旁邊看……，如果發現我在寫履歷或投履歷或忙自己的事時，還會幽幽地說：「蛤……不是在弄我的喔……」，言盡於此，大家應該可以想像得到那個畫面吧^^</p>
 <p>至於這種不用串後端的形象網站為何要用到 Vue？除了我想練一下對 Vue 專案結構的熟悉度以外，也是希望未來有一天能自己開 API 增加功能，所以就預先把架構架好這樣。</p>
 <p>好啦，我媽可以容忍女兒好好的公務員不幹，從台北跑回家當尼特好幾個月，作為對她的回饋，我運用這一年多的學習成果幫她寫個網頁、讓她開心、同時又讓她可以跟親友炫耀，這樣應該算是孝順吧！XD</p>
