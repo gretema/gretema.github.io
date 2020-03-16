@@ -1,6 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>開發紀錄：幫媽媽寫一個 SPA 形象網站</title>
+    <url>/Vuejs/20200316/2576586368/</url>
+    <content><![CDATA[<p>不知道各位是否曾經經歷過，當身邊的親朋好友知道你會寫網頁後，就開始拜託你幫他免費寫網頁呢？<br>一般來說我們一定會跟對方<del>說誰理你啊</del>婉拒，但如果說拜託你的人是你媽呢？<br>以下就是我被我媽軟磨硬泡一年多後，認命幫她寫網頁的開發紀錄。</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我媽是一個年資 20 幾年的保母，她希望能透過架設個人網站，來吸引更多的客源。<br>於是，就如同我上面提到的，這是我被她盧到受不了，就幫媽媽做了一個 Vue SPA 個人形象網站，網址在此：<a href="https://nanny-yingju.com/" target="_blank" rel="external nofollow noopener noreferrer">https://nanny-yingju.com/</a>。</p>
+<h2 id="使用技術"><a href="#使用技術" class="headerlink" title="使用技術"></a>使用技術</h2><ul>
+<li>Vue Cli 3</li>
+<li>Vue Router</li>
+<li>Vue Components</li>
+<li>RWD</li>
+<li>Bootstrap 4</li>
+<li>JavaScript（ES6）</li>
+<li>SCSS</li>
+<li>ESlint Aribnb</li>
+</ul>
+<h2 id="使用-Vue-Plugin"><a href="#使用-Vue-Plugin" class="headerlink" title="使用 Vue-Plugin"></a>使用 Vue-Plugin</h2><ul>
+<li><a href="https://github.com/nuxt/vue-meta" target="_blank" rel="external nofollow noopener noreferrer">Vue Meta</a></li>
+<li><a href="https://github.com/chrisvfritz/prerender-spa-plugin" target="_blank" rel="external nofollow noopener noreferrer">Prerender SPA Plugin</a></li>
+</ul>
+<p>這兩個插件很特別，都是用來優化網站的 SEO 的。就如同大家所熟知的，SPA 網頁在 SEO 方面比較不利，因此往往需要透過 SSR 來改善這件事。</p>
+<p>但是我畢竟只會寫前端，突然要我學 SSR 有點困難，於是我查到了這兩個套件可以協助 SEO。首先，Vue Meta 可以讓我們在 Vue 元件的 <code>script</code> 中塞入原本要寫在網頁 <code>&lt;head&gt;</code> 中的 <code>&lt;meta&gt;</code> 資訊；而 Prerender SPA Plugin 則是幫助 SPA 網頁預先渲染出具有語意的 HTML 標籤。</p>
+<h2 id="網站介紹"><a href="#網站介紹" class="headerlink" title="網站介紹"></a>網站介紹</h2><h3 id="Home-Page"><a href="#Home-Page" class="headerlink" title="Home Page"></a>Home Page</h3><p><img src="https://i.imgur.com/qyObIrW.jpg" alt="Home Header"></p>
+<p>Home Page 的 Header 是三張輪播圖片，圖片來源為 <a href="https://unsplash.com/" target="_blank" rel="external nofollow noopener noreferrer">Unsplash</a>，並不是我家寶寶，沒有肖像權或是隱私權問題。</p>
+<p><img src="https://i.imgur.com/YuwwwNl.jpg" alt="Home Worries Section"></p>
+<p>畫面會往下滑動至一定高度時，畫面右下角會出現「回到最上方」按鈕。</p>
+<p><img src="https://i.imgur.com/3j2XDrB.png" alt="Home ThreePoints Section"></p>
+<p>在「聽聽家長怎麼說」的區塊，家長們的評價也是採用輪播的方式。</p>
+<p><img src="https://i.imgur.com/oDwt3iz.png" alt="Footer"></p>
+<p>在 Footer 嵌入我媽經營的 Facebook 粉絲專頁，增加 SEO 與能見度（雖然她粉專根本沒什麼粉絲 QQ）。</p>
+<h3 id="About-Page"><a href="#About-Page" class="headerlink" title="About Page"></a>About Page</h3><p><img src="https://i.imgur.com/srUaiZz.jpg" alt="About Header"></p>
+<p><img src="https://i.imgur.com/7z773xy.jpg" alt="EnvImg"></p>
+<p><img src="https://i.imgur.com/iGNUccl.png" alt="Exp"></p>
+<p>「托育環境」中的圖片，hover 時會動態 zoom in（精確地說是 CSS3 <code>transform: scale()</code>）；「特殊經歷」以時間軸呈現各個時間點的經歷。</p>
+<h3 id="Feature-Page"><a href="#Feature-Page" class="headerlink" title="Feature Page"></a>Feature Page</h3><p><img src="https://i.imgur.com/vTRhE4w.jpg" alt="Feature Header"></p>
+<p><img src="https://i.imgur.com/rZ7rRFg.jpg" alt="Feature Main"></p>
+<p>各項托育特色的標題，以偽元素製造出 highlight 的效果；所搭配的圖片，hover 時會動態 zoom in（一樣，其實是 CSS3 <code>transform: scale()</code>）。</p>
+<h3 id="FAQ-Page"><a href="#FAQ-Page" class="headerlink" title="FAQ Page"></a>FAQ Page</h3><p><img src="https://i.imgur.com/u7bQhGH.png" alt="FAQ main"></p>
+<p>常見問答中，對該問題的回覆是以手風琴式折疊呈現；當 hover 至問題文字時，會動態 highlight。</p>
+<h3 id="部署、買域名"><a href="#部署、買域名" class="headerlink" title="部署、買域名"></a>部署、買域名</h3><p>由於之前寫作品時都是直接使用 GitHub Pages，所以都沒有研究過如何買域名，也不知道如何把做好的網站跟域名綁在一起。剛好藉這個機會，參照了以下的網站，學習如何把網站弄上線（雖然遠端伺服器還是使用 GitHub 啦）。</p>
+<ul>
+<li><a href="https://hsiangfeng.github.io/vue/20200214/1055437216/" target="_blank" rel="external nofollow noopener noreferrer">一個指令快速部署 Vue Cli 到 GitHub Pages</a></li>
+<li><a href="https://medium.com/@moojing/%E5%80%8B%E4%BA%BA%E6%8A%80%E8%A1%93%E7%AB%99%E4%B8%80%E6%8A%8A%E7%BD%A9-%E9%83%A8%E8%90%BD%E6%A0%BC%E5%BB%BA%E7%BD%AE%E5%A4%A7%E5%85%A8-%E4%BA%8C-%E5%B0%87-github-page-%E4%B8%B2%E4%B8%8A%E8%87%AA%E5%B7%B1%E7%9A%84%E5%9F%9F%E5%90%8D-8f7e11cf2687" target="_blank" rel="external nofollow noopener noreferrer">個人技術站一把罩！部落格建置大全（二）- 將 Github Page 串上自己的域名</a></li>
+</ul>
+<p>不過這中間也是踩到蠻多雷的，大家可以看我自己寫的<a href="https://github.com/gretema/nanny-yingju-personal-page/issues/1" target="_blank" rel="external nofollow noopener noreferrer">每日進度 issue</a> 最後一則 comment。</p>
+<h3 id="Bug"><a href="#Bug" class="headerlink" title="Bug"></a>Bug</h3><p>寫這個網站雖然沒有串到後端，照理來說應該不太會有什麼問題。不過也是有產生一個 Bug 是在我今天上線後才發現的，那就是我明明有使用 animate.css + wow.js，在本機的 Web Server 也都看得到效果，結果推上線後效果就不見了，我回到開發環境檢查也是一切正常，不知道是發生什麼事。</p>
+<h2 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h2><p>老實說我現在正開始如火如荼地尋求第一份前端工程師正職，結果我媽硬是要我在這段緊張忙碌的期間做她的個人網站，真的是蠻負擔的，尤其這位不給 Pay 的業主在我寫扣的時候總是站在我旁邊看……，如果發現我在寫履歷或投履歷或忙自己的事時，還會幽幽地說：「蛤……不是在弄我的喔……」，言盡於此，大家應該可以想像得到那個畫面吧^^</p>
+<p>至於這種不用串後端的形象網站為何要用到 Vue？除了我想練一下對 Vue 專案結構的熟悉度以外，也是希望未來有一天能自己開 API 增加功能，所以就預先把架構架好這樣。</p>
+<p>好啦，我媽可以容忍女兒好好的公務員不幹，從台北跑回家當尼特好幾個月，作為對她的回饋，我運用這一年多的學習成果幫她寫個網頁、讓她開心、同時又讓她可以跟親友炫耀，這樣應該算是孝順吧！XD</p>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>w3HexSchool</tag>
+        <tag>VueCLI3</tag>
+        <tag>形象網站</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[Gulp] 安裝 PostCSS 的地雷</title>
     <url>/Gulp/20200310/2050018576/</url>
     <content><![CDATA[<p>最近在學怎麼使用 Gulp 來管理專案，於是按照 Ray 的教學文慢慢跟著寫 gulpfile，不過在安裝 PostCSS 時有踩到一個文章中沒提到的地雷，解決的過程一波二折，於是讓我決定紀錄一下拆地雷的經過。</p>
