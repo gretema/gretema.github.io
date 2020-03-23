@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[Vue] Vuex 資料狀態管理學習筆記（上）</title>
+    <url>/Vuejs/20200323/1597330136/</url>
+    <content><![CDATA[<p>最近為了鼠年全馬寫文活動，開始清點所有還沒公開發表學習筆記，這就是其中一篇。<br>今天這篇會先簡介一下 Vuex 是什麼，篇幅會稍短，<br>然後下一篇就會寫到一些 Vuex 實際演練。</p>
+<a id="more"></a>
+
+<h2 id="Vuex-是什麼"><a href="#Vuex-是什麼" class="headerlink" title="Vuex 是什麼"></a>Vuex 是什麼</h2><p>根據<a href="https://vuex.vuejs.org/zh/" target="_blank" rel="external nofollow noopener noreferrer">官方文件</a>的說明，Vuex 是 Vue.js 專用的資料狀態管理模式，可以集中式地管理各元件的資料，通常用於大規模的專案。</p>
+<h2 id="為何需要使用-Vuex"><a href="#為何需要使用-Vuex" class="headerlink" title="為何需要使用 Vuex"></a>為何需要使用 Vuex</h2><p><img src="https://i.imgur.com/4mkJRn0.png" alt="圖片來源：卡斯伯老師"></p>
+<p>父元件跟子元件之間互相傳遞資料可以使用 <code>props</code> 及 <code>emit</code>，而兄弟元件之間可以用 <code>$eventbus</code> 做資料傳遞。然而，<code>$eventbus</code> 只適合用於簡單的情境，如果資料量大的話就不適用。</p>
+<p>因此，我們就可以使用 Vuex 這個工具，它把所有資料與方法存放在 store (倉庫) 中集中管理，如此一來不管是哪一個元件都可以呼叫 store 裡面的資料與方法，並且維持雙向綁定。</p>
+<h2 id="Vuex-的核心概念"><a href="#Vuex-的核心概念" class="headerlink" title="Vuex 的核心概念"></a>Vuex 的核心概念</h2><p>Vuex 中使用的方法與 Vue 元件的方法可以做以下的對應：</p>
+<p><img src="https://i.imgur.com/EjqiLt4.png" alt="圖片來源：卡斯伯老師"></p>
+<ul>
+<li><code>state</code> 就如同 <code>data</code>，是存放資料的地方。</li>
+<li><code>action</code> 如同 <code>methods</code>，用來處理非同步事件及取得遠端資料，但不負責處理資料內容的改變。</li>
+<li><code>getter</code> 如同 <code>computed</code>，在畫面渲染前先對資料進行運算及過濾等。</li>
+<li><code>mutation</code> 是 Vuex 比較特別的方法，它用於改變資料的內容。在 Vue 元件中我們習慣在 <code>methods</code> 中去改變資料，現在用了 Vuex 則是在 <code>mutation</code> 進行處理。</li>
+</ul>
+<h2 id="Vuex-的運作流程"><a href="#Vuex-的運作流程" class="headerlink" title="Vuex 的運作流程"></a>Vuex 的運作流程</h2><ol>
+<li>元件透過 <code>Dispatch</code> 方法來觸發 <code>Actions</code> 事件</li>
+<li><code>Actions</code> 會去執行 AJAX，取得遠端的資料</li>
+<li>接著 <code>Actions</code> 使用 <code>Commit</code> 方式去呼叫 <code>Mutations</code></li>
+<li>透過 <code>Mutations</code> 去改變資料狀態（<code>State</code>）</li>
+<li>最後把資料狀態回應給元件去渲染畫面</li>
+</ol>
+<p><img src="https://i.imgur.com/8VwkWrN.png" alt="圖片來源：卡斯伯老師"></p>
+<hr>
+<p>這週就先介紹到這邊，下週的 Vuex 筆記就會用比較長的篇幅來記錄一些實際演練過程囉！</p>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>w3HexSchool</tag>
+        <tag>Vuex</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>開發紀錄：幫媽媽寫一個 SPA 形象網站</title>
-    <url>/Vuejs/20200316/2576586368/</url>
+    <url>/%E9%96%8B%E7%99%BC%E7%B4%80%E9%8C%84/20200316/2576586368/</url>
     <content><![CDATA[<p>不知道各位是否曾經經歷過，當身邊的親朋好友知道你會寫網頁後，就開始拜託你幫他免費寫網頁呢？<br>一般來說我們一定會跟對方<del>說誰理你啊</del>婉拒，但如果說拜託你的人是你媽呢？<br>以下就是我被我媽軟磨硬泡一年多後，認命幫她寫網頁的開發紀錄。</p>
 <a id="more"></a>
 
@@ -52,7 +90,7 @@
 <p>好啦，我媽可以容忍女兒好好的公務員不幹，從台北跑回家當尼特好幾個月，作為對她的回饋，我運用這一年多的學習成果幫她寫個網頁、讓她開心、同時又讓她可以跟親友炫耀，這樣應該算是孝順吧！XD</p>
 ]]></content>
       <categories>
-        <category>Vuejs</category>
+        <category>開發紀錄</category>
       </categories>
       <tags>
         <tag>Vue</tag>

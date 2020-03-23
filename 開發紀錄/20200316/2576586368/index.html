@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/iconfinder_horse_384872.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/iconfinder_horse_384872.png">
+  <link rel="mask-icon" href="/images/iconfinder_horse_384872.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Sans TC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://gretema.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="不知道各位是否曾經經歷過，當身邊的親朋好友知道你會寫網頁後，就開始拜託你幫他免費寫網頁呢？一般來說我們一定會跟對方說誰理你啊婉拒，但如果說拜託你的人是你媽呢？以下就是我被我媽軟磨硬泡一年多後，認命幫她寫網頁的開發紀錄。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="開發紀錄：幫媽媽寫一個 SPA 形象網站">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;%E9%96%8B%E7%99%BC%E7%B4%80%E9%8C%84&#x2F;20200316&#x2F;2576586368&#x2F;index.html">
+<meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
+<meta property="og:description" content="不知道各位是否曾經經歷過，當身邊的親朋好友知道你會寫網頁後，就開始拜託你幫他免費寫網頁呢？一般來說我們一定會跟對方說誰理你啊婉拒，但如果說拜託你的人是你媽呢？以下就是我被我媽軟磨硬泡一年多後，認命幫她寫網頁的開發紀錄。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;qyObIrW.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;YuwwwNl.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;3j2XDrB.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;oDwt3iz.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;srUaiZz.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;7z773xy.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;iGNUccl.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;vTRhE4w.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;rZ7rRFg.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;u7bQhGH.png">
+<meta property="article:published_time" content="2020-03-16T09:36:30.000Z">
+<meta property="article:modified_time" content="2020-03-23T04:36:32.537Z">
+<meta property="article:author" content="Grete Ma">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="w3HexSchool">
+<meta property="article:tag" content="VueCLI3">
+<meta property="article:tag" content="形象網站">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;qyObIrW.jpg">
+
+<link rel="canonical" href="http://gretema.github.io/%E9%96%8B%E7%99%BC%E7%B4%80%E9%8C%84/20200316/2576586368/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>開發紀錄：幫媽媽寫一個 SPA 形象網站 | 馬格蕾特的前端勇者日誌</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-154635603-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">馬格蕾特的前端勇者日誌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜尋..." spellcheck="false" type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/%E9%96%8B%E7%99%BC%E7%B4%80%E9%8C%84/20200316/2576586368/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Grete Ma">
+      <meta itemprop="description" content="前端技術 Blog，蒐集學習路上的吉光片羽">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="馬格蕾特的前端勇者日誌">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          開發紀錄：幫媽媽寫一個 SPA 形象網站
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2020-03-16 17:36:30" itemprop="dateCreated datePublished" datetime="2020-03-16T17:36:30+08:00">2020-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2020-03-23 12:36:32" itemprop="dateModified" datetime="2020-03-23T12:36:32+08:00">2020-03-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%96%8B%E7%99%BC%E7%B4%80%E9%8C%84/" itemprop="url" rel="index">
+                    <span itemprop="name">開發紀錄</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/%E9%96%8B%E7%99%BC%E7%B4%80%E9%8C%84/20200316/2576586368/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="開發紀錄/20200316/2576586368/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>不知道各位是否曾經經歷過，當身邊的親朋好友知道你會寫網頁後，就開始拜託你幫他免費寫網頁呢？<br>一般來說我們一定會跟對方<del>說誰理你啊</del>婉拒，但如果說拜託你的人是你媽呢？<br>以下就是我被我媽軟磨硬泡一年多後，認命幫她寫網頁的開發紀錄。</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我媽是一個年資 20 幾年的保母，她希望能透過架設個人網站，來吸引更多的客源。<br>於是，就如同我上面提到的，由於我被她盧到受不了，就幫媽媽做了一個 Vue SPA 個人形象網站，網址在此：<a href="https://nanny-yingju.com/" target="_blank" rel="external nofollow noopener noreferrer">https://nanny-yingju.com/</a>。</p>
+<h2 id="使用技術"><a href="#使用技術" class="headerlink" title="使用技術"></a>使用技術</h2><ul>
+<li>Vue Cli 3</li>
+<li>Vue Router</li>
+<li>Vue Components</li>
+<li>RWD</li>
+<li>Bootstrap 4</li>
+<li>JavaScript（ES6）</li>
+<li>SCSS</li>
+<li>ESlint Airbnb</li>
+</ul>
+<h2 id="使用-Vue-Plugin"><a href="#使用-Vue-Plugin" class="headerlink" title="使用 Vue-Plugin"></a>使用 Vue-Plugin</h2><ul>
+<li><a href="https://github.com/nuxt/vue-meta" target="_blank" rel="external nofollow noopener noreferrer">Vue Meta</a></li>
+<li><a href="https://github.com/chrisvfritz/prerender-spa-plugin" target="_blank" rel="external nofollow noopener noreferrer">Prerender SPA Plugin</a></li>
+</ul>
+<p>這兩個插件很特別，都是用來優化網站的 SEO 的。就如同大家所熟知的，SPA 網頁在 SEO 方面比較不利，因此往往需要透過 SSR 來改善這件事。</p>
+<p>但是我畢竟只會寫前端，突然要我學 SSR 有點困難，於是我查到了這兩個套件可以協助 SEO。首先，Vue Meta 可以讓我們在 Vue 元件的 <code>script</code> 中塞入原本要寫在網頁 <code>&lt;head&gt;</code> 中的 <code>&lt;meta&gt;</code> 資訊；而 Prerender SPA Plugin 則是幫助 SPA 網頁預先渲染出具有語意的 HTML 標籤。</p>
+<h2 id="網站介紹"><a href="#網站介紹" class="headerlink" title="網站介紹"></a>網站介紹</h2><h3 id="Home-Page"><a href="#Home-Page" class="headerlink" title="Home Page"></a>Home Page</h3><p><img src="https://i.imgur.com/qyObIrW.jpg" alt="Home Header"></p>
+<p>Home Page 的 Header 是三張輪播圖片，圖片來源為 <a href="https://unsplash.com/" target="_blank" rel="external nofollow noopener noreferrer">Unsplash</a>，並不是我家寶寶，沒有肖像權或是隱私權問題。</p>
+<p><img src="https://i.imgur.com/YuwwwNl.jpg" alt="Home Worries Section"></p>
+<p>往下滑動至一定高度時，畫面右下角會出現「回到最上方」按鈕。</p>
+<p><img src="https://i.imgur.com/3j2XDrB.png" alt="Home ThreePoints Section"></p>
+<p>在「聽聽家長怎麼說」的區塊，家長們的評價也是採用輪播的方式。</p>
+<p><img src="https://i.imgur.com/oDwt3iz.png" alt="Footer"></p>
+<p>在 Footer 嵌入我媽經營的 Facebook 粉絲專頁，增加 SEO 與能見度（雖然她粉專根本沒什麼粉絲 QQ）。</p>
+<h3 id="About-Page"><a href="#About-Page" class="headerlink" title="About Page"></a>About Page</h3><p><img src="https://i.imgur.com/srUaiZz.jpg" alt="About Header"></p>
+<p><img src="https://i.imgur.com/7z773xy.jpg" alt="EnvImg"></p>
+<p><img src="https://i.imgur.com/iGNUccl.png" alt="Exp"></p>
+<p>「托育環境」中的圖片，hover 時會動態 zoom in（精確地說是 CSS3 <code>transform: scale()</code>）；「特殊經歷」以時間軸呈現各個時間點的經歷。</p>
+<h3 id="Feature-Page"><a href="#Feature-Page" class="headerlink" title="Feature Page"></a>Feature Page</h3><p><img src="https://i.imgur.com/vTRhE4w.jpg" alt="Feature Header"></p>
+<p><img src="https://i.imgur.com/rZ7rRFg.jpg" alt="Feature Main"></p>
+<p>各項托育特色的標題，以偽元素製造出 highlight 的效果；所搭配的圖片，hover 時會動態 zoom in（一樣，其實是 CSS3 <code>transform: scale()</code>）。</p>
+<h3 id="FAQ-Page"><a href="#FAQ-Page" class="headerlink" title="FAQ Page"></a>FAQ Page</h3><p><img src="https://i.imgur.com/u7bQhGH.png" alt="FAQ main"></p>
+<p>常見問答中，對該問題的回覆是以手風琴式折疊呈現；當 hover 至問題文字時，會動態 highlight。</p>
+<h2 id="部署、買域名"><a href="#部署、買域名" class="headerlink" title="部署、買域名"></a>部署、買域名</h2><p>由於之前寫作品時都是直接使用 GitHub Pages，所以都沒有研究過如何買域名，也不知道如何把做好的網站跟域名綁在一起。剛好藉這個機會，參照了以下的網站，學習如何把網站弄上線（雖然遠端伺服器還是使用 GitHub 啦）。</p>
+<ul>
+<li><a href="https://hsiangfeng.github.io/vue/20200214/1055437216/" target="_blank" rel="external nofollow noopener noreferrer">一個指令快速部署 Vue Cli 到 GitHub Pages</a></li>
+<li><a href="https://medium.com/@moojing/%E5%80%8B%E4%BA%BA%E6%8A%80%E8%A1%93%E7%AB%99%E4%B8%80%E6%8A%8A%E7%BD%A9-%E9%83%A8%E8%90%BD%E6%A0%BC%E5%BB%BA%E7%BD%AE%E5%A4%A7%E5%85%A8-%E4%BA%8C-%E5%B0%87-github-page-%E4%B8%B2%E4%B8%8A%E8%87%AA%E5%B7%B1%E7%9A%84%E5%9F%9F%E5%90%8D-8f7e11cf2687" target="_blank" rel="external nofollow noopener noreferrer">個人技術站一把罩！部落格建置大全（二）- 將 Github Page 串上自己的域名</a></li>
+</ul>
+<p>不過這中間也是踩到蠻多雷的，大家可以看我自己寫的<a href="https://github.com/gretema/nanny-yingju-personal-page/issues/1" target="_blank" rel="external nofollow noopener noreferrer">每日進度 issue</a> 最後一則 comment。</p>
+<h2 id="Bug"><a href="#Bug" class="headerlink" title="Bug"></a>Bug</h2><p>寫這個網站雖然沒有串到後端，照理來說應該不太會有什麼問題。不過也是有產生一個 Bug 是在我今天上線後才發現的，那就是我明明有使用 animate.css + wow.js，在本機的 Web Server 也都看得到效果，結果推上線後效果就不見了，我回到開發環境檢查也是一切正常，不知道是發生什麼事。</p>
+<h2 id="結語"><a href="#結語" class="headerlink" title="結語"></a>結語</h2><p>老實說我現在正開始如火如荼地尋求第一份前端工程師正職，結果我媽硬是要我在這段緊張忙碌的期間做她的個人網站，真的是蠻負擔的，尤其這位不給 Pay 的業主在我寫扣的時候總是站在我旁邊看……，如果發現我在寫履歷或投履歷或忙自己的事時，還會幽幽地說：「蛤……不是在弄我的喔……」，言盡於此，大家應該可以想像得到那個畫面吧^^</p>
+<p>至於這種不用串後端的形象網站為何要用到 Vue？除了我想練一下對 Vue 專案結構的熟悉度以外，也是希望未來有一天能自己開 API 增加功能，所以就預先把架構架好這樣。</p>
+<p>好啦，我媽可以容忍女兒好好的公務員不幹，從台北跑回家當尼特好幾個月，作為對她的回饋，我運用這一年多的學習成果幫她寫個網頁、讓她開心、同時又讓她可以跟親友炫耀，這樣應該算是孝順吧！XD</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+              <a href="/tags/w3HexSchool/" rel="tag"># w3HexSchool</a>
+              <a href="/tags/VueCLI3/" rel="tag"># VueCLI3</a>
+              <a href="/tags/%E5%BD%A2%E8%B1%A1%E7%B6%B2%E7%AB%99/" rel="tag"># 形象網站</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Gulp/20200310/2050018576/" rel="prev" title="[Gulp] 安裝 PostCSS 的地雷">
+      <i class="fa fa-chevron-left"></i> [Gulp] 安裝 PostCSS 的地雷
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Vuejs/20200323/1597330136/" rel="next" title="[Vue] Vuex 資料狀態管理學習筆記（上）">
+      [Vue] Vuex 資料狀態管理學習筆記（上） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+	        <div style>
+	          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+	        </div>
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用技術"><span class="nav-number">2.</span> <span class="nav-text">使用技術</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Vue-Plugin"><span class="nav-number">3.</span> <span class="nav-text">使用 Vue-Plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#網站介紹"><span class="nav-number">4.</span> <span class="nav-text">網站介紹</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Home-Page"><span class="nav-number">4.1.</span> <span class="nav-text">Home Page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#About-Page"><span class="nav-number">4.2.</span> <span class="nav-text">About Page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Feature-Page"><span class="nav-number">4.3.</span> <span class="nav-text">Feature Page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FAQ-Page"><span class="nav-number">4.4.</span> <span class="nav-text">FAQ Page</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署、買域名"><span class="nav-number">5.</span> <span class="nav-text">部署、買域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bug"><span class="nav-number">6.</span> <span class="nav-text">Bug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#結語"><span class="nav-number">7.</span> <span class="nav-text">結語</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Grete Ma" src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Grete Ma</p>
+  <div class="site-description" itemprop="description">前端技術 Blog，蒐集學習路上的吉光片羽</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">45</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gretema" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gretema" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jeanma1995@gmail.com" title="E-Mail → mailto:jeanma1995@gmail.com" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.facebook.com/weichun.ma.56" title="FB Page → https:&#x2F;&#x2F;www.facebook.com&#x2F;weichun.ma.56" rel="external nofollow noopener noreferrer" target="_blank"><i class="fa fa-fw fa-facebook"></i>FB Page</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      友站連結
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://medium.com/%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" title="https:&#x2F;&#x2F;medium.com&#x2F;%E9%A6%AC%E6%A0%BC%E8%95%BE%E7%89%B9%E7%9A%84%E5%86%92%E9%9A%AA%E8%80%85%E6%97%A5%E8%AA%8C" rel="external nofollow noopener noreferrer" target="_blank">馬格蕾特的樹洞</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hsiangfeng.github.io/" title="https:&#x2F;&#x2F;hsiangfeng.github.io&#x2F;" rel="external nofollow noopener noreferrer" target="_blank">Welcome.Web.World</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Grete Ma</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gretesblog.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: {page: {
+            url: "http://gretema.github.io/%E9%96%8B%E7%99%BC%E7%B4%80%E9%8C%84/20200316/2576586368/",
+            identifier: "開發紀錄/20200316/2576586368/",
+            title: "開發紀錄：幫媽媽寫一個 SPA 形象網站"
+          }
+        }
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gretesblog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
