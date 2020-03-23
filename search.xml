@@ -3,7 +3,7 @@
   <entry>
     <title>[Vue] Vuex 資料狀態管理學習筆記（上）</title>
     <url>/Vuejs/20200323/1597330136/</url>
-    <content><![CDATA[<p>最近為了鼠年全馬寫文活動，開始清點所有還沒公開發表學習筆記，這就是其中一篇。<br>今天這篇會先簡介一下 Vuex 是什麼，篇幅會稍短，<br>然後下一篇就會寫到一些 Vuex 實際演練。</p>
+    <content><![CDATA[<p>最近為了鼠年全馬寫文活動，開始清點所有還沒公開發表的學習筆記，這就是其中一篇。<br>今天這篇會先簡介一下 Vuex 是什麼，篇幅會稍短，<br>然後下一篇就會寫到一些 Vuex 實際演練。</p>
 <a id="more"></a>
 
 <h2 id="Vuex-是什麼"><a href="#Vuex-是什麼" class="headerlink" title="Vuex 是什麼"></a>Vuex 是什麼</h2><p>根據<a href="https://vuex.vuejs.org/zh/" target="_blank" rel="external nofollow noopener noreferrer">官方文件</a>的說明，Vuex 是 Vue.js 專用的資料狀態管理模式，可以集中式地管理各元件的資料，通常用於大規模的專案。</p>
