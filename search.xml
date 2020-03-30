@@ -1295,7 +1295,7 @@
     <content><![CDATA[<p>本篇筆記要繼續分享 Vue 中一些指令的進階用法與使用細節，基本上是 Vue 基礎概述篇的延伸，不過也會提到一些新的東西。<br>我超不會寫前言，就不廢話了，直接開始吧！</p>
 <a id="more"></a>
 
-<h2 id="v-if-v-else-v-if-else"><a href="#v-if-v-else-v-if-else" class="headerlink" title="v-if / v-else / v-if-else"></a>v-if / v-else / v-if-else</h2><p>在一個 HTML 元素上使用 <code>v-if=&quot;data資料&quot;</code>，當資料的值為 <code>true</code> 時才會渲染這個 DOM；而在 <code>v-if</code> 相鄰的 HTML 元素上使用 <code>v-else</code>，就能把 <code>v-if</code> 判斷為 <code>false</code> 的資料渲染在這個 DOM 上。</p>
+<h2 id="v-if-v-else-v-else-if"><a href="#v-if-v-else-v-else-if" class="headerlink" title="v-if / v-else / v-else-if"></a>v-if / v-else / v-else-if</h2><p>在一個 HTML 元素上使用 <code>v-if=&quot;data資料&quot;</code>，當資料的值為 <code>true</code> 時才會渲染這個 DOM；而在 <code>v-if</code> 相鄰的 HTML 元素上使用 <code>v-else</code>，就能把 <code>v-if</code> 判斷為 <code>false</code> 的資料渲染在這個 DOM 上。</p>
 <p><code>v-else-if</code> 用於渲染條件<strong>多於兩個以上</strong>時，第一個條件用 <code>v-if=&quot;條件</code>“，第二跟第三個就可以用 <code>v-else-if=&quot;其他條件&quot;</code> 。</p>
 <h3 id="v-if-跟-v-show-的差異"><a href="#v-if-跟-v-show-的差異" class="headerlink" title="v-if 跟 v-show 的差異"></a>v-if 跟 v-show 的差異</h3><p><code>v-show</code> 是控制 HTML 元素的 <code>display</code>，所以 <code>v-show</code> 為 <code>false</code> 的 HTML 元素其實還是有被渲染出來，只是 <code>display: none</code> 而已；<code>v-if</code> 是指渲染出符合條件的 HTML 元素，不符合的就不會渲染。</p>
 <h3 id="模板-lt-template-gt"><a href="#模板-lt-template-gt" class="headerlink" title="模板 &lt;template&gt;"></a>模板 <code>&lt;template&gt;</code></h3><p><code>&lt;template&gt;</code> 的使用時機在於，想要使用 Vue 指令，但不希望 HTML 標籤輸出時。<br>在 <code>&lt;template&gt;</code> 裡的子元素不會被渲染出來，可以一次控制多個 DOM。如果在 <code>&lt;template&gt;</code> 使用 <code>v-if</code>，那麼條件為 <code>true</code> 時，就能渲染出 <code>&lt;template&gt;</code> 內的子元素。</p>
