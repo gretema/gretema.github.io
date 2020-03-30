@@ -1260,20 +1260,23 @@
 <h2 id="雙花括號輸出資料加總"><a href="#雙花括號輸出資料加總" class="headerlink" title="雙花括號輸出資料加總"></a>雙花括號輸出資料加總</h2><p>如果 <code>data</code> 中有多個特性的值為數字，可以用雙花括號在 HTML 輸出這些特性作為變數組成的算式，並在畫面上渲染出計算結果；或者也可以將數個字串型別的特性直接在雙花括號中串接，一樣可以渲染出字串連接的結果。</p>
 <h2 id="動態操控-disabled-屬性"><a href="#動態操控-disabled-屬性" class="headerlink" title="動態操控 disabled 屬性"></a>動態操控 disabled 屬性</h2><p>用 <code>v-bind</code> 綁定 <code>disabled</code> 屬性與 <code>data</code> 特性，當切換對應的 <code>data</code> 值（值為布林）時，就能隨之切換 HTML 的可用狀態。</p>
 <h2 id="動態切換-className-的多種寫法"><a href="#動態切換-className-的多種寫法" class="headerlink" title="動態切換 className 的多種寫法"></a>動態切換 className 的多種寫法</h2><ul>
-<li><p>用物件帶值：在 <a href="https://gretema.github.io/Vuejs/20191218/150943901/">Vue 基礎概述 (下)</a> 講過，也就是在要切換 <code>className</code> 的 HTML 元素上使用 <code>v-bind</code> 並且值用<strong>物件形式</strong>帶入，像下面這樣：<br><code>:class=&quot;{&#39;要加入的 className&#39;: 判斷式}&quot;</code> </p>
+<li><p>用物件帶值：在 <a href="https://gretema.github.io/Vuejs/20191218/150943901/">Vue 基礎概述 (下)</a> 講過，也就是在要切換 <code>className</code> 的 HTML 元素上使用 <code>v-bind</code> 並且值用<strong>物件形式</strong>帶入，像下面這樣：<br><code>:class=&quot;{&#39;要加入的 className&#39;: 判斷式}&quot;</code></p>
 </li>
-<li><p>用陣列帶值：在 data 創一個<strong>空陣列</strong>，在要套用 <code>className</code> 的元素上設定 <code>:class=&quot;data 陣列名&quot;</code>，觸發切換的元素加上 <code>v-model=&quot;data 陣列名&quot;</code> 及 <code>value=&quot;要切換的 className&quot;</code>，這樣如果要啟用 <code>className</code> 就能透過觸發元素將 <code>value</code> 傳進 <code>data</code> 裡的陣列，而如果要拿掉 <code>className</code> 一樣也是透過觸發元素刪掉該陣列中的 <code>value</code>。</p>
+<li><p>用陣列帶值：在 data 創一個<strong>空陣列</strong>，在要套用 <code>className</code> 的元素上設定 <code>:class=&quot;data 陣列名&quot;</code>，觸發樣式切換的元素（例如 checkbox）加上 <code>v-model=&quot;data 陣列名&quot;</code> 及 <code>value=&quot;要切換的 className&quot;</code>，這樣如果要啟用 <code>className</code> 就能透過觸發元素將 <code>value</code> 傳進 <code>data</code> 裡的陣列，而如果要拿掉 <code>className</code> 一樣也是透過觸發元素刪掉該陣列中的 <code>value</code>。</p>
 </li>
 </ul>
+<iframe src="https://codepen.io/gretema/embed/PoqVbLz?height=265&theme-id=light&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+
 <h2 id="插入行內樣式-style"><a href="#插入行內樣式-style" class="headerlink" title="插入行內樣式 (style)"></a>插入行內樣式 (style)</h2><ul>
-<li><p>用物件帶值：要注意 style 樣式屬性的名稱跟 CSS 不太一樣，style 的樣式屬性採用駝峰式命名法。也可以用<strong>參數</strong>的方式從 data 傳物件到 style 屬性，這樣做的話可以在物件內放入數個特性（樣式）</p>
+<li>用物件帶值：要注意 style 樣式屬性的名稱跟 CSS 不太一樣，style 的樣式屬性採用駝峰式命名法。也可以用<strong>參數</strong>的方式從 data 傳物件到 style 屬性，這樣做的話可以在物件內放入數個特性（樣式）</li>
+</ul>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 基本款 --&gt;</span></span><br><span class="line">:style="&#123;'樣式屬性': '樣式的值'&#125;"</span><br><span class="line"><span class="comment">&lt;!-- 傳參數版 --&gt;</span></span><br><span class="line">:style="styleObject"</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>用陣列帶值：陣列元素必須以<strong>物件方式</strong>寫入；或用<strong>參數</strong>，可以在陣列內放入數個物件參數。</p>
+
+<ul>
+<li>用陣列帶值：陣列元素必須以<strong>物件方式</strong>寫入；或用<strong>參數</strong>，可以在陣列內放入數個物件參數。</li>
+</ul>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 基本款 --&gt;</span></span><br><span class="line">[&#123;'樣式屬性1': '樣式的值1'&#125;, &#123;'樣式屬性2': '樣式的值2'&#125;]</span><br><span class="line"><span class="comment">&lt;!-- 傳參數版 --&gt;</span></span><br><span class="line">[styleObject1, styleObject2]</span><br></pre></td></tr></table></figure>
 
-</li>
-</ul>
 <h2 id="v-for-使用細節"><a href="#v-for-使用細節" class="headerlink" title="v-for 使用細節"></a>v-for 使用細節</h2><p>可以用於疊代 data 中的陣列及物件。</p>
 <h3 id="v-for-與-key-屬性"><a href="#v-for-與-key-屬性" class="headerlink" title="v-for 與 key 屬性"></a>v-for 與 key 屬性</h3><p>引述自官網：「使用 v-for 渲染的元素列表時，默認使用『就地更新』的策略。如果數據項的順序被改變，Vue 將<strong>不會移動 DOM 元素</strong>來匹配數據項的順序，而是就地更新每個元素，並且確保它們在每個索引位置正確渲染。」</p>
 <p>也就是說，預設狀況下，資料的<strong>索引值是固定的</strong>，當畫面上資料順序變換時，是將內容進行替換，而不是替換 DOM 元素位置。</p>
@@ -1288,15 +1291,16 @@
 <li><strong>負責輸出的 HTML 元素</strong> - 設定 <code>v-for=&quot;(item,key) in filterArray&quot;</code>（<code>filterArray</code> 初始狀態為空陣列）</li>
 </ul>
 <ol start="2">
-<li><p>在 <code>methods</code> 新增方法：</p>
+<li>在 <code>methods</code> 新增方法：</li>
+</ol>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">filterData: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> vm = <span class="keyword">this</span>;</span><br><span class="line">  <span class="comment">// 用 for loop 時裡面的 this 不是指向 Vue，所以要在外面先定義好 this</span></span><br><span class="line">  vm.filterArray = vm.arrayData.filter(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> item.name.match(vm.filterText);</span><br><span class="line">  <span class="comment">// 回傳與輸入文字相符的 name 值</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>⚠️ <code>match()</code> 方法：<br>用於在字串中檢索指定的值，此方法類似 <code>indexOf()</code>，不過它回傳的是指定的值而不是索引值。</p>
-</li>
-<li><p>實際運行</p>
+<ol start="3">
+<li>實際運行</li>
+</ol>
 <iframe src="https://codepen.io/gretema/embed/OJJdgor?height=265&theme-id=default&default-tab=js,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
 
-</li>
-</ol>
 <h3 id="v-for-無法運行的狀況"><a href="#v-for-無法運行的狀況" class="headerlink" title="v-for 無法運行的狀況"></a>v-for 無法運行的狀況</h3><p>在 <code>methods</code> 方法中用陣列特性及索引去修改 <code>data</code> 資料是無效的，因為 Vue 無法探測普通的新增屬性。</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 無效的修改方式</span></span><br><span class="line"><span class="keyword">this</span>.arrayData.length = <span class="number">0</span>; <span class="comment">// arrayData 的陣列元素依然存在陣列中</span></span><br><span class="line"><span class="keyword">this</span>.arrayData[<span class="number">0</span>] = &#123;</span><br><span class="line">  name: <span class="string">'阿強'</span>,</span><br><span class="line">  age: <span class="number">99</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1311,6 +1315,7 @@
 <p>你可以把 <code>&lt;template&gt;</code> 想成文件裡面，被儲存以待<strong>稍後使用</strong>的內容片段。在頁面載入時，解析器雖然會處理 <code>&lt;template&gt;</code> 元件的內容，但元素本身並<strong>不會被渲染</strong>。</p>
 <p><code>&lt;template&gt;</code> 內的內容可以用 JavaScript 抓取節點、複製到要插入的 DOM 之下，類似這樣：</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 在 template 上面有一些表格元素 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span> <span class="attr">id</span>=<span class="string">"itemRow"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// JS</span></span><br><span class="line"><span class="keyword">var</span> template = <span class="built_in">document</span>.querySelector(<span class="string">'#itemRow'</span>);</span><br><span class="line"><span class="keyword">var</span> td = t.content.querySelectorAll(<span class="string">"td"</span>);</span><br><span class="line">td[<span class="number">0</span>].textContent = <span class="string">"123"</span>;</span><br><span class="line">td[<span class="number">1</span>].textContent = <span class="string">"abc"</span>;</span><br><span class="line"><span class="keyword">var</span> clone = <span class="built_in">document</span>.importNode(template.content, <span class="literal">true</span>);</span><br><span class="line">要插入的DOM.appendChild(clone);</span><br></pre></td></tr></table></figure>
 
 <p>⚠️ 關於 <code>importNode()</code><br><code>importNode()</code> 是 <code>document</code> 物件的方法，功用是把一個節點從另一個文件（document）複製到該文件以便運用。第二個參數（布林值）必填，如果為 <code>true</code>，會複製 <code>importNode()</code> 的所有子節點。</p>
