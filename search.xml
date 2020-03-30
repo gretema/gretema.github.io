@@ -1265,7 +1265,7 @@
 <li><p>用陣列帶值：在 data 創一個<strong>空陣列</strong>，在要套用 <code>className</code> 的元素上設定 <code>:class=&quot;data 陣列名&quot;</code>，觸發樣式切換的元素（例如 checkbox）加上 <code>v-model=&quot;data 陣列名&quot;</code> 及 <code>value=&quot;要切換的 className&quot;</code>，這樣如果要啟用 <code>className</code> 就能透過觸發元素將 <code>value</code> 傳進 <code>data</code> 裡的陣列，而如果要拿掉 <code>className</code> 一樣也是透過觸發元素刪掉該陣列中的 <code>value</code>。</p>
 </li>
 </ul>
-<iframe src="https://codepen.io/gretema/embed/PoqVbLz?height=265&theme-id=light&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
+<iframe src="https://codepen.io/gretema/embed/PoqVbLz?height=265&theme-id=dark&default-tab=html,result" width="100%" height="300" frameborder="0" loading="lazy" allowfullscreen></iframe>
 
 <h2 id="插入行內樣式-style"><a href="#插入行內樣式-style" class="headerlink" title="插入行內樣式 (style)"></a>插入行內樣式 (style)</h2><ul>
 <li>用物件帶值：要注意 style 樣式屬性的名稱跟 CSS 不太一樣，style 的樣式屬性採用駝峰式命名法。也可以用<strong>參數</strong>的方式從 data 傳物件到 style 屬性，這樣做的話可以在物件內放入數個特性（樣式）</li>
