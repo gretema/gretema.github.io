@@ -1312,7 +1312,7 @@
 <ol>
 <li>在 <code>data</code> 先寫好要放進 <code>&lt;option&gt;</code> 的資料（陣列格式）</li>
 <li>寫一個 HTML <code>&lt;option&gt;</code>，並設定 <code>:value=&quot;item&quot;</code>，及 <code>v-for=&quot;item in 資料陣列&quot;</code></li>
-<li>在 <code>&lt;option&gt;</code> 中插入 <code></code></li>
+<li>在 <code>&lt;option&gt;</code> 中插入選項文字：雙花括號包著 <code>item</code></li>
 </ol>
 <h3 id="lt-select-gt-多選："><a href="#lt-select-gt-多選：" class="headerlink" title="&lt;select&gt; 多選："></a><code>&lt;select&gt;</code> 多選：</h3><p>跟上面的程式碼大同小異，不過要在 <code>&lt;select&gt;</code> 多加一個 <code>multiple</code> 屬性。</p>
 <h3 id="checkbox-與-data-的切換"><a href="#checkbox-與-data-的切換" class="headerlink" title="checkbox 與 data 的切換"></a>checkbox 與 data 的切換</h3><p>在 checkobx 使用 <code>true-value</code> 與 <code>false-value</code> 屬性，例如下面的程式碼，當勾選（<code>true</code>）時會使 <code>data.sex</code> 為男生，沒勾選（<code>false</code>）時會使 <code>data.sex</code> 為女生。</p>
