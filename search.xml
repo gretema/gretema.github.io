@@ -1,7 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>[Vue] Vuex 資料狀態管理學習筆記（上）</title>
+    <title>[Vue] Vuex 資料狀態管理學習筆記之實作起手式</title>
+    <url>/Vuejs/20200330/3884529085/</url>
+    <content><![CDATA[<p>上週的 Vuex 筆記中介紹完了基本概念，這週的筆記就著重在實作上囉！<br>不過由於實作的部分篇幅過長，所以會分成比較多篇來發布。</p>
+<a id="more"></a>
+
+<h3 id="新增一個-store-管理網站資料狀態"><a href="#新增一個-store-管理網站資料狀態" class="headerlink" title="新增一個 store 管理網站資料狀態"></a>新增一個 store 管理網站資料狀態</h3><ol>
+<li>下載 Vuex，並到 main.js 啟用 Vuex</li>
+<li>在 src 新增 store 資料夾，並在裡面新增 index.js</li>
+<li>在 index.js 中也要引入 Vue 及 Vuex （參照：<a href="https://vuex.vuejs.org/zh/installation.html" target="_blank" rel="external nofollow noopener noreferrer">官網安裝說明</a>）</li>
+<li>接著使用以下語法：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Vuex.Store(&#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>回到 main.js，把 store/index.js import 進來，下方的 new Vue 中也要引入 store (寫在 router 的下一行)</li>
+</ol>
+<h3 id="將-vue-loading-overlay-的讀取效果存入-store"><a href="#將-vue-loading-overlay-的讀取效果存入-store" class="headerlink" title="將 vue-loading-overlay 的讀取效果存入 store"></a>將 vue-loading-overlay 的讀取效果存入 store</h3><ol>
+<li>在 store/index.js 的物件中，新增 state 物件，並在裡面加入 <code>isLoading</code> 特性，先預設值為 <code>false</code></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Vuex.Store(&#123;</span><br><span class="line">  state: &#123;</span><br><span class="line">    isLoading: <span class="literal">true</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>此時，其他元件中就不需要有 <code>isLoading</code> 這個資料，而有用到 <code>isLoading</code> 的程式碼也要先註解起來</p>
+</li>
+<li><p>如果外層元件跟內元件都要使用讀取效果時，應該要統一把效果加在外層。此時外層元件必須使用 computed 來操作 store 中的資料，而且 <code>isLoading</code> 這個變數要變成 function 的形式，之所以 function 要取名為 <code>isLoading</code> 是因為要對應 vue-loading-overlay 的模板 <code>&lt;loading :active.sync=&quot;isLoading&quot;&gt;&lt;/loading&gt;</code></p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 要使用讀取效果的外層元件</span></span><br><span class="line">computed: &#123;</span><br><span class="line">  isLoading() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.$store.state.isLoading</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>接著來到內元件，內元件就不需要 loading 模板了，但依然需要在 <code>methods</code> 中切換 store 的 <code>isLoading</code> 值。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">getProducts() &#123;</span><br><span class="line">  <span class="keyword">const</span> api = <span class="string">`<span class="subst">$&#123;process.env.APIPATH&#125;</span>/api/<span class="subst">$&#123;process.env.CUSTOMPATH&#125;</span>/admin/products`</span>;</span><br><span class="line">  <span class="keyword">const</span> vm = <span class="keyword">this</span>;</span><br><span class="line">  <span class="comment">// 開啟 loading</span></span><br><span class="line">  vm.$store.state.isLoading = <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">this</span>.$http.get(api).then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(response.data);</span><br><span class="line">    <span class="comment">// 關閉 loading</span></span><br><span class="line">    vm.$store.state.isLoading = <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 存到陣列裡</span></span><br><span class="line">    vm.products = response.data.products;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-Actions-及-Mutations-變更資料狀態"><a href="#使用-Actions-及-Mutations-變更資料狀態" class="headerlink" title="使用 Actions 及 Mutations 變更資料狀態"></a>使用 Actions 及 Mutations 變更資料狀態</h3><p>上一段改變資料狀態的方法其實並不正確，透過 Vue dev tool 可以發現資料狀態並沒有響應式，因此這一段就要來介紹如何正確地改變資料狀態。（參照：<a href="https://vuex.vuejs.org/zh/guide/actions.html" target="_blank" rel="external nofollow noopener noreferrer">官方文件 Action 介紹</a>）</p>
+<ol>
+<li><p>在 store 新增 actions 物件及 mutations 物件。</p>
+</li>
+<li><p>在 actions 中新增 <code>updateLoading()</code> 並傳入兩個參數，分別是 <code>context</code> 及 <code>status</code>。第一個參數是固定的，第二個參數則是開發者自訂的，由外部傳進來。（參照：<a href="https://vuex.vuejs.org/zh/api/#actions" target="_blank" rel="external nofollow noopener noreferrer">官網 API 參考</a>）</p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">actions: &#123;</span><br><span class="line">  <span class="comment">// status 原始的參數名稱為 payload</span></span><br><span class="line">  updateLoading(context, status)&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>Mutations 中的函式命名方式建議採用常數命名，也就是所有字母都用大寫。Mutations 要傳入的參數也有兩個，第一個固定都是 <code>state</code>（代表資料狀態），另一個是 <code>payload</code>（在此我們自定義名稱為 <code>status</code>）。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">mutations: &#123;</span><br><span class="line">  <span class="comment">// 第二個參數為 updateLoading 第二個參數所代表的值</span></span><br><span class="line">  LOADING(state, status) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>由於我們已經希望達成的任務就是修改 <code>state</code> 資料狀態，所以可以先在 mutations 裡寫好 <code>state</code> 變更後的結果。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">mutations: &#123;</span><br><span class="line">  <span class="comment">// 第二個參數為 updateLoading 第二個參數所代表的值</span></span><br><span class="line">  LOADING(state, status) &#123;</span><br><span class="line">    state.isLoading = status;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>接著再到 actions 來觸發 mutations 的變化。使用 <code>context</code> 的 <code>commit</code> 方法，並帶入對應的 <code>mutations</code> 名稱與要傳到該 <code>mutations</code> 的參數（<code>status</code>）。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">actions: &#123;</span><br><span class="line">  updateLoading(context, status)&#123;</span><br><span class="line">    context.commit(<span class="string">'LOADING'</span>, status);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>回到內元件，原本在 <code>methods</code> 直接操作 store 資料的程式碼要刪掉，改成使用 <code>dispatch()</code> 來觸發 <code>actions</code> 中的函式。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 開啟讀取效果</span></span><br><span class="line"><span class="comment">// 第二個參數帶入新的值</span></span><br><span class="line">vm.$store.dispatch(<span class="string">'updateLoading'</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 關閉讀取效果</span></span><br><span class="line">vm.$store.dispatch(<span class="string">'updateLoading'</span>, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>在 Vue 的開發者工具中，可以看到 Vuex 管理的資料，以及不同時間點資料個別的狀態。</li>
+</ol>
+<h4 id="store-中-commit-與-dispatch-的區別"><a href="#store-中-commit-與-dispatch-的區別" class="headerlink" title="store 中 commit() 與 dispatch() 的區別"></a>store 中 <code>commit()</code> 與 <code>dispatch()</code> 的區別</h4><p>這兩種方法都用在 <code>actions</code> 的函式中，然而，<code>commit()</code> 用來觸發 <code>mutations</code> 中的資料函式；<code>dispatch()</code> 則是用來觸發其他 <code>actions</code> 中的函式，而且可以帶入載荷（payload，也就是參數值）。</p>
+<h3 id="使用嚴謹模式可以更正確使用-Vuex"><a href="#使用嚴謹模式可以更正確使用-Vuex" class="headerlink" title="使用嚴謹模式可以更正確使用 Vuex"></a>使用嚴謹模式可以更正確使用 Vuex</h3><p>在 <code>state</code> 物件上面新增 <code>strict: true,</code> 這行程式碼，當我們寫出不合乎 Vuex 規範的程式碼時，console 就會跳錯，例如不應該在 actions 操作資料狀態等等。</p>
+<p>但是，使用嚴謹模式將會有一個很不便利的地方，那就是在採用雙向綁定時不能直接用 <code>v-model</code>，而是必須多繞點彎，在 <code>computed</code> 設定 getter 跟 setter，詳細做法可參考官方文件：<a href="https://vuex.vuejs.org/zh/guide/forms.html" target="_blank" rel="external nofollow noopener noreferrer">表单处理</a>。</p>
+<h3 id="使用-Actions-取得遠端資料"><a href="#使用-Actions-取得遠端資料" class="headerlink" title="使用 Actions 取得遠端資料"></a>使用 Actions 取得遠端資料</h3><ol>
+<li>起手式是在 store 中 import axios：<code>import axios from &#39;axios&#39;</code>。</li>
+<li>先在 <code>state</code> 中定義資料結構，用來儲存遠端取回來的資料。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">state: &#123;</span><br><span class="line">  ...</span><br><span class="line">  products: [],</span><br><span class="line">  categories: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>把原本元件中負責 AJAX 的函式貼到 <code>actions</code> 裡面，記得帶入 <code>context</code> 參數，並對程式碼做修正。例如，把寫在 <code>updateLodaing()</code> 中的 <code>commit()</code> 移到這裡面（<code>status</code> 改成 <code>true</code> 或 <code>false</code>），代替原本的 <code>dispatch()</code>；AJAX 的方法要從 <code>this.$http</code> 改為 <code>axios</code>；還要記得把儲存遠端資料的程式碼移到 mutations 裡面。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">getProducts() &#123;</span><br><span class="line">  <span class="keyword">const</span> url = <span class="string">`<span class="subst">$&#123;process.env.VUE_APP_APIPATH&#125;</span>/api/<span class="subst">$&#123;process.env.VUE_APP_CUSTOMPATH&#125;</span>/products/all`</span>;</span><br><span class="line">  context.commit(<span class="string">'LOADING'</span>, <span class="literal">true</span>);</span><br><span class="line">  axios.get(url).then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">    context.commit(<span class="string">'PRODUCTS'</span>, response.data.products);</span><br><span class="line">    context.commit(<span class="string">'CATEGORIES'</span>, response.data.products);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'取得產品列表:'</span>, response);</span><br><span class="line">    context.commit(<span class="string">'LOADING'</span>, <span class="literal">false</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>在 mutations 新增函式來儲存遠端取回來的資料。<code>CATEGORIES()</code> 中的程式碼去複製元件中的 <code>getUnique()</code> 即可，不過 <code>const vm = this;</code> 不需要保留，並且 <code>forEach()</code> 的對象是 <code>payload</code> 參數。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">PRODUCTS(state, payload) &#123;</span><br><span class="line">  state.products = payload;</span><br><span class="line">&#125;,</span><br><span class="line">CATEGORIES(state, payload) &#123;</span><br><span class="line">  <span class="keyword">const</span> categories = <span class="keyword">new</span> <span class="built_in">Set</span>();</span><br><span class="line">  payload.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">    categories.add(item.category);</span><br><span class="line">  &#125;);</span><br><span class="line">  state.categories = <span class="built_in">Array</span>.from(categories);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>接著要把 actions 中的函式掛載到元件中。到 <code>methods</code> 中，在 actions 對應的函式中呼叫 actions。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">getProducts() &#123;</span><br><span class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'getProducts'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>最後則是要把資料渲染到畫面上。在 computed 中新增函式來達成，函式的名稱依照資料特性名稱來取。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">categories() &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.$store.state.categories;</span><br><span class="line">&#125;,</span><br><span class="line">products() &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.$store.state.products;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>w3HexSchool</tag>
+        <tag>Vuex</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[Vue] Vuex 資料狀態管理學習筆記之基本概念篇</title>
     <url>/Vuejs/20200323/1597330136/</url>
     <content><![CDATA[<p>最近為了鼠年全馬寫文活動，開始清點所有還沒公開發表的學習筆記，這就是其中一篇。<br>今天這篇會先簡介一下 Vuex 是什麼，篇幅會稍短，<br>然後下一篇就會寫到一些 Vuex 實際演練。</p>
 <a id="more"></a>
