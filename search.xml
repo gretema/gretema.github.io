@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Vuex 資料狀態管理學習筆記之功能實作篇</title>
+    <title>[Vue] Vuex 資料狀態管理學習筆記之功能實作篇</title>
     <url>/Vuejs/20200406/1863907667/</url>
     <content><![CDATA[<p>學習六角學院「Vue 出一個電商網站」課程時，課程後半段是跟著老師的示範，實作出電商網站的完整功能。</p>
 <p>這篇筆記便是紀錄了當時實作的部分功能：Navbar 中的購物車列表、商品頁側欄的商品分類。</p>
