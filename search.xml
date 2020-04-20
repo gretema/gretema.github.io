@@ -1,6 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[Vue] Vuex 資料狀態管理學習筆記之模組化資料運用</title>
+    <url>/Vuejs/20200420/127038282/</url>
+    <content><![CDATA[<p>這系列到目前為止，其實已經把 Vuex 基本的使用方式介紹得差不多了。<br>而本篇則是會介紹一些比之前進階一點的寫法，也就是將 Vuex 中管理的資料模組化，並以與之前不同的形式在元件中讀取資料。</p>
+<a id="more"></a>
+
+<h2 id="Vuex-中的-getters-mapGetters-mapActions"><a href="#Vuex-中的-getters-mapGetters-mapActions" class="headerlink" title="Vuex 中的 getters, mapGetters, mapActions"></a>Vuex 中的 getters, mapGetters, mapActions</h2><p>這一段要介紹的是：在元件中提取 Vuex 函式的新方法。</p>
+<ol>
+<li>在 store 中加上 <code>getters</code> 物件，把在元件中要用 <code>computed</code> 呈現在畫面上的資料移進來。移進來的形式是 function 形式，且帶入跟 <code>mutations</code> 一樣的參數（<code>state</code>）。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">getters: &#123;</span><br><span class="line">  categories(state) &#123;</span><br><span class="line">    <span class="keyword">return</span> state.categories;</span><br><span class="line">  &#125;,</span><br><span class="line">  products(state) &#123;</span><br><span class="line">    <span class="keyword">return</span> state.products;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>到要呈現畫面的元件中（Home.app），引入 Vuex 中的 <code>mapGetters</code>，注意，要用物件包住要引入項目。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; mapGetters &#125; <span class="keyword">from</span> <span class="string">'vuex'</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>移除原本 <code>computed</code> 中定義的資料函式，改用<strong>展開符號</strong>把 <code>mapGetters</code> 的內容取出來，並指定要取出裡面的哪些 gettets。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">computed: &#123;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  ...mapGetters([<span class="string">'categories'</span>, <span class="string">'products'</span>]),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>除了 <code>mutations</code> 可以改成 <code>getters</code>，<code>actions</code> 也能用這種方法，從 store 取出來用在元件上。首先在引入的地方，多增加 <code>mapActions</code> 的引入。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; mapGetters, mapActions &#125; <span class="keyword">from</span> <span class="string">'vuex'</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><code>mapActions</code> 可以用來替換元件中<strong>不需要帶入參數</strong>的 <code>methods</code> 函式，例如以下這樣：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原本是這樣</span></span><br><span class="line">getProducts() &#123;</span><br><span class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'getProducts'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用 mapActions 帶入</span></span><br><span class="line">...mapActions([<span class="string">'getProducts'</span>]),</span><br></pre></td></tr></table></figure>
+
+<h3 id="補充說明：mapActions-的使用時機"><a href="#補充說明：mapActions-的使用時機" class="headerlink" title="補充說明：mapActions 的使用時機"></a>補充說明：mapActions 的使用時機</h3><p><code>mapActions</code> 的使用時機，最簡單的辨別方式就是「需不需要帶入參數」，若需要就不能使用 <code>mapActions</code>。</p>
+<h2 id="模組化資料運用"><a href="#模組化資料運用" class="headerlink" title="模組化資料運用"></a>模組化資料運用</h2><p>場景從元件切回到 store。</p>
+<p>接下來我們要把 store 中的程式碼再做拆分（模組化），例如，將行為及資料分為兩大類：「取得產品」類及「取得購物車、新增刪除品項」類。</p>
+<p>以下以「取得產品」類為例，示範如何將資料模組化。</p>
+<ol>
+<li><p>在 store 資料夾新增 products.js</p>
+</li>
+<li><p>在裡面寫好 <code>export default {}</code> 後就可以複製 store 中的程式碼，移到這個物件裡。但因為這個檔案只放與產品相關的行為，所以跟購物車、讀取效果有關的程式碼就先移除。</p>
+</li>
+<li><p>把 axios import 進來</p>
+</li>
+<li><p>回到 store/index.js，把已經拆出去的程式碼刪掉，然後引入 products.js，並且幫 products.js 取一個模組名稱叫做 <code>productsModules</code>。</p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> productsModules <span class="keyword">from</span> <span class="string">'./products'</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>一樣是在 index.js 中，在 <code>getter</code> 物件下方新增 <code>modules</code> 物件，在裡面直接貼入 <code>modules</code> 名稱。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">modules: &#123;</span><br><span class="line">  productsModules,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="模組重要概念"><a href="#模組重要概念" class="headerlink" title="模組重要概念"></a>模組重要概念</h3><p>在 products.js 中，<code>state</code> 是模組內的<strong>區域變數</strong>，除此以外 <code>actions</code>、<code>mutations</code>、<code>getters</code> 等都是<strong>全域變數</strong>。</p>
+<p>所以如果 store 中有其他模組使用與 products.js 相同名稱的 <code>actions</code>、<code>mutations</code>、<code>getters</code>，就會出現錯誤。</p>
+<p>如果在元件中想要讀取模組的 <code>state</code> 變數，要這樣寫：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.$store.state.productsModules.products);</span><br><span class="line"><span class="comment">// state 後面還要多一層 productsModules 才讀得到模組內的資料</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果希望 <code>actions</code>、<code>mutations</code>、<code>getters</code> 都變成模組內的區域變數，該怎麼做？</p>
+</blockquote>
+<p>只要在 <code>state</code> 上一行加上 <code>namespaced: true</code>，它們就都會變成區域變數了，但此時元件就沒辦法直接讀到這些行為。</p>
+<p>解決方法是，當使用 <code>mapGetters()</code> 時，也把模組名稱帶進來：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">...mapGetters(<span class="string">'productsModules'</span>, [<span class="string">'categories'</span>, <span class="string">'products'</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>不過，當元件內同時要讀取模組資料及全域資料時，就要標示出哪些是全域資料，標示的方法是在 <code>commit()</code> 中帶入 <code>{ root: true }</code> 當參數：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// LOADING 是定義在 index.js 中的全域變數</span></span><br><span class="line">context.commit(<span class="string">'LOADING'</span>, <span class="literal">true</span>, &#123; <span class="attr">root</span>: <span class="literal">true</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Vuex 筆記到此差不多告一個段落了～</p>
+<p>這些筆記都是我在上六角學院的 Vue.js 課程中寫下的筆記，不過我可能還是有寫得不夠仔細的地方，<br>所以附上兩個我覺得整理得很不錯的文章給各位一起參考：</p>
+<ul>
+<li><a href="https://blog.hinablue.me/2019-ithome-ironman-day-8/" target="_blank" rel="external nofollow noopener noreferrer">[IT 鐵人賽] Vuex 基本入門Day 8 - HINA::工程幼稚園</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/100941659" target="_blank" rel="external nofollow noopener noreferrer">vuex：弄懂mapState、mapGetters、mapMutations、mapActions</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Vuejs</category>
+      </categories>
+      <tags>
+        <tag>Vue</tag>
+        <tag>w3HexSchool</tag>
+        <tag>Vuex</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[Vue] Vuex 資料狀態管理學習筆記之功能實作篇</title>
     <url>/Vuejs/20200406/1863907667/</url>
     <content><![CDATA[<p>學習六角學院「Vue 出一個電商網站」課程時，課程後半段是跟著老師的示範，實作出電商網站的完整功能。</p>
