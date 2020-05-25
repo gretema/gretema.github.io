@@ -47,22 +47,22 @@
   };
 </script>
 
-  <meta name="description" content="這系列到目前為止，其實已經把 Vuex 基本的使用方式介紹得差不多了。而本篇則是會介紹一些比之前進階一點的寫法，也就是將 Vuex 中管理的資料模組化，並以與之前不同的形式在元件中讀取資料。">
+  <meta name="description" content="這篇文章是我在開始工作前學習 Gulp 與 EJS 時的筆記，現在的公司雖然不是用 Gulp 也不是用 EJS，而是採用一個電商後台服務 Shopify 自創的模板語言（liquid），但因為同為模板語言，因此讓我想起曾寫過這篇跟 EJS 有關的筆記，所以就拿來發鐵人賽啦～">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[Vue] Vuex 資料狀態管理學習筆記之模組化資料運用">
-<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Vuejs&#x2F;20200420&#x2F;127038282&#x2F;index.html">
+<meta property="og:title" content="[Gulp] 在 Gulp 專案中引入 EJS template">
+<meta property="og:url" content="http:&#x2F;&#x2F;gretema.github.io&#x2F;Gulp&#x2F;20200525&#x2F;2363080042&#x2F;index.html">
 <meta property="og:site_name" content="馬格蕾特的前端勇者日誌">
-<meta property="og:description" content="這系列到目前為止，其實已經把 Vuex 基本的使用方式介紹得差不多了。而本篇則是會介紹一些比之前進階一點的寫法，也就是將 Vuex 中管理的資料模組化，並以與之前不同的形式在元件中讀取資料。">
+<meta property="og:description" content="這篇文章是我在開始工作前學習 Gulp 與 EJS 時的筆記，現在的公司雖然不是用 Gulp 也不是用 EJS，而是採用一個電商後台服務 Shopify 自創的模板語言（liquid），但因為同為模板語言，因此讓我想起曾寫過這篇跟 EJS 有關的筆記，所以就拿來發鐵人賽啦～">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2020-04-20T02:56:11.000Z">
-<meta property="article:modified_time" content="2020-04-20T03:23:59.751Z">
+<meta property="article:published_time" content="2020-05-25T12:37:55.000Z">
+<meta property="article:modified_time" content="2020-05-25T12:42:59.351Z">
 <meta property="article:author" content="Greta Ma">
-<meta property="article:tag" content="Vue">
 <meta property="article:tag" content="w3HexSchool">
-<meta property="article:tag" content="Vuex">
+<meta property="article:tag" content="Gulp">
+<meta property="article:tag" content="EJS">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://gretema.github.io/Vuejs/20200420/127038282/">
+<link rel="canonical" href="http://gretema.github.io/Gulp/20200525/2363080042/">
 
 
 <script id="page-configurations">
@@ -74,7 +74,7 @@
   };
 </script>
 
-  <title>[Vue] Vuex 資料狀態管理學習筆記之模組化資料運用 | 馬格蕾特的前端勇者日誌</title>
+  <title>[Gulp] 在 Gulp 專案中引入 EJS template | 馬格蕾特的前端勇者日誌</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154635603-1"></script>
     <script>
@@ -215,7 +215,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/Vuejs/20200420/127038282/">
+    <link itemprop="mainEntityOfPage" href="http://gretema.github.io/Gulp/20200525/2363080042/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -228,7 +228,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          [Vue] Vuex 資料狀態管理學習筆記之模組化資料運用
+          [Gulp] 在 Gulp 專案中引入 EJS template
         </h2>
 
         <div class="post-meta">
@@ -239,7 +239,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2020-04-20 10:56:11 / 修改時間：11:23:59" itemprop="dateCreated datePublished" datetime="2020-04-20T10:56:11+08:00">2020-04-20</time>
+              <time title="創建時間：2020-05-25 20:37:55 / 修改時間：20:42:59" itemprop="dateCreated datePublished" datetime="2020-05-25T20:37:55+08:00">2020-05-25</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -247,8 +247,8 @@
               </span>
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vuejs/" itemprop="url" rel="index">
-                    <span itemprop="name">Vuejs</span>
+                  <a href="/categories/Gulp/" itemprop="url" rel="index">
+                    <span itemprop="name">Gulp</span>
                   </a>
                 </span>
             </span>
@@ -262,8 +262,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/Vuejs/20200420/127038282/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Vuejs/20200420/127038282/" itemprop="commentCount"></span>
+    <a title="disqus" href="/Gulp/20200525/2363080042/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Gulp/20200525/2363080042/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -278,78 +278,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>這系列到目前為止，其實已經把 Vuex 基本的使用方式介紹得差不多了。<br>而本篇則是會介紹一些比之前進階一點的寫法，也就是將 Vuex 中管理的資料模組化，並以與之前不同的形式在元件中讀取資料。</p>
+        <p>這篇文章是我在開始工作前學習 Gulp 與 EJS 時的筆記，現在的公司雖然不是用 Gulp 也不是用 EJS，而是採用一個電商後台服務 Shopify 自創的模板語言（liquid），但因為同為模板語言，因此讓我想起曾寫過這篇跟 EJS 有關的筆記，所以就拿來發鐵人賽啦～</p>
 <a id="more"></a>
 
-<h2 id="Vuex-中的-getters-mapGetters-mapActions"><a href="#Vuex-中的-getters-mapGetters-mapActions" class="headerlink" title="Vuex 中的 getters, mapGetters, mapActions"></a>Vuex 中的 getters, mapGetters, mapActions</h2><p>這一段要介紹的是：在元件中提取 Vuex 函式的新方法。</p>
-<ol>
-<li>在 store 中加上 <code>getters</code> 物件，把在元件中要用 <code>computed</code> 呈現在畫面上的資料移進來。移進來的形式是 function 形式，且帶入跟 <code>mutations</code> 一樣的參數（<code>state</code>）。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">getters: &#123;</span><br><span class="line">  categories(state) &#123;</span><br><span class="line">    <span class="keyword">return</span> state.categories;</span><br><span class="line">  &#125;,</span><br><span class="line">  products(state) &#123;</span><br><span class="line">    <span class="keyword">return</span> state.products;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如何在 Gulp 專案中安裝 EJS 可以參考<a href="https://hsiangfeng.github.io/gulp/20190613/2073498620/" target="_blank" rel="external nofollow noopener noreferrer">這是在講 Gulp 不是飲料是任務自動化工具這件事之番外篇：加入 ejs 篇</a>。</p>
+<p>以下內容關於是如何在專案中撰寫 EJS。</p>
+<h2 id="gulpfile-js"><a href="#gulpfile-js" class="headerlink" title="gulpfile.js"></a>gulpfile.js</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ejs block</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ejs</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.src([<span class="string">'./src/templates/**.ejs'</span>, <span class="string">'!./src/templates/**/_*.ejs'</span>])</span><br><span class="line">    .pipe($.ejs(&#123;</span><br><span class="line">      msg: <span class="string">'Hello Gulp!'</span>,</span><br><span class="line">    &#125;))</span><br><span class="line">    .pipe($.rename(&#123; <span class="attr">extname</span>: <span class="string">'.html'</span> &#125;))</span><br><span class="line">    .pipe($.<span class="keyword">if</span>(options.env === <span class="string">'prod'</span>, $.htmlmin(&#123; <span class="attr">collapseWhitespace</span>: <span class="literal">true</span> &#125;)))</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'./public/'</span>))</span><br><span class="line">    .pipe(browserSync.stream());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// watch files</span></span><br><span class="line">gulp.task(<span class="string">'watch'</span>, gulp.parallel(<span class="string">'browser-sync'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="comment">// 改第一行</span></span><br><span class="line">  gulp.watch(<span class="string">'./src/templates/**/*.ejs'</span>, gulp.series(<span class="string">'ejs'</span>));</span><br><span class="line">  gulp.watch(<span class="string">'./src/sass/**/*.scss'</span>, gulp.series(<span class="string">'scss'</span>));</span><br><span class="line">  gulp.watch(<span class="string">'./src/js/**/*.js'</span>, gulp.series(<span class="string">'babel'</span>));</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>到要呈現畫面的元件中（Home.app），引入 Vuex 中的 <code>mapGetters</code>，注意，要用物件包住要引入項目。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; mapGetters &#125; <span class="keyword">from</span> <span class="string">'vuex'</span>;</span><br></pre></td></tr></table></figure>
+<p>如果有需要載入其他套件的 js 檔，需要再寫一個段落來整合。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">vendorsJs</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.src([</span><br><span class="line">    <span class="string">'./node_modules/jquery/dist/**/jquery.min.js'</span>,</span><br><span class="line">    <span class="string">'./node_modules/popper.js/dist/umd/**/popper.min.js'</span>,</span><br><span class="line">    <span class="string">'./node_modules/bootstrap/dist/js/**/bootstrap.bundle.min.js'</span>,</span><br><span class="line">    <span class="string">'./node_modules/wowjs/dist/wow.min.js'</span>,</span><br><span class="line">  ])</span><br><span class="line">    .pipe($.concat(<span class="string">'vendors.js'</span>))</span><br><span class="line">    .pipe(gulp.dest(<span class="string">'./public/javascript'</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<ol start="3">
-<li>移除原本 <code>computed</code> 中定義的資料函式，改用<strong>展開符號</strong>把 <code>mapGetters</code> 的內容取出來，並指定要取出裡面的哪些 gettets。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">computed: &#123;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  ...mapGetters([<span class="string">'categories'</span>, <span class="string">'products'</span>]),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="專案資料夾結構"><a href="#專案資料夾結構" class="headerlink" title="專案資料夾結構"></a>專案資料夾結構</h2><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">src/</span><br><span class="line">  <span class="string">|-- templates/</span></span><br><span class="line">        <span class="string">|-- index/</span></span><br><span class="line">        <span class="string">|-- layout/</span></span><br><span class="line">        <span class="string">|-- index.ejs</span></span><br></pre></td></tr></table></figure>
 
-<ol start="4">
-<li>除了 <code>mutations</code> 可以改成 <code>getters</code>，<code>actions</code> 也能用這種方法，從 store 取出來用在元件上。首先在引入的地方，多增加 <code>mapActions</code> 的引入。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; mapGetters, mapActions &#125; <span class="keyword">from</span> <span class="string">'vuex'</span>;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li><code>mapActions</code> 可以用來替換元件中<strong>不需要帶入參數</strong>的 <code>methods</code> 函式，例如以下這樣：</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原本是這樣</span></span><br><span class="line">getProducts() &#123;</span><br><span class="line">  <span class="keyword">this</span>.$store.dispatch(<span class="string">'getProducts'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用 mapActions 帶入</span></span><br><span class="line">...mapActions([<span class="string">'getProducts'</span>]),</span><br></pre></td></tr></table></figure>
-
-<h3 id="補充說明：mapActions-的使用時機"><a href="#補充說明：mapActions-的使用時機" class="headerlink" title="補充說明：mapActions 的使用時機"></a>補充說明：mapActions 的使用時機</h3><p><code>mapActions</code> 的使用時機，最簡單的辨別方式就是「需不需要帶入參數」，若需要就不能使用 <code>mapActions</code>。</p>
-<h2 id="模組化資料運用"><a href="#模組化資料運用" class="headerlink" title="模組化資料運用"></a>模組化資料運用</h2><p>場景從元件切回到 store。</p>
-<p>接下來我們要把 store 中的程式碼再做拆分（模組化），例如，將行為及資料分為兩大類：「取得產品」類及「取得購物車、新增刪除品項」類。</p>
-<p>以下以「取得產品」類為例，示範如何將資料模組化。</p>
-<ol>
-<li><p>在 store 資料夾新增 products.js</p>
-</li>
-<li><p>在裡面寫好 <code>export default {}</code> 後就可以複製 store 中的程式碼，移到這個物件裡。但因為這個檔案只放與產品相關的行為，所以跟購物車、讀取效果有關的程式碼就先移除。</p>
-</li>
-<li><p>把 axios import 進來</p>
-</li>
-<li><p>回到 store/index.js，把已經拆出去的程式碼刪掉，然後引入 products.js，並且幫 products.js 取一個模組名稱叫做 <code>productsModules</code>。</p>
-</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> productsModules <span class="keyword">from</span> <span class="string">'./products'</span>;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>一樣是在 index.js 中，在 <code>getter</code> 物件下方新增 <code>modules</code> 物件，在裡面直接貼入 <code>modules</code> 名稱。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">modules: &#123;</span><br><span class="line">  productsModules,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="模組重要概念"><a href="#模組重要概念" class="headerlink" title="模組重要概念"></a>模組重要概念</h3><p>在 products.js 中，<code>state</code> 是模組內的<strong>區域變數</strong>，除此以外 <code>actions</code>、<code>mutations</code>、<code>getters</code> 等都是<strong>全域變數</strong>。</p>
-<p>所以如果 store 中有其他模組使用與 products.js 相同名稱的 <code>actions</code>、<code>mutations</code>、<code>getters</code>，就會出現錯誤。</p>
-<p>如果在元件中想要讀取模組的 <code>state</code> 變數，要這樣寫：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.$store.state.productsModules.products);</span><br><span class="line"><span class="comment">// state 後面還要多一層 productsModules 才讀得到模組內的資料</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>如果希望 <code>actions</code>、<code>mutations</code>、<code>getters</code> 都變成模組內的區域變數，該怎麼做？</p>
-</blockquote>
-<p>只要在 <code>state</code> 上一行加上 <code>namespaced: true</code>，它們就都會變成區域變數了，但此時元件就沒辦法直接讀到這些行為。</p>
-<p>解決方法是，當使用 <code>mapGetters()</code> 時，也把模組名稱帶進來：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...mapGetters(<span class="string">'productsModules'</span>, [<span class="string">'categories'</span>, <span class="string">'products'</span>]);</span><br></pre></td></tr></table></figure>
-
-<p>不過，當元件內同時要讀取模組資料及全域資料時，就要標示出哪些是全域資料，標示的方法是在 <code>commit()</code> 中帶入 <code>{ root: true }</code> 當參數：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LOADING 是定義在 index.js 中的全域變數</span></span><br><span class="line">context.commit(<span class="string">'LOADING'</span>, <span class="literal">true</span>, &#123; <span class="attr">root</span>: <span class="literal">true</span> &#125;);</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>Vuex 筆記到此差不多告一個段落了～</p>
-<p>這些筆記都是我在上六角學院的 Vue.js 課程中寫下的筆記，不過我可能還是有寫得不夠仔細的地方，<br>所以附上兩個我覺得整理得很不錯的文章給各位一起參考：</p>
 <ul>
-<li><a href="https://blog.hinablue.me/2019-ithome-ironman-day-8/" target="_blank" rel="external nofollow noopener noreferrer">[IT 鐵人賽] Vuex 基本入門Day 8 - HINA::工程幼稚園</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/100941659" target="_blank" rel="external nofollow noopener noreferrer">vuex：弄懂mapState、mapGetters、mapMutations、mapActions</a></li>
+<li>index 資料夾：各區塊的 .ejs 檔，每個檔裡面的內容都是用 HTML 標籤撰寫的，且每個檔名開頭都是 <code>_</code>，例如 <code>_footer.ejs</code>。</li>
+<li>layout 資料夾：放一些共用的內容，例如 <code>&lt;head&gt;</code> 中的資訊、所有要載入的 CDN <code>&lt;script&gt;</code> 等。</li>
+<li>index.ejs：把以上兩個資料夾中所有 .ejs 排成一個完整的網頁。</li>
 </ul>
+<h2 id="index-ejs"><a href="#index-ejs" class="headerlink" title="index.ejs"></a>index.ejs</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%-</span> <span class="attr">include</span> ('<span class="attr">.</span>/<span class="attr">layout</span>/<span class="attr">_head.ejs</span>') %&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- header &amp; solvable --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%-</span> <span class="attr">include</span> ('<span class="attr">.</span>/<span class="attr">layout</span>/<span class="attr">_header.ejs</span>') %&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- capable --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%-</span> <span class="attr">include</span> ('<span class="attr">.</span>/<span class="attr">index</span>/<span class="attr">_capable.ejs</span>') %&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- formula --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%-</span> <span class="attr">include</span> ('<span class="attr">.</span>/<span class="attr">index</span>/<span class="attr">_formula.ejs</span>') %&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- footer --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%-</span> <span class="attr">include</span> ('<span class="attr">.</span>/<span class="attr">index</span>/<span class="attr">_footer.ejs</span>') %&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- script --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%-</span> <span class="attr">include</span> ('<span class="attr">.</span>/<span class="attr">layout</span>/<span class="attr">_script.ejs</span>') %&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>引入其他的 .ejs 檔，要用 <code>&lt;%- include (&#39;路徑&#39;) %&gt;</code> 標籤。</p>
 
     </div>
 
@@ -359,9 +307,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Vue/" rel="tag"># Vue</a>
               <a href="/tags/w3HexSchool/" rel="tag"># w3HexSchool</a>
-              <a href="/tags/Vuex/" rel="tag"># Vuex</a>
+              <a href="/tags/Gulp/" rel="tag"># Gulp</a>
+              <a href="/tags/EJS/" rel="tag"># EJS</a>
           </div>
 
         
@@ -370,13 +318,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Vuejs/20200406/1863907667/" rel="prev" title="[Vue] Vuex 資料狀態管理學習筆記之功能實作篇">
-      <i class="fa fa-chevron-left"></i> [Vue] Vuex 資料狀態管理學習筆記之功能實作篇
+    <a href="/%E9%96%8B%E7%99%BC%E7%B4%80%E9%8C%84/20200518/2522345259/" rel="prev" title="開發紀錄：商品分類實作">
+      <i class="fa fa-chevron-left"></i> 開發紀錄：商品分類實作
     </a></div>
-      <div class="post-nav-item">
-    <a href="/%E8%81%B7%E6%B6%AF%E8%88%87%E5%AD%B8%E7%BF%92/20200427/1054851528/" rel="next" title="講座筆記：人生策略與學習方法論">
-      講座筆記：人生策略與學習方法論 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -446,7 +391,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Vuex-中的-getters-mapGetters-mapActions"><span class="nav-number">1.</span> <span class="nav-text">Vuex 中的 getters, mapGetters, mapActions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#補充說明：mapActions-的使用時機"><span class="nav-number">1.1.</span> <span class="nav-text">補充說明：mapActions 的使用時機</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模組化資料運用"><span class="nav-number">2.</span> <span class="nav-text">模組化資料運用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模組重要概念"><span class="nav-number">2.1.</span> <span class="nav-text">模組重要概念</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gulpfile-js"><span class="nav-number">1.</span> <span class="nav-text">gulpfile.js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#專案資料夾結構"><span class="nav-number">2.</span> <span class="nav-text">專案資料夾結構</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#index-ejs"><span class="nav-number">3.</span> <span class="nav-text">index.ejs</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -604,9 +549,9 @@
       DISQUS.reset({
         reload: true,
         config: {page: {
-            url: "http://gretema.github.io/Vuejs/20200420/127038282/",
-            identifier: "Vuejs/20200420/127038282/",
-            title: "[Vue] Vuex 資料狀態管理學習筆記之模組化資料運用"
+            url: "http://gretema.github.io/Gulp/20200525/2363080042/",
+            identifier: "Gulp/20200525/2363080042/",
+            title: "[Gulp] 在 Gulp 專案中引入 EJS template"
           }
         }
       });
