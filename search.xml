@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[JS] 講座筆記：JavaScript 設計模式</title>
+    <url>/javascript/20200601/270454248/</url>
+    <content><![CDATA[<p>本篇筆記來自 2020.4.15 六角學院線上研討會，講者為卡斯伯老師。在這一次講座中，老師講解了關注點分離作為一種 JavaScript 設計模式是如何運作的。</p>
+<a id="more"></a>
+
+<h2 id="何謂關注點分離"><a href="#何謂關注點分離" class="headerlink" title="何謂關注點分離"></a>何謂關注點分離</h2><p>畫面歸畫面、邏輯歸邏輯、資料歸資料<del>、孫子龜孫子</del></p>
+<ul>
+<li>畫面：HTML 渲染方式，HTML 結構、樣式等等</li>
+<li>邏輯：處理資料的方法</li>
+<li>資料：就是資料</li>
+</ul>
+<p>MVC 也是屬於此概念。</p>
+<h2 id="開發技巧"><a href="#開發技巧" class="headerlink" title="開發技巧"></a>開發技巧</h2><ol>
+<li>將資料拆分出來</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = [</span><br><span class="line">  &#123;</span><br><span class="line">    first: <span class="string">'Mark'</span>,</span><br><span class="line">    last: <span class="string">'Otto'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    first: <span class="string">'Jacob'</span>,</span><br><span class="line">    last: <span class="string">'Thornton'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    first: <span class="string">'Larry'</span>,</span><br><span class="line">    first: <span class="string">'the Bird'</span></span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>一個區塊維持一種渲染模式（大多數框架就是讓開發者省去這段流程）</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> htmlString= <span class="string">''</span>;</span><br><span class="line">  data.forEach( <span class="function">(<span class="params">item, i</span>) =&gt;</span> &#123;</span><br><span class="line">    htmlString = htmlString + <span class="string">`&lt;tr&gt;</span></span><br><span class="line"><span class="string">        &lt;th scope="row"&gt;<span class="subst">$&#123; i + <span class="number">1</span> &#125;</span>&lt;/th&gt;</span></span><br><span class="line"><span class="string">        &lt;td&gt;<span class="subst">$&#123; item.first &#125;</span>&lt;/td&gt;</span></span><br><span class="line"><span class="string">        &lt;td&gt;<span class="subst">$&#123; item.last &#125;</span>&lt;/td&gt;</span></span><br><span class="line"><span class="string">        &lt;td&gt;&lt;button class="btn btn-outline-danger" data-id="<span class="subst">$&#123;i&#125;</span>"&gt;刪除&lt;/button&gt;&lt;/td&gt;</span></span><br><span class="line"><span class="string">      &lt;tr&gt;`</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>邏輯不會與渲染方式混在一起<br>此部分重點在於<strong>資料處理的熟練度</strong></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">removeItem</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> id = e.target.dataset.id;</span><br><span class="line">  data.splice(id, <span class="number">1</span>);</span><br><span class="line">  render();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addItem</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> newItem = &#123;</span><br><span class="line">    first: <span class="string">'Greta'</span>,</span><br><span class="line">    last: <span class="string">'Ma'</span></span><br><span class="line">  &#125;</span><br><span class="line">  data.push(newItem);</span><br><span class="line">  render();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><p><a href="https://paper.dropbox.com/doc/0415-JavaScript-bXc2gUg81pibTQMmAvmjL" target="_blank" rel="external nofollow noopener noreferrer">問答會共筆</a></p>
+]]></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>w3HexSchool</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[Gulp] 在 Gulp 專案中引入 EJS template</title>
     <url>/Gulp/20200525/2363080042/</url>
     <content><![CDATA[<p>這篇文章是我在開始工作前學習 Gulp 與 EJS 時的筆記，現在的公司雖然不是用 Gulp 也不是用 EJS，而是採用一個電商後台服務 Shopify 自創的模板語言（liquid），但因為同為模板語言，因此讓我想起曾寫過這篇跟 EJS 有關的筆記，所以就拿來發鐵人賽啦～</p>
