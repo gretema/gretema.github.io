@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>[JS] 講座筆記：JavaScript 設計模式</title>
+    <title>在工作中學 Git：rebase 指令</title>
+    <url>/Git/20200608/1285084183/</url>
+    <content><![CDATA[<p>在進入公司以前，我都是用 <code>git merge</code> 來合併分支；直到進入公司後，團隊都是用 <code>git rebase</code> 來合併，一開始很不習慣，到最近我才漸漸習慣這種合併方式，因此想把 <code>rebase</code> 指令適用的場景記錄下來，跟大家分享。</p>
+<a id="more"></a>
+
+<h2 id="什麼是-rebase"><a href="#什麼是-rebase" class="headerlink" title="什麼是 rebase"></a>什麼是 rebase</h2><p><code>rebase</code> 是 <code>merge</code> 以外的另一種合併方式，它會取出一連串的 commit，「複製」它們，然後把它們接在別的地方。</p>
+<p>跟 <code>merge</code> 的差別在於： <code>merge</code> 會產生額外的 commit 來合併兩個分支；而 <code>rebase</code> 則不會有額外的 commit，如果用線圖來表示的話，可以看到用 <code>rebase</code> 來合併分支時，線圖將會呈現一條直線。</p>
+<p>這樣一來，我們的 repo 將會有更好看的 commit 紀錄。</p>
+<p>這是用 <code>merge</code> 指令來合併的線圖：</p>
+<p><img src="https://i.imgur.com/2guwwkO.png" alt="Source: Learn Git Branching"></p>
+<p>這是使用 <code>rebase</code> 指令合併過後的線圖：</p>
+<p><img src="https://i.imgur.com/UH4vBmc.png" alt="Source: Learn Git Branching"></p>
+<h2 id="使用目的"><a href="#使用目的" class="headerlink" title="使用目的"></a>使用目的</h2><p>我在工作上使用 rebase 的目的是，為了在遠端合併時不發生衝突，需要事先讓本地端的 feature branch 的前段長得跟 develop branch 一樣，而在後段多出自己新增的 commit。</p>
+<h2 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h2><p><code>git rebase 要合併的分支</code></p>
+<h2 id="使用情境"><a href="#使用情境" class="headerlink" title="使用情境"></a>使用情境</h2><p><code>feature/add-addon-categories</code> 分支是從 <code>develop</code> 分支分出來的，在該分支做了一些開發後，準備要推到遠端、發 PR 給團隊成員 code review。在這之前，需要先 <code>rebase</code> 上游分支（<code>develop</code>），確保在遠端合併到 <code>develop</code> 時不會發生衝突。</p>
+<p>此時，就可以在 <code>feature/add-addon-categories</code> 中下這個指令：<code>git rebase develop</code></p>
+<h2 id="衝突"><a href="#衝突" class="headerlink" title="衝突"></a>衝突</h2><p><code>rebase</code> 的過程中跟 <code>merge</code> 一樣可能會遇到衝突，解衝突時一個 commit 要解一次，衝突解完後要依循以下步驟：<br><code>git add .</code> ⇒ <code>git rebase --continue</code> ⇒ 下一個衝突 ⇒ 重複。</p>
+<p>至於遇到衝突可以怎麼解，我就留到之後再分享啦～<del>不然我已經快沒梗了</del></p>
+<h2 id="狀況題"><a href="#狀況題" class="headerlink" title="狀況題"></a>狀況題</h2><h3 id="rebase-完-push-失敗，git-提示先-pull"><a href="#rebase-完-push-失敗，git-提示先-pull" class="headerlink" title="rebase 完 push 失敗，git 提示先 pull"></a>rebase 完 push 失敗，git 提示先 pull</h3><p>如果你的分支曾經推到遠端過，然後中間又 <code>rebase</code> 其他分支，那之後再 <code>push</code> 時，Git 就會叫你 <code>pull</code> 遠端下來再推一次。</p>
+<p>這是因為 Git 此時判定本地端的內容比遠端的內容還舊，所以才會出現這種提示，然而，<strong>此時不能 <code>pull</code></strong>，不然程式碼又會變成舊的！</p>
+<p>所以這時候的解法就是要用 <code>git push --force-with-lease</code> ，硬推上去更新遠端內容。</p>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ul>
+<li><a href="https://backlog.com/git-tutorial/tw/stepup/stepup2_8.html" target="_blank" rel="external nofollow noopener noreferrer">使用 rebase 合併【教學1 使用分支】 | 連猴子都能懂的Git入門指南 | 貝格樂（Backlog）</a></li>
+<li><a href="https://gitbook.tw/chapters/branch/merge-with-rebase.html" target="_blank" rel="external nofollow noopener noreferrer">另一種合併方式（使用 rebase） - 為你自己學 Git | 高見龍</a></li>
+<li><a href="https://learngitbranching.js.org/?locale=zh_TW" target="_blank" rel="external nofollow noopener noreferrer">Learn Git Branching</a></li>
+</ul>
+<hr>
+<p>都已經講到 <code>rebase</code> 了，感覺就應該要繼續講 <code>rebase -i</code>（互動式 rebase），不過就讓我挪到下禮拜再寫吧！<del>因為真的快沒題材了</del></p>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>w3HexSchool</tag>
+        <tag>Git</tag>
+        <tag>Rebase</tag>
+        <tag>GitFlow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[JS] 講座筆記：JavaScript 設計模式——關注點分離</title>
     <url>/javascript/20200601/270454248/</url>
     <content><![CDATA[<p>本篇筆記來自 2020.4.15 六角學院線上研討會，講者為卡斯伯老師。在這一次講座中，老師講解了關注點分離作為一種 JavaScript 設計模式是如何運作的。</p>
 <a id="more"></a>
@@ -35,6 +75,7 @@
       </categories>
       <tags>
         <tag>w3HexSchool</tag>
+        <tag>SeparationOfConcerns</tag>
       </tags>
   </entry>
   <entry>
